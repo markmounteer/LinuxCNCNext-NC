@@ -24,10 +24,23 @@ escaped metadata, exclusive HTML output and unchanged diagnostic indexes/inputs.
 Resource tests enforce the 64 MiB limit on actual reads, reject missing/non-regular
 files, detect a changing file, and test nonblocking FIFO rejection on POSIX.
 
-The Windows/Linux Node matrix and standalone LinuxCNC interpreter are run in CI;
-their results for this change will be recorded after completion. Local tests do
-not establish physical machine acceptance. Profiles, CPS/shared reader,
-execution-plan schemas and machine configuration are unchanged.
+All seven jobs passed in [CI run 36476468764](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36476468764)
+at `39337423e8bd57825f5cf4017902857b09179d1e`: Windows/Linux Node 20/22/24 and
+the standalone LinuxCNC interpreter. Linux passed all 73 Node groups; Windows
+passed 72 with the POSIX-only skip. Both Python helper tests and example
+reproducibility passed in every Node job.
+
+The existing native suite passed 20 valid scenarios, 12 independent reference
+programs and 40 deliberate corruptions (72 interpreted programs). Downloaded
+evidence contains 72 `.ngc` programs and 72 trace files. This includes lathe XZ
+and mill XY/XZ/YZ in both units, major/full arcs, nonzero independent T/H/WCS,
+process changes and ordered transitions. Interpreter package:
+`linuxcnc-uspace 2.9.0~pre1+git20230208.f1270d6ed7-1+deb12u2`.
+The canonical printer's four-decimal precision and 0.00011 comparison allowance
+remain unchanged; exact-number Node tests provide the separate precision checks.
+
+These are offline tests, not physical machine acceptance. Profiles, CPS/shared
+reader, execution-plan schemas and machine configuration are unchanged.
 
 # v0.8.0 validation update
 
