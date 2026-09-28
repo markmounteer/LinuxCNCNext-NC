@@ -8,6 +8,11 @@ It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` p
 
 ## Quick start
 
+Version 0.6.0 adds geometry-error provenance, command/state details in review
+reports, and independent interpreter comparisons for both machines. Existing
+program profiles and reviewed execution plans remain compatible. See
+[command/state records](docs/command-state.md) and [validation](docs/validation.md).
+
 Requires Node.js 20 or later; there are no npm dependencies. LinuxCNC is needed only for preview/execution and the optional standalone interpreter tests.
 
 ```sh

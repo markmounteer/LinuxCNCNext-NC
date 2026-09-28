@@ -31,3 +31,10 @@ jobs:
       - name: Record interpreter package version
         run: dpkg-query -W linuxcnc-uspace
       - run: npm run test:linuxcnc
+      - name: Preserve synthetic programs, offsets and interpreter traces
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: linuxcnc-interpreter-evidence
+          path: artifacts/linuxcnc/
+          if-no-files-found: warn

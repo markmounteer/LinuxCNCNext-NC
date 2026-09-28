@@ -1,3 +1,15 @@
+# v0.6.0 validation update
+
+The shared-reader suite has 73 passing Node groups. Translator tests have 30 passing groups on Windows, with the POSIX filter group skipped there; two Python AXIS-helper tests pass. Eight golden fixture hashes retain exact pre-refactor G-code after the release comment and unchanged fingerprints. Both machines are checked in mm/inch.
+
+New geometry tests cover radius/join tolerance boundaries, source records/lines and owning uses of shared geometry. CLI tests confirm identical preflight/translation failures, unchanged INVALID_NEXTNC codes, and no output on geometry or formatter failure. Unexpected exceptions are not relabeled as malformed geometry.
+
+Command/state tests cover independent translations, unknown positions, M6 invalidation/reassertion, tool/H/WCS mappings, and repeated/reversed vertices in explicit and compacted paths. Source-association corruption is detected independently against decoded paths.
+
+The expanded native suite compares every parsed canonical event (except comments) with independently hand-authored reference programs for lathe/mill in mm/inch. It adds nonzero, distinct T/H and G54/G55 values, changes of plane across continue/link/retract, major arcs, feed changes after rapid/dwell, spindle reversal and coolant changes. Five generated-program corruptions (plane, center, feed mode, spindle direction, H record) must either be rejected by rs274 or fail the semantic comparison. Existing full-circle and all-plane tests remain. Native CI results are pending at this commit.
+
+The standalone canonical printer has four-decimal output. Comparisons allow 0.00011 in printed numeric fields, while Node tests retain exact-coordinate and threshold checks; canonical traces are not a sub-0.0001 precision oracle. CI archives synthetic inputs, reference/corrupted programs, tool/parameter tables and traces, including on failure. Nothing connects to a live machine.
+
 # v0.5.0 validation update
 
 The new suites cover XYZ mill paths in both units; all three principal arc planes, both senses and full circles; nonzero Y; two tools and independent H/WCS mappings; schema 4 and exact XYZ transitions; aggregated plan problems and skipped dependent checks; escaped HTML, old archives and exclusive report output; doctor/filter configuration precedence and failure isolation. POSIX CI also tests the real shell wrapper, paths with spaces/quotes and missing Node. The optional AXIS helper has process/argument tests; no AXIS GUI was launched.
