@@ -2,9 +2,9 @@
 
 [![Tests](https://github.com/markmounteer/LinuxCNCNext-NC/actions/workflows/ci.yml/badge.svg)](https://github.com/markmounteer/LinuxCNCNext-NC/actions/workflows/ci.yml)
 
-An experimental translator and LinuxCNC input filter for XZ turning files from [Fusion360Next-NC](https://github.com/markmounteer/Fusion360Next-NC).
+An experimental translator and LinuxCNC input filter for XZ lathe and fixed-axis XYZ milling files from [Fusion360Next-NC](https://github.com/markmounteer/Fusion360Next-NC).
 
-It reads the `next-nc/turning-toolpath/0.1` profile, validates it, and produces LinuxCNC RS274 G-code. LinuxCNC supplies preview, interpretation, trajectory planning, limits and HAL. This is a translation bridge, not a native STEP-NC interpreter or a general AP238 implementation. No LinuxCNC machine configuration or hardware is changed by installing this repository.
+It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` profiles, validates it, and produces LinuxCNC RS274 G-code. LinuxCNC supplies preview, interpretation, trajectory planning, limits and HAL. This is a translation bridge, not a native STEP-NC interpreter or a general AP238 implementation. No LinuxCNC machine configuration or hardware is changed by installing this repository.
 
 ## Quick start
 
@@ -18,7 +18,7 @@ node bin/nextnc.js inspect examples/synthetic.stpnc
 node bin/nextnc.js translate examples/synthetic.stpnc --plan examples/simulation-plan.json --output /tmp/nextnc-simulation.ngc
 ```
 
-The example coordinates and tool table assumptions are **for simulation only**. They are not settings for a Grizzly or any other physical lathe.
+The example coordinates and tool table assumptions are **for simulation only**. They are not settings for a Grizzly or any physical lathe or mill. See `examples/synthetic-mill.stpnc` and `examples/simulation-mill-plan.json` for the XYZ counterpart.
 
 ## Translate your own export
 
@@ -32,7 +32,7 @@ node bin/nextnc.js translate /path/1001.stpnc --plan /path/1001-plan.json --tool
 
 The template deliberately has `null` mappings and required approach/retract paths. The export contains each operation's entry point, but no machine-safe approach or tool-change policy. Translation requires explicit LinuxCNC tool/H-offset and work-offset mappings, plus ordered machine-coordinate retract and work-coordinate approach waypoints where needed. It never assumes work offset 0 means the currently active WCS or that a straight rapid between operations is safe.
 
-Version 0.4.0 templates use execution-plan schema 3. When adjacent operations have exactly matching exit/entry, Fusion tool/offset/WCS, spindle state and coolant, the template marks the boundary `{"mode":"continue"}`. Validation rechecks these conditions and mapped offsets. Such a boundary keeps the spindle running and adds no retract or approach.
+Lathe templates use execution-plan schema 3; XYZ milling templates use schema 4 with `machine: "mill"`. The program profile determines the machine type; it is not a machining option. When adjacent operations have exactly matching exit/entry, Fusion tool/offset/WCS, spindle state and coolant, the template marks the boundary `{"mode":"continue"}`. Validation rechecks these conditions and mapped offsets. Such a boundary keeps the spindle running and adds no retract or approach.
 
 When compatible operations have different exit/entry points, schema 3 can accept an explicitly reviewed `{"mode":"link","moves":[...]}` path in work coordinates while preserving process state. The template **never invents this path**; it leaves a retract boundary until you supply a reviewed connection. Waypoints are one axis at a time and must reach the exact next entry. Existing schema 1/2 plans and explicit retract boundaries keep their reviewed paths. Inspect reports explain eligibility. See [execution plans](docs/execution-plan.md).
 
@@ -42,9 +42,20 @@ The entire input and plan are checked before any G-code reaches stdout or an out
 
 ## Offline preflight
 
-Version 0.4.0 adds `preflight`, which performs the same translation checks but returns a JSON review instead of G-code. `--output` saves that JSON to a new file. Optional `--tool-table` checks a snapshot of your existing LinuxCNC table for syntax, duplicate tool numbers and the presence of every mapped T and H record. Missing records are reported together with all affected operations. Supply the same table to `translate` to repeat the check at generation time; preflight is not a reusable authorization token.
+`preflight` performs the same translation checks but returns a JSON review instead of G-code. `--output` saves that JSON to a new file. Optional `--tool-table` checks a snapshot of your existing LinuxCNC table for syntax, duplicate tool numbers and the presence of every mapped T and H record. Missing records are reported together with all affected operations. Supply the same table to `translate` to repeat the check at generation time; preflight is not a reusable authorization token.
 
 The default filename is `tool.tbl`; use the file specified by your existing `[EMCIO]TOOL_TABLE` setting. No table is written or loaded into LinuxCNC. Without `--tool-table`, the report explicitly says `not_checked`. Presence of a record does not establish correct physical tooling, calibrated offsets, changer pockets, work offsets, clearance or safe machine operation; an external tool database or live controller may differ from the file snapshot. See [preflight and source maps](docs/preflight.md).
+
+## Review and installation tools (v0.5.0)
+
+```sh
+node bin/nextnc.js doctor
+node bin/nextnc.js report /path/to/timestamped-diagnostic.json --output /path/new-review.html
+```
+
+`doctor` and the LinuxCNC filter use the same resolver for `NEXTNC_PLAN`, `NEXTNC_TOOL_TABLE` and `NEXTNC_DIAGNOSTICS`. Doctor reports runtime, resolved paths, file readability and diagnostics-directory access without creating files. Run preflight with your program for job validation.
+
+The HTML report shows job hashes, grouped tools, mappings, process state, transition decisions and operation links to source lines. It is self-contained, escapes file content, writes only to a new destination and leaves existing diagnostic archives unchanged. Independent execution-plan problems are reported together with operation names and JSON field locations. Checks needing invalid mappings are explicitly marked not completed; malformed files and mismatched fingerprints stop immediately. [Details](docs/preflight.md). An [optional AXIS shortcut](docs/axis-report.md) opens an explicitly selected archive without replacing AXIS or assuming it matches the loaded job.
 
 ## Supported translation
 
@@ -52,19 +63,20 @@ The default filename is `tool.tbl`; use the file specified by your existing `[EM
 | --- | --- |
 | Millimetres / inches, X radius, XZ plane | G21 / G20, G8, G18 |
 | Absolute positions, relative arc centres | G90, G91.1 |
-| Rapid/cutting polylines | Every vertex in order as G0/G1; unchanged X/Z words omitted without rounding |
-| CW/CCW arcs and full circles | G2/G3 with I/K; full circles omit endpoint axes |
+| Rapid/cutting polylines | Every vertex in order as G0/G1; unchanged axis words omitted without rounding |
+| XYZ milling, fixed +Z tool axis | G17 initially; G17/G18/G19 with I/J, I/K or J/K for principal-plane arcs |
+| CW/CCW arcs and full circles | G2/G3; full circles omit endpoint axes |
 | Feed per minute / revolution | G94 / G95 with explicit F on every feed-mode change |
 | Constant RPM | G97 S, M3/M4 on spindle 0 |
-| CSS and maximum RPM | G96 S D; mm/min converted to m/min, inch/min to ft/min |
+| Lathe CSS and maximum RPM | G96 S D; mm/min converted to m/min, inch/min to ft/min |
 | Off / flood / mist coolant | M9 / M8 / M7 |
 | Dwell | G4 P in seconds |
 | Reviewed logical tool/offset mapping | Tn M6, G43 Hn; no repeated M6 for the same mapped tool |
 | Reviewed work-offset mapping | G54 through G59.3 |
 
-G40 prevents a second application of nose-radius compensation; Fusion has already calculated it. G61 requests exact path control. The translator does not alter machine velocity/acceleration limits, overrides or HAL. G95 needs the actual spindle-speed feedback configured in LinuxCNC; CSS needs X0 at the spindle centre with the selected WCS/tool offsets.
+G8 establishes ordinary X coordinates (radius on a lathe) even after a prior G7 program. G40 prevents a second application of cutter/nose-radius compensation; Fusion has already calculated it. G61 requests exact path control. The translator does not alter machine velocity/acceleration limits, overrides or HAL. G95 needs the actual spindle-speed feedback configured in LinuxCNC; CSS needs X0 at the spindle centre with the selected WCS/tool offsets.
 
-Threading/tapping, cycles, secondary spindles, Y/multi-axis motion, controller cutter compensation, manual NC, through-tool coolant and unknown executable properties are rejected. There is no fallback that turns unsupported instructions into ordinary moves.
+Threading/tapping, cycles, secondary spindles, rotary/multi-axis motion, controller cutter compensation, manual NC, through-tool coolant and unknown executable properties are rejected. There is no fallback that turns unsupported instructions into ordinary moves.
 
 ## LinuxCNC file filter
 
@@ -72,7 +84,7 @@ Place the reviewed plan at `~/.config/LinuxCNCNext-NC/plan.json`, or set `NEXTNC
 
 ```ini
 [FILTER]
-PROGRAM_EXTENSION = .stpnc Next-NC turning toolpaths
+PROGRAM_EXTENSION = .stpnc Next-NC lathe and mill toolpaths
 stpnc = /home/you/LinuxCNCNext-NC/bin/nextnc-filter
 ```
 
@@ -82,7 +94,7 @@ To use the same tool-table check in the filter, set `NEXTNC_TOOL_TABLE` to the e
 
 ## Diagnostics
 
-Every command archives a local JSON report, including input/plan hashes, error code/context or validated program summary, and a generated-line-to-operation/path map for translations.
+Inspect, plan-template, preflight, translate and the filter archive local JSON reports, including input/plan hashes, error code/context or validated program summary, and a generated-line-to-operation/path map for translations.
 
 Inspect reports include per-operation feeds, spindle settings, entry/exit coordinates and continuation/connection eligibility. Translation reports also list the actual boundary decisions, link starts/ends/waypoints, source-line mapping and number of unchanged axis words omitted. A difference in CAM feed settings is preserved, not silently normalized to another file's feed.
 
@@ -108,8 +120,8 @@ The first release is for development and simulation. Machine-specific clearance,
 
 ## License and provenance
 
-MIT. The bounded reader/inspector and synthetic-fixture writer are vendored from Fusion360Next-NC v0.1.5 with their [license and pinned provenance](vendor/fusion360next-nc/PROVENANCE.md). LinuxCNC is a separate dependency. No Autodesk executable/source, private CAD/job data or physical-machine settings are distributed. [Primary references](docs/references.md).
+MIT. The bounded reader/inspector and synthetic-fixture writer are vendored from Fusion360Next-NC v0.2.0 with their [license and pinned provenance](vendor/fusion360next-nc/PROVENANCE.md). LinuxCNC is a separate dependency. No Autodesk executable/source, private CAD/job data or physical-machine settings are distributed. [Primary references](docs/references.md).
 
 ## Architecture research update
 
-See [the architecture review and resulting improvements](docs/architecture-research.md) for the three-paper review, stronger input checks and indexed interpretation. The format and machining semantics remain unchanged.
+See [the architecture review and resulting improvements](docs/architecture-research.md) for the three-paper review, stronger input checks and indexed interpretation. The subsequent [adapter review](docs/adapter-review-plan.md) informed the report and installation tools; v0.5.0 also adds a separate XYZ profile without changing legacy turning semantics.

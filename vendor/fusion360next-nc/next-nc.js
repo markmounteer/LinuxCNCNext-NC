@@ -3,8 +3,10 @@
  */
 var NextNC = (function () {
   "use strict";
-  var VERSION = "0.1.7";
+  var VERSION = "0.2.0";
   var PROFILE = "next-nc/turning-toolpath/0.1";
+  var MILL_PROFILE = "next-nc/milling-toolpath/0.1";
+  var planes = {XY: {normal: [0, 0, 1], axes: [0, 1], fixed: 2}, XZ: {normal: [0, 1, 0], axes: [0, 2], fixed: 1}, YZ: {normal: [1, 0, 0], axes: [1, 2], fixed: 0}};
   function requireValue(ok, message) { if (!ok) { throw new Error("Next-NC: " + message); } }
   function finite(n, label) {
     requireValue(typeof n === "number" && isFinite(n) && Math.abs(n) < 1e15, label + " must be a finite number below 1e15 in magnitude");
@@ -14,13 +16,13 @@ var NextNC = (function () {
   function integer(n, label, minimum) {
     finite(n, label); requireValue(n === Math.floor(n) && n >= minimum, label + " must be an integer >= " + minimum); return n;
   }
-  function point(p) {
+  function point(p, machine) {
     requireValue(p && p.length === 3, "a point must have X, Y, Z coordinates");
     var q = [finite(p[0], "X"), finite(p[1], "Y"), finite(p[2], "Z")];
-    requireValue(Math.abs(q[1]) <= 1e-9, "only XZ turning with Y=0 is supported"); q[1] = 0; return q;
+    if (machine !== "mill") { requireValue(Math.abs(q[1]) <= 1e-9, "only XZ turning with Y=0 is supported"); q[1] = 0; } return q;
   }
   function same(a, b) { return a[0] === b[0] && a[1] === b[1] && a[2] === b[2]; }
-  function distance(a, b) { return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[2] - b[2], 2)); }
+  function distance(a, b) { return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2) + Math.pow(a[2] - b[2], 2)); }
   function copySpindle(s) {
     requireValue(s && (s.mode === "rpm" || s.mode === "css"), "spindle mode must be rpm or css");
     requireValue(typeof s.clockwise === "boolean", "spindle direction must be explicit");
@@ -36,21 +38,24 @@ var NextNC = (function () {
   function stateKey(s, f) {
     return [s.mode, s.speed, s.maximumRPM || 0, s.clockwise, f ? f.mode : "", f ? f.value : ""].join("|");
   }
-  function Section(spec) {
+  function Section(spec, machine) {
+    this.machine = machine;
     requireValue(spec && spec.tool, "section and tool are required");
-    this.name = String(spec.name || "Turning");
+    this.name = String(spec.name || (machine === "mill" ? "Milling" : "Turning"));
     this.tool = {number: integer(spec.tool.number, "tool number", 1),
       offset: integer(spec.tool.offset, "tool offset", 0), description: String(spec.tool.description || "")};
     this.workOffset = integer(spec.workOffset, "Fusion work offset", 0);
-    this.start = point(spec.start);
+    this.start = point(spec.start, machine);
     this.position = this.start.slice();
-    this.spindle = copySpindle(spec.spindle);
+    this.setSpindle(spec.spindle);
     this.coolant = coolant(spec.coolant);
     this.initialSpindle = copySpindle(spec.spindle);
     this.initialCoolant = this.coolant;
     this.paths = [];
   }
-  Section.prototype.setSpindle = function (s) { this.spindle = copySpindle(s); };
+  Section.prototype.setSpindle = function (s) {
+    var spindle = copySpindle(s); requireValue(this.machine !== "mill" || spindle.mode === "rpm", "XYZ milling requires constant RPM"); this.spindle = spindle;
+  };
   Section.prototype.setCoolant = function (c) { this.coolant = coolant(c); };
   Section.prototype.append = function (path, f) {
     path.spindle = copySpindle(this.spindle); path.coolant = this.coolant;
@@ -64,17 +69,21 @@ var NextNC = (function () {
     } else { this.paths.push(path); }
   };
   Section.prototype.rapid = function (end) {
-    end = point(end);
+    end = point(end, this.machine);
     if (!same(this.position, end)) { this.append({kind: "rapid", points: [this.position, end]}); }
     this.position = end;
   };
   Section.prototype.linear = function (end, f) {
-    end = point(end); f = feed(f);
+    end = point(end, this.machine); f = feed(f);
     if (!same(this.position, end)) { this.append({kind: "linear", points: [this.position, end]}, f); }
     this.position = end;
   };
-  Section.prototype.arc = function (end, center, clockwise, f, fullCircle) {
-    end = point(end); center = point(center); f = feed(f);
+  Section.prototype.arc = function (end, center, clockwise, f, fullCircle, plane) {
+    end = point(end, this.machine); center = point(center, this.machine); f = feed(f);
+    plane = plane || (this.machine === "mill" ? "XY" : "XZ");
+    requireValue(Object.prototype.hasOwnProperty.call(planes, plane) && (this.machine === "mill" || plane === "XZ"), "unsupported arc plane");
+    var frame = planes[plane];
+    requireValue(this.position[frame.fixed] === end[frame.fixed] && center[frame.fixed] === end[frame.fixed], "arc must be planar; linearize helices in CAM");
     requireValue(typeof clockwise === "boolean", "arc direction must be explicit");
     var radius = positive(distance(this.position, center), "arc radius");
     var radialDifference = Math.abs(distance(end, center) - radius);
@@ -85,19 +94,22 @@ var NextNC = (function () {
     }
     requireValue(fullCircle ? same(this.position, end) : !same(this.position, end), "full-circle flag must match arc endpoints");
     this.append({kind: "arc", start: this.position, end: end, center: center, radius: radius,
-      clockwise: clockwise, fullCircle: !!fullCircle}, f);
+      clockwise: clockwise, fullCircle: !!fullCircle, plane: plane}, f);
     this.position = end;
   };
   Section.prototype.dwell = function (seconds) { this.append({kind: "dwell", seconds: positive(seconds, "dwell")}); };
   function Program(options) {
     options = options || {};
     requireValue(options.units === "mm" || options.units === "inch", "units must be mm or inch");
+    this.machine = options.machine || "lathe";
+    requireValue(this.machine === "lathe" || this.machine === "mill", "machine must be lathe or mill");
+    this.profile = this.machine === "mill" ? MILL_PROFILE : PROFILE;
     this.units = options.units; this.name = String(options.name || "Next-NC program");
     this.timestamp = options.timestamp || new Date().toISOString();
     requireValue(/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z$/.test(this.timestamp), "timestamp must be UTC ISO 8601");
     this.sections = [];
   }
-  Program.prototype.addSection = function (spec) { var s = new Section(spec); this.sections.push(s); return s; };
+  Program.prototype.addSection = function (spec) { var s = new Section(spec, this.machine); this.sections.push(s); return s; };
   function real(n) {
     finite(n, "STEP real");
     var result = (n === 0 ? "0" : String(n)).toUpperCase();
@@ -137,7 +149,8 @@ var NextNC = (function () {
     MACHINING_TOOLPATH_SPEED_PROFILE_REPRESENTATION: true, DERIVED_UNIT_ELEMENT: true,
     POLYLINE: true, AXIS2_PLACEMENT_3D: true, CIRCLE: true, TRIMMED_CURVE: true
   };
-  function Writer() {
+  function Writer(machine) {
+    this.machine = machine; this.process = machine === "mill" ? "milling" : "turning";
     this.lines = []; this.valueCache = Object.create(null); this.reused = 0;
     this.curves = {polylines: 0, arcs: 0};
   }
@@ -194,7 +207,7 @@ var NextNC = (function () {
   };
   Writer.prototype.technology = function (spindle, f) {
     var key = stateKey(spindle, f), cached = this.technologyCache[key]; if (cached) { return cached; }
-    var tech = this.method("MACHINING_TECHNOLOGY", "", "turning"), items;
+    var tech = this.method("MACHINING_TECHNOLOGY", "", this.process), items;
     // AP238 uses a right-handed sign: clockwise is negative (opposite Fusion).
     var signed = spindle.speed * (spindle.clockwise ? -1 : 1);
     if (spindle.mode === "css") {
@@ -210,15 +223,15 @@ var NextNC = (function () {
   };
   Writer.prototype.functions = function (coolantMode) {
     var cached = this.functionsCache[coolantMode]; if (cached) { return cached; }
-    var functions = this.method("MACHINING_FUNCTIONS", "", "turning");
+    var functions = this.method("MACHINING_FUNCTIONS", "", this.process);
     this.textProperty(functions, "coolant", coolantMode === "off" ? "coolant off" : "coolant on");
     if (coolantMode !== "off") { this.textProperty(functions, "coolant type", coolantMode); }
     this.functionsCache[coolantMode] = functions; return functions;
   };
   Writer.prototype.curve = function (path) {
     if (path.kind !== "arc") { return this.add("POLYLINE", ["''", list(path.points.map(this.point.bind(this)))]); }
-    var normal = this.add("DIRECTION", ["''", "(0.,1.,0.)"]);
-    var direction = [(path.start[0] - path.center[0]) / path.radius, 0, (path.start[2] - path.center[2]) / path.radius];
+    var normal = this.add("DIRECTION", ["''", list(planes[path.plane].normal.map(real))]);
+    var direction = path.start.map(function (v, i) { return (v - path.center[i]) / path.radius; });
     var ref = this.add("DIRECTION", ["''", list(direction.map(real))]);
     var placement = this.add("AXIS2_PLACEMENT_3D", ["''", this.point(path.center), normal, ref]);
     var circle = this.add("CIRCLE", ["''", placement, real(path.radius)]);
@@ -255,8 +268,8 @@ var NextNC = (function () {
     var workplan = this.method("MACHINING_WORKPLAN", program.name, "");
     var process = this.add("PRODUCT_DEFINITION_PROCESS", [str("machining"), "''", workplan, "''"]);
     this.add("PROCESS_PRODUCT_ASSOCIATION", ["''", "''", projectDef, process]);
-    this.textProperty(workplan, "next-nc profile", PROFILE);
-    this.textProperty(workplan, "next-nc coordinates", "WCS; X radius; Y zero; Z axial; Fusion tool reference point");
+    this.textProperty(workplan, "next-nc profile", program.profile);
+    this.textProperty(workplan, "next-nc coordinates", program.machine === "mill" ? "WCS; XYZ Cartesian; fixed +Z tool axis; Fusion tool reference point" : "WCS; X radius; Y zero; Z axial; Fusion tool reference point");
     var part = this.add("PRODUCT", [str("workpiece"), str("Toolpath-only workpiece; geometry not supplied"), "$", list([context])]);
     var partFormation = this.add("PRODUCT_DEFINITION_FORMATION", ["''", "''", part]);
     var partDef = this.add("PRODUCT_DEFINITION", [str("workpiece"), "''", partFormation, defContext]);
@@ -268,7 +281,7 @@ var NextNC = (function () {
     requireValue(section.paths.length > 0, "section '" + section.name + "' contains no motion or dwell");
     var ws = this.method("MACHINING_WORKINGSTEP", section.name, "machining");
     this.rel("MACHINING_PROCESS_SEQUENCE_RELATIONSHIP", workplan, ws, index);
-    var operation = this.method("TURNING_TYPE_OPERATION", section.name, "");
+    var operation = this.method(this.machine === "mill" ? "MILLING_TYPE_OPERATION" : "TURNING_TYPE_OPERATION", section.name, "");
     this.rel("MACHINING_OPERATION_RELATIONSHIP", ws, operation);
     // A generic CC1 toolpath feature avoids claiming feature-based turning geometry.
     var feature = this.add("INSTANCED_FEATURE", ["''", str("toolpath"), "''", str("toolpath"), this.partShape, ".T."]);
@@ -288,7 +301,7 @@ var NextNC = (function () {
   };
   Program.prototype.toSTEP = function () {
     requireValue(this.sections.length > 0, "program contains no sections");
-    var w = new Writer(); w.units(this.units); var workplan = w.project(this);
+    var w = new Writer(this.machine); w.units(this.units); var workplan = w.project(this);
     for (var i = 0; i < this.sections.length; ++i) { w.section(workplan, this.sections[i], i + 1); }
     this.lastExport = {entities: w.lines.length, reusedValues: w.reused, curveDefinitions: w.curves, sections: this.sections.length,
       paths: 0, arcs: 0, rapidSegments: 0, cuttingSegments: 0, dwells: 0};
@@ -301,12 +314,12 @@ var NextNC = (function () {
       }
     }
     var lines = ["ISO-10303-21;", "HEADER;",
-      "FILE_DESCRIPTION((" + str("Experimental AP238 toolpath; " + PROFILE) + "),'2;1');",
+      "FILE_DESCRIPTION((" + str("Experimental AP238 toolpath; " + this.profile) + "),'2;1');",
       "FILE_NAME(" + str(this.name + ".stpnc") + "," + str(this.timestamp) + ",(''),('')," + str("Fusion360Next-NC " + VERSION) + ",'Fusion360Next-NC','');",
       "FILE_SCHEMA(('INTEGRATED_CNC_SCHEMA'));", "ENDSEC;", "DATA;"];
     for (i = 0; i < w.lines.length; ++i) { lines.push("#" + (i + 1) + "=" + w.lines[i] + ";"); }
     lines.push("ENDSEC;", "END-ISO-10303-21;"); return lines.join("\n") + "\n";
   };
-  return {Program: Program, version: VERSION, profile: PROFILE, stepString: str, stepReal: real};
+  return {Program: Program, version: VERSION, profile: PROFILE, millingProfile: MILL_PROFILE, stepString: str, stepReal: real};
 }());
 if (typeof module !== "undefined" && module.exports) { module.exports = NextNC; }

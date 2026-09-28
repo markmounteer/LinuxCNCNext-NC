@@ -1,10 +1,31 @@
 "use strict";
 // Offline standalone interpreter only: no LinuxCNC task, HAL or controller connection.
 const fs = require("node:fs"), path = require("node:path"), os = require("node:os"), assert = require("node:assert/strict");
-const {spawnSync} = require("node:child_process"), {example, continuationExample, linkExample} = require("./example"), {translate} = require("../src/translate");
+const {spawnSync} = require("node:child_process"), {example, continuationExample, linkExample, millingExample} = require("./example"), {translate} = require("../src/translate");
 const root = path.resolve(__dirname, ".."), artifacts = path.join(root, "artifacts", "linuxcnc"); fs.mkdirSync(artifacts, {recursive: true});
 const executable = process.env.LINUXCNC_RS274 || "rs274";
 const toolTable = "T1 P1 X0 Z0 D0.8 I0 J0 Q1 ; synthetic\n";
+for (const units of ["mm", "inch"]) {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "nextnc-mill-rs274-"));
+  try {
+    const {text, plan} = millingExample(units), result = translate(text, plan, {toolTable: "T1 P1\nT2 P2\nT3 P3\n"});
+    const input = path.join(temporary, "mill.ngc"), tool = path.join(temporary, "tool.tbl"), vars = path.join(temporary, "rs274.var");
+    fs.writeFileSync(input, "G7\n" + result.gcode); fs.writeFileSync(tool, "T1 P1\nT2 P2\nT3 P3\n"); fs.writeFileSync(vars, "");
+    const run = spawnSync(executable, ["-t", tool, "-v", vars, "-n", "0", "-g", input], {cwd: temporary, encoding: "utf8", timeout: 30000});
+    if (run.error) throw run.error;
+    fs.writeFileSync(path.join(artifacts, units + "-mill.ngc"), result.gcode);
+    fs.writeFileSync(path.join(artifacts, units + "-mill.trace.txt"), run.stdout + run.stderr);
+    assert.equal(run.status, 0, run.stdout + run.stderr);
+    assert.doesNotMatch(run.stdout + run.stderr, /(?:error|bad character|unknown word|near line)/i);
+    const arcs = [...run.stdout.matchAll(/ARC_FEED\(([^)]*)\)/g)].map(m => m[1].split(",").slice(0, 6).map(Number));
+    // Canonical in-plane axes: XY -> X,Y; XZ -> Z,X; YZ -> Y,Z.
+    // Sixth coordinate is the fixed perpendicular axis. Verify independently.
+    assert.deepEqual(arcs, [[1,2,1,1,1,-1],[2,1,1,1,-1,-1],[2,1,1,1,-1,-1],[-2,1,-1,1,1,1],[-1,2,-1,1,-1,1],[-1,2,-1,1,-1,1],[0,0,0,-1,1,2],[1,-1,0,-1,-1,2],[1,-1,0,-1,-1,2]]);
+    const feeds = [...run.stdout.matchAll(/STRAIGHT_FEED\(([^)]*)\)/g)].map(m => m[1].split(",").slice(0, 3).map(Number));
+    assert.deepEqual(feeds, [[2,1,-1],[4,5,0]]); assert.match(run.stdout, /PROGRAM_END/);
+    console.log(`PASS: LinuxCNC rs274 ${units} XYZ mill: all three planes, CW/CCW/full circles, XYZ endpoints, two tools and independent H record.`);
+  } finally { fs.rmSync(temporary, {recursive: true, force: true}); }
+}
 for (const units of ["mm", "inch"]) {
   const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "nextnc-rs274-"));
   try {

@@ -1,3 +1,11 @@
+# v0.5.0 validation update
+
+The new suites cover XYZ mill paths in both units; all three principal arc planes, both senses and full circles; nonzero Y; two tools and independent H/WCS mappings; schema 4 and exact XYZ transitions; aggregated plan problems and skipped dependent checks; escaped HTML, old archives and exclusive report output; doctor/filter configuration precedence and failure isolation. POSIX CI also tests the real shell wrapper, paths with spaces/quotes and missing Node. The optional AXIS helper has process/argument tests; no AXIS GUI was launched.
+
+A pre-change synthetic lathe snapshot retains its exact decoded fingerprint and all G-code after the release banner. The existing lathe suites remain in the test command. Standalone interpreter tests now include mill XY/XZ/YZ canonical arc endpoints, centers, directions, fixed-axis coordinates, linear XYZ moves and tool changes in mm/inch, starting from an inherited G7 state to verify G8 reset. Linux interpreter results are recorded by CI, not inferred from Windows tests.
+
+The prior release's record follows for provenance; counts and package versions below describe those earlier observations.
+
 # Validation scope
 
 Version 0.4.1 development preview.

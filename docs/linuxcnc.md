@@ -10,7 +10,7 @@ The same CLI also runs on Windows for inspection/translation. Copying an `.ngc` 
 
 ## Machine requirements
 
-- Single spindle 0, XZ axes, unrotated WCS and compatible physical X-radius/tool-reference conventions.
+- Single spindle 0; XZ lathe (radius X) or fixed-axis XYZ mill; unrotated WCS and compatible tool-reference conventions.
 - Actual tool-table records matching the reviewed T/H mappings; M6 behavior and clearance verified for the machine.
 - Correct WCS origin. CSS requires X0 at the spindle centre, including tool offsets.
 - Actual spindle speed feedback connected for G95, and spindle-at-speed behavior configured as required by LinuxCNC. Successful offline interpretation does not establish this wiring.
@@ -23,6 +23,18 @@ Through-tool coolant and threading are unsupported. M7/M8/M9 preserve the export
 
 The output includes source operation comments and the local report maps each G-code line to its operation/path or transition. Shared STEP curves still generate every ordered move. Run from the beginning; run-from-line, block search and mid-operation restart have not been designed or tested. Translation cannot preserve controller state across an arbitrary restart point.
 
-G61 conservatively preserves the path. Machine limits and trajectory planning still determine actual velocity. Schema 2/3 plans can avoid needless spindle stops and boundary travel where exact continuation is validated. Schema 3 can also follow an explicitly reviewed work-coordinate link between different endpoints with matching process state. Links retain active spindle/CSS/coolant; their clearance must be reviewed. This does not estimate cycle time or change blending/acceleration. Existing schema 1/2 plans retain their reviewed transitions.
+G61 conservatively preserves the path. Machine limits and trajectory planning still determine actual velocity. Schemas 2/3/4 can avoid needless spindle stops and boundary travel where exact continuation is validated. Schemas 3/4 can also follow an explicitly reviewed work-coordinate link between different endpoints with matching process state. Links retain active spindle/CSS/coolant; their clearance must be reviewed. This does not estimate cycle time or change blending/acceleration. Existing schema 1/2 plans retain their reviewed transitions.
 
 G-code formatting expands exponent notation without truncating decoded coordinates. For G0/G1 body moves, an axis word is omitted only when its coordinate is exactly unchanged from the preceding decoded point. Every motion vertex and feed/state transition remains present. Arcs and full circles keep their explicit centre/sense format. CSS unit conversion is the only required scale conversion; toolpath units and feed units otherwise remain unchanged. No arithmetic loop recognition, geometric fitting or coordinate rounding is performed.
+
+## Installation diagnosis
+
+`node bin/nextnc.js doctor` reports Node version/executable, resolved plan/table/diagnostic paths and their source, readability and filesystem-access checks. It creates no files unless you explicitly give `--output` for its JSON. The filter and doctor share the same JavaScript resolver:
+
+- Plan: `NEXTNC_PLAN`, otherwise `${XDG_CONFIG_HOME:-$HOME/.config}/LinuxCNCNext-NC/plan.json`.
+- Optional snapshot: `NEXTNC_TOOL_TABLE`; absent means not checked.
+- Diagnostics: `NEXTNC_DIAGNOSTICS`, otherwise the platform state directory documented in README.
+
+Use absolute environment paths before starting LinuxCNC. Relative overrides are resolved against the invoking process's working directory. An absent Node executable produces `NODE_MISSING` on stderr and exit 127 from the shell wrapper. Doctor does not parse INI/HAL or check live controller state; path readability is not job validation. Run preflight for the selected file/plan/table.
+
+An [optional AXIS report shortcut](axis-report.md) is provided as an example. It is not installed automatically and opens an explicitly selected diagnostic record.

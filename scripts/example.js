@@ -1,7 +1,7 @@
 "use strict";
 const fs = require("node:fs"), path = require("node:path");
 const {Program} = require("../vendor/fusion360next-nc/next-nc"), {readProgram} = require("../src/profile");
-const {template} = require("../src/plan"), {translate} = require("../src/translate");
+const {template, machineOf} = require("../src/plan"), {translate} = require("../src/translate");
 function example(units = "mm") {
   const p = new Program({name: "Synthetic simulation only", units, timestamp: "2026-09-28T00:00:00Z"});
   const s = p.addSection({name: "Synthetic turning", tool: {number: 1, offset: 1, description: "Simulation tool"}, workOffset: 1,
@@ -15,10 +15,27 @@ function example(units = "mm") {
 }
 function simulationPlan(program) {
   const plan = template(program);
+  const mill = machineOf(program) === "mill";
   for (const key of Object.keys(plan.tools)) plan.tools[key] = {tool: 1, offset: 1};
   for (const key of Object.keys(plan.workOffsets)) plan.workOffsets[key] = "G54";
-  plan.sections = program.model.sections.map((s, i) => plan.sections[i].mode === "continue" ? plan.sections[i] : {mode: "retract", retract: [{x: 25}, {z: 10}], approach: [{z: s.start[2]}, {x: s.start[0]}]});
-  plan.end = [{x: 25}, {z: 10}]; return plan;
+  plan.sections = program.model.sections.map((s, i) => plan.sections[i].mode === "continue" ? plan.sections[i] : {mode: "retract", retract: mill ? [{z: 20}, {x: 0}, {y: 0}] : [{x: 25}, {z: 10}], approach: mill ? [{z: 10}, {x: s.start[0]}, {y: s.start[1]}, {z: s.start[2]}] : [{z: s.start[2]}, {x: s.start[0]}]});
+  plan.end = mill ? [{z: 20}, {x: 0}, {y: 0}] : [{x: 25}, {z: 10}]; return plan;
+}
+function millingExample(units = "mm") {
+  const p = new Program({name: "Synthetic XYZ simulation only", machine: "mill", units, timestamp: "2026-09-28T00:00:00Z"});
+  const spec = {tool: {number: 1, offset: 1}, workOffset: 1, start: [2, 1, 5], spindle: {mode: "rpm", speed: 1200, clockwise: true}, coolant: "flood"};
+  const s = p.addSection({name: "Three-plane arcs", ...spec}), feed = {mode: "perMinute", value: 100};
+  s.rapid([2, 1, 0]); s.linear([2, 1, -1], feed);
+  for (const [plane, end, center] of [["XY", [1, 2, -1], [1, 1, -1]], ["XZ", [1, 1, -2], [1, 1, -1]], ["YZ", [2, 0, 0], [2, 0, -1]]]) {
+    s.arc(end, center, false, feed, false, plane);
+    s.arc([2, 1, -1], center, true, feed, false, plane);
+    s.arc([2, 1, -1], center, true, feed, true, plane);
+  }
+  s.dwell(0.2);
+  p.addSection({name: "Second tool XYZ", ...spec, tool: {number: 2, offset: 3}, workOffset: 2, start: [3, 4, 5]}).linear([4, 5, 0], {mode: "perMinute", value: 80});
+  const text = p.toSTEP(), plan = simulationPlan(readProgram(text));
+  plan.tools["2:3"] = {tool: 2, offset: 3}; plan.workOffsets[2] = "G55";
+  return {text, plan};
 }
 function continuationExample(units = "mm") {
   const p = new Program({name: "Synthetic continuous operations", units, timestamp: "2026-09-28T00:00:00Z"});
@@ -50,5 +67,9 @@ if (require.main === module) {
   fs.writeFileSync(path.join(dir, "synthetic.stpnc"), text);
   fs.writeFileSync(path.join(dir, "simulation-plan.json"), JSON.stringify(plan, null, 2) + "\n");
   fs.writeFileSync(path.join(dir, "synthetic.ngc"), translate(text, plan).gcode);
+  const mill = millingExample();
+  fs.writeFileSync(path.join(dir, "synthetic-mill.stpnc"), mill.text);
+  fs.writeFileSync(path.join(dir, "simulation-mill-plan.json"), JSON.stringify(mill.plan, null, 2) + "\n");
+  fs.writeFileSync(path.join(dir, "synthetic-mill.ngc"), translate(mill.text, mill.plan).gcode);
 }
-module.exports = {example, simulationPlan, continuationExample, linkExample};
+module.exports = {example, simulationPlan, continuationExample, linkExample, millingExample};

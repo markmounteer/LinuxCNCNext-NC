@@ -15,6 +15,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm test
+      - run: npm run test:axis-helper
       - run: npm run example
       - run: git diff --exit-code -- examples
   linuxcnc:

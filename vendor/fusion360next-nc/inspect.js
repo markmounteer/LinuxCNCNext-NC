@@ -3,7 +3,7 @@
 // writer. This is neither a general AP238 validator nor a machine interpreter.
 const {parse} = require("./part21");
 const {createHash} = require("node:crypto");
-const PROFILE = "next-nc/turning-toolpath/0.1";
+const PROFILE = "next-nc/turning-toolpath/0.1", MILL_PROFILE = "next-nc/milling-toolpath/0.1";
 function check(ok, message) { if (!ok) throw new Error("Next-NC inspection: " + message); }
 function positive(n, label) { check(Number.isFinite(n) && n > 0, label + " must be positive"); return n; }
 function close(a, b, epsilon = 1e-9) { return a.length === b.length && a.every((v, i) => Math.abs(v - b[i]) <= epsilon); }
@@ -38,7 +38,7 @@ function inspectDocument(doc) {
     const owners = tool.args[2];
     recordCheck(Array.isArray(owners) && owners.length > 0 && new Set(owners.map(r => r && r.ref)).size === owners.length, "invalid tool association", tool.id);
     for (const owner of owners) {
-      recordCheck(owner && (doc.records.get(owner.ref) || []).some(p => p.type === "TURNING_TYPE_OPERATION"), "tool owner is not an operation", tool.id);
+      recordCheck(owner && (doc.records.get(owner.ref) || []).some(p => ["TURNING_TYPE_OPERATION", "MILLING_TYPE_OPERATION"].includes(p.type)), "tool owner is not an operation", tool.id);
       if (!toolOwners.has(owner.ref)) toolOwners.set(owner.ref, []);
       toolOwners.get(owner.ref).push(tool);
     }
@@ -70,7 +70,7 @@ function inspectDocument(doc) {
     rows.forEach(row => consumed.add(row.id)); return rows;
   }
   function target(type, id) { return one(relationship(type, id), type + " for #" + id).args[3]; }
-  const visited = {MACHINING_WORKINGSTEP: new Set(), TURNING_TYPE_OPERATION: new Set(), MACHINING_TOOLPATH: new Set()};
+  const visited = {MACHINING_WORKINGSTEP: new Set(), TURNING_TYPE_OPERATION: new Set(), MILLING_TYPE_OPERATION: new Set(), MACHINING_TOOLPATH: new Set()};
   function visit(ref, type) {
     check(!visited[type].has(ref.ref), "repeated " + type); visited[type].add(ref.ref); return get(ref, type);
   }
@@ -128,11 +128,12 @@ function inspectDocument(doc) {
   function processState(id) {
     const tech = target("MACHINING_TECHNOLOGY_RELATIONSHIP", id).ref;
     used.MACHINING_TECHNOLOGY.add(tech);
-    check(get({ref: tech}, "MACHINING_TECHNOLOGY")[1] === "turning", "unsupported technology");
+    check(get({ref: tech}, "MACHINING_TECHNOLOGY")[1] === processKind, "unsupported technology");
     check(textProp(tech, "feedrate reference") === "tool center point", "unsupported feed reference");
     const sr = prop(tech, "spindle", "MACHINING_SPINDLE_SPEED_REPRESENTATION");
     const css = sr[0] === "cutting speed";
     check(css || sr[0] === "spindle speed", "unsupported spindle mode");
+    check(!milling || !css, "XYZ milling requires constant RPM");
     check(sr[1].length === (css ? 2 : 1), "incorrect spindle measures");
     const signedSpeed = measure(sr[1][0], css ? units + "/minute" : "revolution/minute");
     const spindle = {mode: css ? "css" : "rpm", speed: positive(Math.abs(signedSpeed), "spindle speed"), clockwise: signedSpeed < 0};
@@ -146,7 +147,7 @@ function inspectDocument(doc) {
     }
     const functions = target("MACHINING_FUNCTIONS_RELATIONSHIP", id).ref;
     used.MACHINING_FUNCTIONS.add(functions);
-    check(get({ref: functions}, "MACHINING_FUNCTIONS")[1] === "turning", "unsupported machine functions");
+    check(get({ref: functions}, "MACHINING_FUNCTIONS")[1] === processKind, "unsupported machine functions");
     const c = textProp(functions, "coolant");
     check(c === "coolant off" || c === "coolant on", "unsupported coolant state");
     const coolant = c === "coolant off" ? "off" : textProp(functions, "coolant type");
@@ -155,24 +156,34 @@ function inspectDocument(doc) {
   }
   function point(ref) {
     const p = get(ref, "CARTESIAN_POINT")[1];
-    check(p.length === 3 && p.every(Number.isFinite) && p[1] === 0, "invalid XZ point"); return p;
+    check(p.length === 3 && p.every(Number.isFinite) && (milling || p[1] === 0), milling ? "invalid XYZ point" : "invalid XZ point"); return p;
   }
   function vector(ref) {
     const v = get(ref, "DIRECTION")[1];
     check(v.length === 3 && v.every(Number.isFinite) && Math.abs(Math.hypot(...v) - 1) < 1e-9, "invalid unit direction"); return v;
   }
-  const report = {validation: "Next-NC profile checks only; not AP238 certification or machine validation", units,
+  const plan = one(all("MACHINING_WORKPLAN"), "workplan");
+  one(all("MACHINING_PROJECT"), "project");
+  const profile = textProp(plan.id, "next-nc profile"), milling = profile === MILL_PROFILE;
+  check(profile === PROFILE || milling, "unsupported Next-NC profile");
+  const processKind = milling ? "milling" : "turning", operationType = milling ? "MILLING_TYPE_OPERATION" : "TURNING_TYPE_OPERATION";
+  check(textProp(plan.id, "next-nc coordinates") === (milling ? "WCS; XYZ Cartesian; fixed +Z tool axis; Fusion tool reference point" : "WCS; X radius; Y zero; Z axial; Fusion tool reference point"), "unsupported coordinate convention");
+  const report = {machine: milling ? "mill" : "lathe", profile, validation: "Next-NC profile checks only; not AP238 certification or machine validation", units,
     entities: doc.records.size, sections: 0, paths: 0, rapidPaths: 0, linearPaths: 0, arcs: 0, dwells: 0,
-    rapidSegments: 0, cuttingSegments: 0, bounds: {min: [Infinity, 0, Infinity], max: [-Infinity, 0, -Infinity]},
+    rapidSegments: 0, cuttingSegments: 0, bounds: {min: [Infinity, milling ? Infinity : 0, Infinity], max: [-Infinity, milling ? -Infinity : 0, -Infinity]},
     maxRadialMismatch: 0, cartesianPointRecords: all("CARTESIAN_POINT").length,
     distinctCartesianPoints: new Set(all("CARTESIAN_POINT").map(p => JSON.stringify(p.args[1]))).size,
     curveDefinitions: {polylines: all("POLYLINE").length, arcs: all("TRIMMED_CURVE").length}, operations: []};
-  function bounds(p) { for (const i of [0, 2]) { report.bounds.min[i] = Math.min(report.bounds.min[i], p[i]); report.bounds.max[i] = Math.max(report.bounds.max[i], p[i]); } }
+  function bounds(p) { for (const i of (milling ? [0, 1, 2] : [0, 2])) { report.bounds.min[i] = Math.min(report.bounds.min[i], p[i]); report.bounds.max[i] = Math.max(report.bounds.max[i], p[i]); } }
   const tau = 2 * Math.PI, wrap = a => (a % tau + tau) % tau;
   function arc(ref) {
     const trim = get(ref, "TRIMMED_CURVE"), circle = get(trim[1], "CIRCLE"), axis = get(circle[1], "AXIS2_PLACEMENT_3D");
     const center = point(axis[1]), normal = vector(axis[2]), direction = vector(axis[3]), radius = positive(circle[2], "arc radius");
-    check(close(normal, [0, 1, 0], 0) && direction[1] === 0, "arc is not in the +Y XZ frame");
+    const frames = [{name: "XY", normal: [0, 0, 1], u: 0, v: 1, n: 2, sign: 1},
+      {name: "XZ", normal: [0, 1, 0], u: 0, v: 2, n: 1, sign: -1}, {name: "YZ", normal: [1, 0, 0], u: 1, v: 2, n: 0, sign: 1}];
+    const frame = frames.find(f => close(normal, f.normal, 0));
+    check(frame && (milling || frame.name === "XZ") && direction[frame.n] === 0, milling ? "arc is not in a supported positive-normal plane" : "arc is not in the +Y XZ frame");
+    const {u, v, n, sign} = frame;
     check([".T.", ".F."].includes(trim[4].symbol), "arc direction is not explicit");
     const clockwise = trim[4].symbol === ".F.", fullCircle = trim[5].symbol === ".PARAMETER.";
     const first = one(trim[2], "first trim"), last = one(trim[3], "last trim");
@@ -185,31 +196,29 @@ function inspectDocument(doc) {
       check(!close(start, end, 0), "partial arc has coincident endpoints");
     }
     for (const p of [start, end]) {
-      const mismatch = Math.abs(Math.hypot(p[0] - center[0], p[2] - center[2]) - radius);
+      check(p[n] === center[n], "nonplanar arc; helices must be linearized by CAM");
+      const mismatch = Math.abs(Math.hypot(p[u] - center[u], p[v] - center[v]) - radius);
       report.maxRadialMismatch = Math.max(report.maxRadialMismatch, mismatch);
       check(mismatch <= Math.max(1e-7, radius * 1e-6), "arc endpoint radius mismatch"); bounds(p);
     }
     check(close(direction, start.map((v, i) => (v - center[i]) / radius), 1e-8), "arc reference direction disagrees with start");
-    const a = Math.atan2(-(start[2] - center[2]), start[0] - center[0]);
-    const b = Math.atan2(-(end[2] - center[2]), end[0] - center[0]);
+    const a = Math.atan2(sign * (start[v] - center[v]), start[u] - center[u]);
+    const b = Math.atan2(sign * (end[v] - center[v]), end[u] - center[u]);
     const sweep = fullCircle ? tau : wrap(clockwise ? a - b : b - a);
     for (let i = 0; i < 4; ++i) {
       const angle = i * Math.PI / 2, along = wrap(clockwise ? a - angle : angle - a);
-      if (along <= sweep + 1e-12) bounds([center[0] + radius * [1, 0, -1, 0][i], 0, center[2] - radius * [0, 1, 0, -1][i]]);
+      if (along <= sweep + 1e-12) { const p = center.slice(); p[u] += radius * [1, 0, -1, 0][i]; p[v] += sign * radius * [0, 1, 0, -1][i]; bounds(p); }
     }
-    return {kind: "arc", start, end, center, radius, clockwise, fullCircle};
+    return {kind: "arc", start, end, center, radius, clockwise, fullCircle, ...(milling ? {plane: frame.name} : {})};
   }
   function nonnegativeInteger(text, label, minimum = 0) {
     check(typeof text === "string" && /^\d+$/.test(text) && Number.isSafeInteger(Number(text)) && Number(text) >= minimum, "invalid " + label); return Number(text);
   }
-  const plan = one(all("MACHINING_WORKPLAN"), "workplan");
-  one(all("MACHINING_PROJECT"), "project");
-  check(textProp(plan.id, "next-nc profile") === PROFILE, "unsupported Next-NC profile");
-  check(textProp(plan.id, "next-nc coordinates") === "WCS; X radius; Y zero; Z axial; Fusion tool reference point", "unsupported coordinate convention");
-  const model = {name: plan.args[0], units, sections: []};
+  // Keep the legacy turning model/fingerprint stable. Milling identifies its machine explicitly.
+  const model = {name: plan.args[0], units, ...(milling ? {machine: "mill"} : {}), sections: []};
   for (const ws of sequence("MACHINING_PROCESS_SEQUENCE_RELATIONSHIP", plan.id)) {
     const step = visit(ws, "MACHINING_WORKINGSTEP"), operation = target("MACHINING_OPERATION_RELATIONSHIP", ws.ref);
-    const op = visit(operation, "TURNING_TYPE_OPERATION"), id = operation.ref;
+    const op = visit(operation, operationType), id = operation.ref;
     check(step[0] === op[0], "workingstep/operation names differ");
     const tool = one(toolOwners.get(id) || [], "tool for " + op[0]); used.MACHINING_TOOL.add(tool.id);
     check(get(tool.args[3], "ACTION_RESOURCE_TYPE")[0] === "cutting tool", "unsupported tool type");

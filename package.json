@@ -1,16 +1,32 @@
 {
   "name": "linuxcnc-next-nc",
-  "version": "0.4.1",
-  "description": "Next-NC XZ turning translator and LinuxCNC input filter",
+  "version": "0.5.0",
+  "description": "Next-NC XZ lathe and XYZ mill translator, offline review tools and LinuxCNC input filter",
   "license": "MIT",
-  "repository": {"type": "git", "url": "https://github.com/markmounteer/LinuxCNCNext-NC.git"},
-  "engines": {"node": ">=20"},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markmounteer/LinuxCNCNext-NC.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "main": "src/translate.js",
-  "bin": {"nextnc-linuxcnc": "bin/nextnc.js"},
-  "files": ["src", "bin", "vendor", "examples", "docs", "README.md", "LICENSE"],
+  "bin": {
+    "nextnc-linuxcnc": "bin/nextnc.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "vendor",
+    "examples",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "test": "node --test test/translation.test.js test/links.test.js test/cli.test.js test/preflight.test.js",
+    "test": "node --test test/translation.test.js test/links.test.js test/cli.test.js test/preflight.test.js test/milling.test.js test/review.test.js test/filter.test.js",
     "example": "node scripts/example.js",
-    "test:linuxcnc": "node scripts/test-linuxcnc.js"
+    "test:linuxcnc": "node scripts/test-linuxcnc.js",
+    "test:axis-helper": "python test/axis-report.test.py"
   }
 }

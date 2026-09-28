@@ -1,9 +1,8 @@
 "use strict";
-const fs = require("node:fs"), path = require("node:path"), os = require("node:os"), crypto = require("node:crypto");
+const fs = require("node:fs"), path = require("node:path"), crypto = require("node:crypto");
+const {resolveConfiguration} = require("./configuration");
 function directory() {
-  if (process.env.NEXTNC_DIAGNOSTICS) return path.resolve(process.env.NEXTNC_DIAGNOSTICS);
-  const root = process.platform === "win32" ? process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData", "Local") : process.env.XDG_STATE_HOME || path.join(os.homedir(), ".local", "state");
-  return path.join(root, "LinuxCNCNext-NC", "diagnostics");
+  return resolveConfiguration().diagnostics.path;
 }
 function save(report) {
   const dir = directory(); fs.mkdirSync(dir, {recursive: true});

@@ -21,9 +21,9 @@ The existing LinuxCNC configuration remains authoritative. The supplied snapshot
 
 `inspection.traceability.schema` is `linuxcnc-next-nc/source-map/1`. Each `sourceMap` entry corresponds to exactly one emitted G-code line and includes its one-based `line`. Operation and path numbers identify positions in this decoded program, not permanent Fusion IDs across reposts. `inspection.programFingerprint` binds their meaning to the decoded input; `traceability.gcodeSHA256` identifies the exact candidate G-code bytes, including the release banner and terminal newline. An edited output needs a fresh map.
 
-Body motions have `phase: toolpath`, `action: motion`, section/operation/path and a motion kind. Linear/rapid entries add one-based segment and from/to vertex indices within the decoded polyline; compaction and shared curves therefore do not hide individual moves. Coordinates are XYZ in program units, with radius X. Starts track the commanded position, including the small join discrepancy the reader may accept; they are not measured positions.
+Body motions have `phase: toolpath`, `action: motion`, section/operation/path and a motion kind. Linear/rapid entries add one-based segment and from/to vertex indices within the decoded polyline; compaction and shared curves therefore do not hide individual moves. Coordinates are XYZ in program units, with radius X for a lathe and Cartesian XYZ for a mill. Starts track the commanded position, including the small join discrepancy the reader may accept; they are not measured positions.
 
-Arcs include commanded start/end, relative `centerOffset` corresponding to I/K, original `sourceStart`/`sourceCenter`, direction and full-circle state. Original source geometry is kept distinct from commanded coordinates at tolerance-accepted joins. Dwells record seconds and the current commanded position.
+Arcs include commanded start/end, relative `centerOffset` corresponding to the selected plane's I/J, I/K or J/K, original `sourceStart`/`sourceCenter`, direction and full-circle state. Original source geometry is kept distinct from commanded coordinates at tolerance-accepted joins. Dwells record seconds and the current commanded position.
 
 Transition entries identify retract, approach, reviewed link or program end, one-based waypoint and `motion.frame` (`machine` for G53, otherwise `work`). Their target contains only the explicitly commanded axis. Unknown initial machine positions and transformations between machine/work frames are not invented. Modal/tool/spindle/feed/coolant lines are identified as state actions; comments share that non-motion classification. `operationRanges` includes transition/state lines belonging to each operation and its count of body motion blocks; program-end moves are separate.
 
@@ -34,3 +34,15 @@ These records support diagnosis and comparison. They neither monitor execution n
 Suh et al., [STEP-compliant CNC system for turning: Data model, architecture, and implementation](https://doi.org/10.1016/j.cad.2006.02.006), *Computer-Aided Design* 38 (2006), 677–688, separates authoring, machine adaptation/verification and execution (pp. 681–685; Figs. 7, 16–17). Its execution layer relates generated control code to workingsteps (pp. 685–686). This implementation adopts bounded offline checks and diagnostic traceability from those ideas. Fusion continues to plan cutting paths; LinuxCNC continues to interpret and control motion. Full feature/stock models, multi-turret scheduling and autonomous recovery described in the paper are outside this toolpath bridge.
 
 Tool-table syntax and configuration ownership follow the [LinuxCNC tool compensation reference](https://www.linuxcnc.org/docs/stable/html/gcode/tool-compensation.html).
+
+## Aggregated plan diagnostics and HTML
+
+Schema/fingerprint/unit/root-shape failures are fatal. With a valid root, independent tool/WCS mappings, retracts, approaches and program-end moves are checked together. The first error's existing `code`, `message` and operation context remain stable; `error.context.issues` adds all independent findings with JSON field locations and corrections. `notChecked` records boundary checks skipped because required mappings are invalid. Tool-table validation follows a valid plan. This does not combine unrelated parser or unexpected programming failures into ordinary plan errors.
+
+```sh
+node bin/nextnc.js report /path/to/diagnostics/2026-...json --output new-review.html
+```
+
+Use a **diagnostic archive**, not the bare JSON printed by preflight: archives have `linuxcnc-next-nc/diagnostic/1` and include file hashes. The renderer reads only that archive, never generates G-code, and rejects unknown schemas. It supports older archives with missing fields, shown as unavailable. Names and paths are escaped; no scripts or network assets are used. The candidate G-code hash is separately identified: preflight never writes those bytes to a G-code file. Report/doctor commands do not replace the job's `latest.json` or `latest-error.json`.
+
+Source-map operation ranges now include the exported tool identity, mapped T/H/WCS and initial spindle/coolant. Milling arcs also include `plane`. These are additive fields to source-map/1; existing lathe motion fields retain their meanings.

@@ -16,7 +16,7 @@ const arities = {
   PROCESS_PRODUCT_ASSOCIATION: 4, DESCRIPTIVE_REPRESENTATION_ITEM: 2, REPRESENTATION: 3,
   ACTION_PROPERTY: 3, ACTION_PROPERTY_REPRESENTATION: 4, PRODUCT: 4,
   MACHINING_PROJECT_WORKPIECE_RELATIONSHIP: 5, PRODUCT_DEFINITION_SHAPE: 3,
-  MACHINING_WORKINGSTEP: 4, MACHINING_PROCESS_SEQUENCE_RELATIONSHIP: 5, TURNING_TYPE_OPERATION: 4,
+  MACHINING_WORKINGSTEP: 4, MACHINING_PROCESS_SEQUENCE_RELATIONSHIP: 5, TURNING_TYPE_OPERATION: 4, MILLING_TYPE_OPERATION: 4,
   MACHINING_OPERATION_RELATIONSHIP: 4, INSTANCED_FEATURE: 6, MACHINING_FEATURE_PROCESS: 4,
   PROPERTY_PROCESS: 4, PROCESS_PROPERTY_ASSOCIATION: 4, MACHINING_FEATURE_RELATIONSHIP: 4,
   ACTION_RESOURCE_TYPE: 1, MACHINING_TOOL: 4, CARTESIAN_POINT: 2, DIRECTION: 2,
@@ -33,12 +33,14 @@ const propertyNames = {
   MACHINING_FUNCTIONS: ["coolant", "coolant type"],
   MACHINING_TOOLPATH: ["priority", "trajectory type", "direction", "basic curve", "speed profile", "dwell"]
 };
+propertyNames.MILLING_TYPE_OPERATION = propertyNames.TURNING_TYPE_OPERATION;
+const operations = ["TURNING_TYPE_OPERATION", "MILLING_TYPE_OPERATION"];
 const endpoints = {
   MACHINING_PROCESS_SEQUENCE_RELATIONSHIP: ["MACHINING_WORKPLAN", "MACHINING_WORKINGSTEP"],
-  MACHINING_OPERATION_RELATIONSHIP: ["MACHINING_WORKINGSTEP", "TURNING_TYPE_OPERATION"],
-  MACHINING_TOOLPATH_SEQUENCE_RELATIONSHIP: ["TURNING_TYPE_OPERATION", "MACHINING_TOOLPATH"],
-  MACHINING_TECHNOLOGY_RELATIONSHIP: [["TURNING_TYPE_OPERATION", "MACHINING_TOOLPATH"], "MACHINING_TECHNOLOGY"],
-  MACHINING_FUNCTIONS_RELATIONSHIP: [["TURNING_TYPE_OPERATION", "MACHINING_TOOLPATH"], "MACHINING_FUNCTIONS"],
+  MACHINING_OPERATION_RELATIONSHIP: ["MACHINING_WORKINGSTEP", operations],
+  MACHINING_TOOLPATH_SEQUENCE_RELATIONSHIP: [operations, "MACHINING_TOOLPATH"],
+  MACHINING_TECHNOLOGY_RELATIONSHIP: [[...operations, "MACHINING_TOOLPATH"], "MACHINING_TECHNOLOGY"],
+  MACHINING_FUNCTIONS_RELATIONSHIP: [[...operations, "MACHINING_TOOLPATH"], "MACHINING_FUNCTIONS"],
   MACHINING_FEATURE_RELATIONSHIP: ["MACHINING_WORKINGSTEP", "MACHINING_FEATURE_PROCESS"]
 };
 function readProgram(text) {
@@ -70,10 +72,10 @@ function readProgram(text) {
         for (let i = 0; i < 2; ++i) need([endpoints[e.type][i]].flat().includes(single(e.args[i + 2]).type), "PROFILE", `Unexpected ${e.type} endpoint at #${id}.`);
         need(e.args[0] === "" && e.args[1] === "", "UNSUPPORTED_RELATIONSHIP", `Unexpected relationship semantics at #${id}.`);
       }
-      if (["MACHINING_WORKPLAN", "MACHINING_WORKINGSTEP", "TURNING_TYPE_OPERATION", "MACHINING_TOOLPATH", "MACHINING_TECHNOLOGY", "MACHINING_FUNCTIONS", "MACHINING_FEATURE_PROCESS"].includes(e.type)) {
+      if (["MACHINING_WORKPLAN", "MACHINING_WORKINGSTEP", ...operations, "MACHINING_TOOLPATH", "MACHINING_TECHNOLOGY", "MACHINING_FUNCTIONS", "MACHINING_FEATURE_PROCESS"].includes(e.type)) {
         need(e.args[2] === "" && e.args[3] === "", "UNSUPPORTED_METHOD", `Unexpected action purpose/consequence at #${id}.`);
         if (e.type === "MACHINING_WORKINGSTEP") need(e.args[1] === "machining", "UNSUPPORTED_METHOD", "Unsupported workingstep classification.");
-        if (["MACHINING_WORKPLAN", "TURNING_TYPE_OPERATION"].includes(e.type)) need(e.args[1] === "", "UNSUPPORTED_METHOD", "Unsupported operation classification.");
+        if (["MACHINING_WORKPLAN", ...operations].includes(e.type)) need(e.args[1] === "", "UNSUPPORTED_METHOD", "Unsupported operation classification.");
       }
     }
     for (const [id, parts] of doc.records) {
@@ -86,7 +88,7 @@ function readProgram(text) {
         const rep = propertyRecords.get(id + "|coolant");
         if (rep?.args[1]?.length === 1 && single(rep.args[1][0]).args[1] === "coolant off") need(!names.includes("coolant type"), "AMBIGUOUS_COOLANT", "Coolant off cannot also specify a coolant type.");
       }
-      if (e.type === "MACHINING_TECHNOLOGY_RELATIONSHIP" && single(e.args[2]).type === "TURNING_TYPE_OPERATION") {
+      if (e.type === "MACHINING_TECHNOLOGY_RELATIONSHIP" && operations.includes(single(e.args[2]).type)) {
         need(!(properties.get(e.args[3].ref) || []).includes("feedrate"), "AMBIGUOUS_FEED", "Operation initial state cannot carry an unused cutting feed.");
       }
     }
