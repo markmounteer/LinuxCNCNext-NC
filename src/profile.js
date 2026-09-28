@@ -93,6 +93,10 @@ function readProgram(text) {
     const result = inspect(text);
     for (const [index, section] of result.model.sections.entries()) {
       const context = {section: index + 1, operation: section.name, tool: section.tool.number};
+      let exit = section.start;
+      for (const path of section.paths) { if (path.kind !== "dwell") exit = path.end || path.points[path.points.length - 1]; }
+      result.report.operations[index].entry = section.start;
+      result.report.operations[index].exit = exit;
       need(section.initialCoolant !== "through tool", "COOLANT", "Through-tool coolant needs a separately specified machine mapping and is unsupported in 0.1.0.", context);
       for (const [p, path] of section.paths.entries()) {
         need(path.coolant !== "through tool", "COOLANT", "Through-tool coolant is unsupported in 0.1.0.", {...context, path: p + 1});

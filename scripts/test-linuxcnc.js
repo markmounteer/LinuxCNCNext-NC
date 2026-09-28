@@ -19,6 +19,7 @@ for (const units of ["mm", "inch"]) {
     assert.match(run.stdout, /ARC_FEED/); assert.match(run.stdout, /PROGRAM_END/);
     assert.equal((run.stdout.match(/ARC_FEED\(/g) || []).length, 3);
     assert.match(run.stdout, /SET_SPINDLE_MODE/);
+    console.log(run.stdout.split("\n").filter(line => /ARC_FEED|SET_SPINDLE_MODE|SET_SPINDLE_SPEED|SET_FEED_MODE|SET_FEED_RATE/.test(line)).join("\n"));
     console.log(`PASS: LinuxCNC rs274 ${units}, lines/arcs/full circle/CSS/G95/dwell/tool offsets.`);
   } finally { fs.rmSync(temporary, {recursive: true, force: true}); }
 }

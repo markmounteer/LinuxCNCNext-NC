@@ -9,7 +9,7 @@
   "bin": {"nextnc-linuxcnc": "bin/nextnc.js"},
   "files": ["src", "bin", "vendor", "examples", "docs", "README.md", "LICENSE"],
   "scripts": {
-    "test": "node --test test/*.test.js",
+    "test": "node --test test/translation.test.js test/cli.test.js",
     "example": "node scripts/example.js",
     "test:linuxcnc": "node scripts/test-linuxcnc.js"
   }
