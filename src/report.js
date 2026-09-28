@@ -5,6 +5,29 @@ const json = value => value === undefined ? "Not recorded" : JSON.stringify(valu
 const pre = value => `<pre>${escape(json(value))}</pre>`;
 function table(rows) { return `<table><tbody>${rows.map(([label, value]) => `<tr><th>${escape(label)}</th><td>${escape(value)}</td></tr>`).join("")}</tbody></table>`; }
 function grid(headers, rows) { return `<table><thead><tr>${headers.map(h => `<th>${escape(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${escape(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table>`; }
+const quantity = q => q?.value == null ? "Unknown" : `${q.value}${q.unit ? " " + q.unit : ""}`;
+function sourceRecords(value) {
+  const records = new Set();
+  function visit(v) { if (!v || typeof v !== "object") return; if (v.record) records.add(v.record); for (const item of Object.values(v)) visit(item); }
+  visit(value); return [...records].join(", ");
+}
+function processView(op) {
+  if (!op) return "<p>Process summary: Not recorded.</p>";
+  return op.phases.map(p => `<h4>${escape(p.phase === "initial" ? "Initial settings" : `Path ${p.path}: ${p.kind}`)}</h4><p>Context lines ${escape(p.firstLine)}–${escape(p.lastLine)}; source ${escape(sourceRecords(p.source))}.</p>` +
+    grid(["Quantity", "Decoded source", "LinuxCNC commanded", "Emission / lines", "Conversion / source records"], p.quantities.map(q => [q.kind + (q.mode ? " / " + q.mode : ""), quantity(q.source), quantity(q.output), q.disposition + (q.lines.length ? ": " + q.lines.join(", ") : " (no new command)"), q.conversion + "; " + sourceRecords(q.source.provenance)])) +
+    `<details><summary>Retained commanded state (unknown values preserved)</summary>${table(Object.entries(p.commanded).map(([key, value]) => [key, quantity({value, unit: p.commandedUnits[key]})]))}</details>`).join("");
+}
+function requirementsView(r) {
+  if (r?.schema !== "linuxcnc-next-nc/job-requirements/1") return "<p>Job requirements: Not recorded.</p>";
+  const range = v => v.min == null ? "Unknown" : `${v.min}–${v.max} ${v.unit}`;
+  return table([["Machine / axes", `${r.machine} / ${r.axes.join(", ")}`], ["Coordinates / units", `${r.coordinates} / ${r.units}`], ["Arc planes", r.arcPlanes.join(", ") || "None"],
+    ["Spindle", `${r.spindle.number}: ${r.spindle.modes.join(", ")}; ${r.spindle.directions.join(", ")}`], ["Feed modes", r.feedModes.join(", ")], ["Requested coolant", r.coolant.requested.join(", ")],
+    ["Coolant commands", r.coolant.commands.join(", ")], ["Reviewed boundaries", `continue ${r.boundaries.continue}; link ${r.boundaries.link}; retract ${r.boundaries.retract}`],
+    ["Translation checks", r.evidence.translation.status + ": " + r.evidence.translation.scope], ["Table snapshot", r.evidence.toolTable.status], ["Controller commissioning", r.evidence.controller.status]]) +
+    `<h3>Requested quantity ranges</h3>` + grid(["Quantity", "Decoded source range", "Commanded range", "Sections"], r.quantityRanges.map(q => [q.kind + (q.mode ? " / " + q.mode : ""), range(q.source), range(q.output), q.sections.join(", ")])) +
+    `<h3>Controller requirements — not checked</h3>` + grid(["Requirement", "Status", "Meaning"], r.evidence.controller.checks.map(c => [c.id, c.status, c.detail])) +
+    r.limitations.map(l => `<p>${escape(l)}</p>`).join("");
+}
 function renderReport(record) {
   need(record && typeof record === "object" && !Array.isArray(record) && record.schema === "linuxcnc-next-nc/diagnostic/1", "REPORT_SCHEMA", "Expected a linuxcnc-next-nc/diagnostic/1 archive; unsupported schemas are not rendered.");
   const inspection = record.inspection || {}, trace = inspection.traceability || {}, execution = inspection.execution || {};
@@ -18,17 +41,20 @@ function renderReport(record) {
   }
   const operationViews = ranges.map((op, index) => {
     const entries = sourceMap.filter(item => item.section === op.section);
-    return `<article id="operation-${index}"><h3>${escape(op.section)}: ${escape(op.operation)}</h3>${table([["Fusion tool / offset", op.tool ? `${op.tool.number} / ${op.tool.offset}` : undefined], ["LinuxCNC T / H", op.mappedTool ? `${op.mappedTool.tool} / ${op.mappedTool.offset}` : undefined], ["LinuxCNC WCS", op.mappedWorkOffset], ["G-code line range", `${op.firstLine}–${op.lastLine}`]])}<details><summary>Show this operation's process state and source lines</summary>${pre({spindle: op.initialSpindle, coolant: op.initialCoolant})}${grid(["Line", "Phase", "Path / segment", "Recorded action"], entries.map(e => [e.line, e.phase, [e.path, e.segment].filter(x => x !== undefined).join(" / "), json(e.command ? {command: e.command, stateChange: e.stateChange, modalState: e.modalState, motion: e.motion, provenance: e.provenance} : e.motion || (e.action === "dwell" ? {seconds: e.seconds, position: e.position} : e.action))]))}</details></article>`;
+    const process = inspection.processSummary?.schema === "linuxcnc-next-nc/process-summary/1" ? inspection.processSummary.operations.find(p => p.section === op.section) : null;
+    return `<article id="operation-${index}"><h3>${escape(op.section)}: ${escape(op.operation)}</h3>${table([["Fusion tool / offset", op.tool ? `${op.tool.number} / ${op.tool.offset}` : undefined], ["LinuxCNC T / H", op.mappedTool ? `${op.mappedTool.tool} / ${op.mappedTool.offset}` : undefined], ["LinuxCNC WCS", op.mappedWorkOffset], ["G-code line range", `${op.firstLine}–${op.lastLine}`]])}${processView(process)}<details><summary>Show this operation's detailed source lines</summary>${pre({initialSpindle: op.initialSpindle, initialCoolant: op.initialCoolant})}${grid(["Line", "Phase", "Path / segment", "Recorded action"], entries.map(e => [e.line, e.phase, [e.path, e.segment].filter(x => x !== undefined).join(" / "), json(e.command ? {command: e.command, stateChange: e.stateChange, modalState: e.modalState, motion: e.motion, provenance: e.provenance} : e.motion || (e.action === "dwell" ? {seconds: e.seconds, position: e.position} : e.action))]))}</details></article>`;
   }).join("");
   const sections = [
     ["Identity and provenance", table([["Status", record.status], ["Recorded UTC", record.timeUTC], ["Translator", record.translator], ["Command", record.command], ["Machine", inspection.machine], ["Profile", inspection.profile], ["Units", inspection.units], ["Input", record.input], ["Input SHA-256", record.inputSHA256], ["Program fingerprint", inspection.programFingerprint?.value], ["Execution plan", record.plan], ["Plan SHA-256", record.planSHA256], ["Tool-table snapshot", record.toolTable], ["Tool-table SHA-256", record.toolTableSHA256], ["Output", record.output], ["Output SHA-256", record.outputSHA256], ["G-code SHA-256", trace.gcodeSHA256], ["Source records bound to input SHA-256", trace.provenance?.inputSHA256]])],
     ["Diagnostics", record.error ? `<p>${escape(correctionFor(record.error))}</p>` + pre(record.error) : "<p>No failure recorded in this archive.</p>"],
     ["Plan issues", Array.isArray(errors) ? errors.map(issue => `<article><h3>${escape(issue.code)} — ${escape(issue.context?.operation || issue.context?.field)}</h3><p>${escape(issue.message)}</p><p>${escape(issue.correction)}</p>${pre(issue.context)}</article>`).join("") : "<p>No aggregated issues recorded.</p>"],
     ["Checks not completed", pre(record.error?.context?.notChecked)],
+    ["Job requirements", requirementsView(inspection.jobRequirements)],
     ["Operations, tools and process state", pre(inspection.operations)],
     ["Tools in use", groups.size ? grid(["Fusion tool:offset", "LinuxCNC T / H", "WCS", "Operations"], [...groups.values()].map(({op, operations}) => [op.tool ? `${op.tool.number}:${op.tool.offset}` : undefined, op.mappedTool ? `${op.mappedTool.tool} / ${op.mappedTool.offset}` : undefined, op.mappedWorkOffset, operations.join("; ")])) : "<p>Tool mappings not recorded.</p>"],
     ["Operation line ranges and mappings", ranges.length ? `<nav>${ranges.map((op, index) => `<p><a href="#operation-${index}">${escape(op.section)}: ${escape(op.operation)}</a> — lines ${escape(op.firstLine)}–${escape(op.lastLine)}</p>`).join("")}</nav>${operationViews}` : "<p>Line ranges not recorded.</p>"],
     ["Tool-table validation", pre(inspection.toolTable)],
+    ["Translator policy commands", inspection.processSummary?.schema === "linuxcnc-next-nc/process-summary/1" ? `<p>Initialization, transition and shutdown commands; these are not requested cutting-speed ranges. Unknown state after M6 is not machine feedback.</p>` + grid(["Line", "Context", "Instruction", "Quantities", "State made unknown"], inspection.processSummary.policyCommands.map(e => [e.line, `${e.phase}${e.section ? "; section " + e.section : ""}`, e.instruction, e.quantities.map(quantity).join("; "), e.invalidated.join(", ")])) : "<p>Policy command summary: Not recorded.</p>"],
     ["Transitions and execution", pre(execution)],
     ["Source map", `<p>Line numbers refer to the candidate G-code hash above. Preflight computes candidate lines but writes no G-code. Machine retracts have no invented starting position.</p><details><summary>Expand complete line-to-operation map</summary>${pre(record.sourceMap)}</details>`]
   ];

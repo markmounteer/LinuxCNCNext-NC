@@ -8,6 +8,8 @@ const crypto = require("node:crypto");
 const version = require("../package.json").version;
 const {LinuxCNCOutput, decimal, comment} = require("./linuxcnc-output");
 const {auditExecution} = require("./execution-audit");
+const {processSummary} = require("./process-summary");
+const {jobRequirements} = require("./job-requirements");
 function translate(text, plan, options = {}) {
   const program = readProgram(text); validatePlan(plan, program);
   const toolTable = checkToolTable(options.toolTable, program, plan);
@@ -106,8 +108,12 @@ function translate(text, plan, options = {}) {
   context = {phase: "program-end"}; stop(); waypoints(plan.end, true, "program-end", "/end"); emit({type: "cancelToolOffset"}); emit({type: "feed", mode: "perMinute"}); emit({type: "end"});
   const completeness = auditExecution(program, plan, output, operationRanges, boundaries);
   const gcode = lines.join("\n") + "\n";
+  const gcodeSHA256 = crypto.createHash("sha256").update(gcode).digest("hex");
+  const process = processSummary(program, sourceMap, boundaries, lines, gcodeSHA256);
   return {gcode, report: {...program.report, translator: version, gcodeLines: lines.length, toolTable,
-    traceability: {provenance: program.provenance, schema: "linuxcnc-next-nc/source-map/1", lineNumbers: "one-based", vertexNumbers: "one-based within each decoded path", coordinates: machine === "mill" ? "XYZ Cartesian, program units" : "XYZ, program units, X radius", gcodeSHA256: crypto.createHash("sha256").update(gcode).digest("hex"), operationRanges},
+    processSummary: process,
+    jobRequirements: jobRequirements(program, process, sourceMap, operationRanges, transitions, toolTable),
+    traceability: {provenance: program.provenance, schema: "linuxcnc-next-nc/source-map/1", lineNumbers: "one-based", vertexNumbers: "one-based within each decoded path", coordinates: machine === "mill" ? "XYZ Cartesian, program units" : "XYZ, program units, X radius", gcodeSHA256, operationRanges},
     execution: {completeness, planSchema: plan.schema, transitions, continuations: transitions.filter(t => t.mode === "continue").length,
       links: transitions.filter(t => t.mode === "link").length, unchangedAxisWordsOmitted, coordinatesRounded: false}}, sourceMap};
 }
