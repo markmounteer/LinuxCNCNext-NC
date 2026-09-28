@@ -108,7 +108,10 @@ test("text corruption leaves CLI output empty, preserves existing destinations a
       const args = ["--require", preload, path.join(__dirname, "../bin/nextnc.js"), command, input, ...(command === "filter" ? [] : ["--plan", plan])];
       const run = more => spawnSync(process.execPath, [...args, ...more], {encoding: "utf8", env: {...process.env, NEXTNC_PLAN: plan, NEXTNC_TOOL_TABLE: "", NEXTNC_DIAGNOSTICS: diagnostics}});
       const r = run([]); assert.equal(r.status, 1); assert.equal(r.stdout, "");
-      const error = JSON.parse(fs.readFileSync(path.join(diagnostics, "latest-error.json"))).error;
+      const archive = JSON.parse(fs.readFileSync(path.join(diagnostics, "latest-error.json"))), error = archive.error;
+      assert.equal(archive.inspection.validationCoverage.stages.completeness.status, "passed");
+      assert.equal(archive.inspection.validationCoverage.stages.serialization.status, "failed");
+      assert.equal(archive.inspection.validationCoverage.stages.globalRules.status, "not_checked");
       assert.equal(error.code, "INTERNAL_ERROR"); assert.equal(error.context.invariant, "SERIALIZATION_WORDS");
       assert.equal(error.context.operation, "First"); assert.ok(error.context.provenance.curve.record);
       if (command !== "filter") {

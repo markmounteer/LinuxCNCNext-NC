@@ -5,6 +5,7 @@ class NextNCError extends Error {
 function requireValue(ok, code, message, context) { if (!ok) throw new NextNCError(code, message, context); }
 function correctionFor(error) {
   if (!error) return undefined;
+  if (error.code === "PROFILE_SHAPE") return "Inspect the named record, component and attribute for a profile mismatch, or regenerate with the supported Fusion post. The reported line and column locate the record start, not the individual parameter.";
   if (error.context?.stage === "geometry") return "Review the named Fusion operation and its source geometry, regenerate its toolpath and post again. The reported threshold is the existing format check; changing the execution plan cannot repair this geometry.";
   if (/^TOOL_TABLE/.test(error.code)) return "Check the named T/H records in the existing LinuxCNC tool-table snapshot and the reviewed plan mapping.";
   if (error.context?.field || error.context?.issues) return "Correct the named execution-plan fields and rerun preflight. Preserve the intended tool, work offset and reviewed transition path.";

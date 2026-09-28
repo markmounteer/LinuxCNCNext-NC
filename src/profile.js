@@ -6,27 +6,8 @@ const {NextNCError, requireValue: need} = require("./errors");
 const {exitPoint, continuation, connection} = require("./continuity");
 // Intentionally closed to additional executable semantics. This is the emitted
 // Next-NC profile, not a general AP238 or arbitrary STEP interpreter.
-const arities = {
-  REPRESENTATION_CONTEXT: 2, LENGTH_UNIT: 0, NAMED_UNIT: 1, SI_UNIT: 2, PLANE_ANGLE_UNIT: 0,
-  SOLID_ANGLE_UNIT: 0, GEOMETRIC_REPRESENTATION_CONTEXT: 1, GLOBAL_UNIT_ASSIGNED_CONTEXT: 1,
-  TIME_UNIT: 0, TIME_MEASURE_WITH_UNIT: 2, LENGTH_MEASURE_WITH_UNIT: 2, DIMENSIONAL_EXPONENTS: 7,
-  CONVERSION_BASED_UNIT: 2, CONTEXT_DEPENDENT_UNIT: 2, DERIVED_UNIT: 1, DERIVED_UNIT_ELEMENT: 2,
-  APPLICATION_CONTEXT: 1, APPLICATION_PROTOCOL_DEFINITION: 4, PRODUCT_CONTEXT: 3,
-  PRODUCT_DEFINITION_CONTEXT: 3, MACHINING_PROJECT: 4, PRODUCT_DEFINITION_FORMATION: 3,
-  PRODUCT_DEFINITION: 4, MACHINING_WORKPLAN: 4, PRODUCT_DEFINITION_PROCESS: 4,
-  PROCESS_PRODUCT_ASSOCIATION: 4, DESCRIPTIVE_REPRESENTATION_ITEM: 2, REPRESENTATION: 3,
-  ACTION_PROPERTY: 3, ACTION_PROPERTY_REPRESENTATION: 4, PRODUCT: 4,
-  MACHINING_PROJECT_WORKPIECE_RELATIONSHIP: 5, PRODUCT_DEFINITION_SHAPE: 3,
-  MACHINING_WORKINGSTEP: 4, MACHINING_PROCESS_SEQUENCE_RELATIONSHIP: 5, TURNING_TYPE_OPERATION: 4, MILLING_TYPE_OPERATION: 4,
-  MACHINING_OPERATION_RELATIONSHIP: 4, INSTANCED_FEATURE: 6, MACHINING_FEATURE_PROCESS: 4,
-  PROPERTY_PROCESS: 4, PROCESS_PROPERTY_ASSOCIATION: 4, MACHINING_FEATURE_RELATIONSHIP: 4,
-  ACTION_RESOURCE_TYPE: 1, MACHINING_TOOL: 4, CARTESIAN_POINT: 2, DIRECTION: 2,
-  MACHINING_TECHNOLOGY: 4, MEASURE_REPRESENTATION_ITEM: 3, MACHINING_SPINDLE_SPEED_REPRESENTATION: 3,
-  MACHINING_FEED_SPEED_REPRESENTATION: 3, MACHINING_TOOLPATH_SPEED_PROFILE_REPRESENTATION: 3,
-  MACHINING_TECHNOLOGY_RELATIONSHIP: 4, MACHINING_FUNCTIONS: 4, MACHINING_FUNCTIONS_RELATIONSHIP: 4,
-  MACHINING_TOOLPATH: 4, MACHINING_TOOLPATH_SEQUENCE_RELATIONSHIP: 5, POLYLINE: 2,
-  AXIS2_PLACEMENT_3D: 4, CIRCLE: 3, TRIMMED_CURVE: 6
-};
+const {validateProfileShape} = require("./profile-shape");
+const {coverageTracker} = require("./validation-coverage");
 const propertyNames = {
   MACHINING_WORKPLAN: ["next-nc profile", "next-nc coordinates"],
   TURNING_TYPE_OPERATION: ["next-nc tool offset", "next-nc work offset", "next-nc entry point"],
@@ -45,17 +26,20 @@ const endpoints = {
   MACHINING_FEATURE_RELATIONSHIP: ["MACHINING_WORKINGSTEP", "MACHINING_FEATURE_PROCESS"]
 };
 function readProgram(text) {
+  const validation = coverageTracker(); validation.start("part21");
   try {
     need(typeof text === "string" && Buffer.byteLength(text) <= 32 * 1024 * 1024, "INPUT_SIZE", "Input must be text no larger than 32 MiB.");
     const doc = parse(text), properties = new Map(), propertyRecords = new Map(), propertyRepresentations = new Map();
+    validation.pass({records: doc.records.size}); validation.start("profileShape");
     need(doc.schema === "INTEGRATED_CNC_SCHEMA", "SCHEMA", "Expected the Next-NC INTEGRATED_CNC_SCHEMA header.");
+    const shape = validateProfileShape(doc);
+    validation.pass(shape); validation.start("semantics");
     const single = ref => { const parts = doc.get(ref); need(parts?.length === 1, "PROFILE", "Expected a single entity reference."); return parts[0]; };
     for (const e of doc.all("ACTION_PROPERTY_REPRESENTATION")) {
       need(single(e.args[2]).type === "ACTION_PROPERTY" && e.args[0] === "" && e.args[1] === "", "PROFILE", "Unexpected property representation association.");
       propertyRepresentations.set(e.args[2].ref, single(e.args[3]));
     }
     for (const [id, parts] of doc.records) for (const e of parts) {
-      need(Object.hasOwn(arities, e.type) && e.args.length === arities[e.type], "UNSUPPORTED_ENTITY", `Unsupported entity or attribute count: #${id} ${e.type}.`);
       if (e.type === "ACTION_PROPERTY") {
         const owner = single(e.args[2]);
         need(propertyNames[owner.type]?.includes(e.args[0]), "UNSUPPORTED_PROPERTY", `Unsupported ${owner.type} property '${e.args[0]}' at #${id}.`);
@@ -106,10 +90,11 @@ function readProgram(text) {
         need(path.kind !== "dwell" || path.feed === null, "AMBIGUOUS_PATH", "A dwell cannot carry a cutting feed.", {...context, path: p + 1});
       }
     }
+    validation.pass(); result.report.validationCoverage = validation.coverage;
     return result;
   } catch (error) {
-    if (!(error instanceof ValidationError)) throw error;
-    throw new NextNCError("INVALID_NEXTNC", error.message, error.context);
+    const failure = error instanceof ValidationError ? new NextNCError("INVALID_NEXTNC", error.message, error.context) : error;
+    validation.fail(failure); throw failure;
   }
 }
 module.exports = {readProgram};

@@ -37,6 +37,14 @@ function identityView(identity) {
   return `<p><strong>Saved G-code identity: ${escape(labels[status] || "Not checked")}</strong></p><p>${explanation}</p>` +
     (status === "not_checked" ? "<p>No saved G-code file was checked in this review.</p>" : table([["Selected file", identity.file], ["Bytes read", identity.bytes], ["Checked UTC", identity.checkedUTC], ["Expected candidate SHA-256", identity.expectedSHA256], ["Observed file SHA-256", identity.observedSHA256], ["Scope", identity.scope]]));
 }
+function validationView(coverage) {
+  if (coverage?.schema !== "linuxcnc-next-nc/validation-coverage/1") return "<p>Not recorded.</p>";
+  return "<p>Profile validation covers the supported toolpath subset. General EXPRESS and full AP238 conformance are separate checks.</p>" +
+    grid(["Stage", "Status", "Scope", "Evidence"], Object.entries(coverage.stages).map(([name, stage]) => {
+      const {status, scope, ...evidence} = stage;
+      return [name, label(status), scope, Object.keys(evidence).length ? json(evidence) : "None recorded"];
+    }));
+}
 function renderReport(record, {artifactIdentity} = {}) {
   need(record && typeof record === "object" && !Array.isArray(record) && record.schema === "linuxcnc-next-nc/diagnostic/1", "REPORT_SCHEMA", "Expected a linuxcnc-next-nc/diagnostic/1 archive; unsupported schemas are not rendered.");
   const inspection = record.inspection || {}, trace = inspection.traceability || {}, execution = inspection.execution || {};
@@ -57,6 +65,7 @@ function renderReport(record, {artifactIdentity} = {}) {
     ["Saved G-code identity", identityView(artifactIdentity)],
     ["Identity and provenance", table([["Status", record.status], ["Recorded UTC", record.timeUTC], ["Translator", record.translator], ["Command", record.command], ["Machine", inspection.machine], ["Profile", inspection.profile], ["Units", inspection.units], ["Input", record.input], ["Input SHA-256", record.inputSHA256], ["Program fingerprint", inspection.programFingerprint?.value], ["Execution plan", record.plan], ["Plan SHA-256", record.planSHA256], ["Tool-table snapshot", record.toolTable], ["Tool-table SHA-256", record.toolTableSHA256], ["Output", record.output], ["Output SHA-256", record.outputSHA256], ["G-code SHA-256", trace.gcodeSHA256], ["Source records bound to input SHA-256", trace.provenance?.inputSHA256]])],
     ["Diagnostics", record.error ? `<p>${escape(correctionFor(record.error))}</p>` + pre(record.error) : "<p>No failure recorded in this archive.</p>"],
+    ["Validation coverage", validationView(inspection.validationCoverage)],
     ["Final G-code serialization audit", execution.serialization?.schema === "linuxcnc-next-nc/serialization-audit/1" ? pre(execution.serialization) : "<p>Not recorded.</p>"],
     ["Plan issues", Array.isArray(errors) ? errors.map(issue => `<article><h3>${escape(issue.code)} — ${escape(issue.context?.operation || issue.context?.field)}</h3><p>${escape(issue.message)}</p><p>${escape(issue.correction)}</p>${pre(issue.context)}</article>`).join("") : "<p>No aggregated issues recorded.</p>"],
     ["Checks not completed", pre(record.error?.context?.notChecked)],

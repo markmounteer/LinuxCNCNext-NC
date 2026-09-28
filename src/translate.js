@@ -11,9 +11,16 @@ const {auditExecution} = require("./execution-audit");
 const {auditGcode} = require("./gcode-audit");
 const {processSummary} = require("./process-summary");
 const {jobRequirements} = require("./job-requirements");
+const {coverageTracker} = require("./validation-coverage");
 function translate(text, plan, options = {}) {
-  const program = readProgram(text); validatePlan(plan, program);
+  const program = readProgram(text), validation = coverageTracker(program.report.validationCoverage);
+  try {
+  validation.start("executionPlan"); validatePlan(plan, program); validation.pass({planSchema: plan.schema});
+  validation.start("toolTable");
   const toolTable = checkToolTable(options.toolTable, program, plan);
+  if (toolTable.status === "passed") validation.pass({sha256: toolTable.sha256, records: toolTable.records});
+  else validation.skip({reason: toolTable.reason});
+  validation.start("completeness");
   const output = new LinuxCNCOutput({machine: machineOf(program), units: program.model.units}), {lines, sourceMap, requested} = output;
   const boundaries = [], boundary = (type, section, path) => boundaries.push({at: lines.length, type, section, ...(path === undefined ? {} : {path})});
   const model = program.model, transitions = [], operationRanges = []; let context = {phase: "header"}, unchangedAxisWordsOmitted = 0;
@@ -108,15 +115,19 @@ function translate(text, plan, options = {}) {
   }
   context = {phase: "program-end"}; stop(); waypoints(plan.end, true, "program-end", "/end"); emit({type: "cancelToolOffset"}); emit({type: "feed", mode: "perMinute"}); emit({type: "end"});
   const completeness = auditExecution(program, plan, output, operationRanges, boundaries);
+  validation.pass({audit: completeness}); validation.start("serialization");
   const gcode = lines.join("\n") + "\n";
   const serialization = auditGcode(gcode, sourceMap, {machine, units: model.units});
+  validation.pass({audit: serialization});
   const gcodeSHA256 = crypto.createHash("sha256").update(gcode).digest("hex");
   const process = processSummary(program, sourceMap, boundaries, lines, gcodeSHA256);
   return {gcode, report: {...program.report, translator: version, gcodeLines: lines.length, toolTable,
+    validationCoverage: validation.coverage,
     processSummary: process,
     jobRequirements: jobRequirements(program, process, sourceMap, operationRanges, transitions, toolTable),
     traceability: {provenance: program.provenance, schema: "linuxcnc-next-nc/source-map/1", lineNumbers: "one-based", vertexNumbers: "one-based within each decoded path", coordinates: machine === "mill" ? "XYZ Cartesian, program units" : "XYZ, program units, X radius", gcodeSHA256, operationRanges},
     execution: {completeness, serialization, planSchema: plan.schema, transitions, continuations: transitions.filter(t => t.mode === "continue").length,
       links: transitions.filter(t => t.mode === "link").length, unchangedAxisWordsOmitted, coordinatesRounded: false}}, sourceMap};
+  } catch (error) { validation.fail(error); throw error; }
 }
 module.exports = {translate, decimal, comment};

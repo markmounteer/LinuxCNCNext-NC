@@ -75,7 +75,7 @@ else {
     }
   } catch (error) {
     const record = {code: error.code || "INTERNAL_ERROR", message: error.message, context: error.context || {}};
-    const archivePath = archive({status: "failed", error: record});
+    const archivePath = archive({status: "failed", error: record, ...(error.validationCoverage ? {inspection: {validationCoverage: error.validationCoverage}} : {})});
     console.error(`Next-NC ${record.code}: ${record.message}`);
     if (Object.keys(record.context).length) console.error(JSON.stringify(record.context));
     if (archivePath) console.error("Next-NC report: " + archivePath);
