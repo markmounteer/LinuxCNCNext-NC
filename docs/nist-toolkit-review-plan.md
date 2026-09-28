@@ -1,6 +1,6 @@
 # NIST ISO 14649 toolkit: review and improvement plan
 
-Status: steps 1–3 implemented for v0.6.0 on 2026-09-28 UTC; independent native CI verification pending. Step 4 remains optional future work. The original review and its pinned v0.5.0 baseline follow for provenance. See command-state.md and validation.md for implementation details.
+Status: steps 1–3 implemented for v0.6.0 on 2026-09-28 UTC; independent native CI verification passed (run 36452446035). Step 4 remains optional future work. The original review and its pinned v0.5.0 baseline follow for provenance. See command-state.md and validation.md for implementation details.
 
 ## Recommendation
 
