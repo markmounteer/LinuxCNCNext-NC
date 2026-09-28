@@ -19,12 +19,24 @@ repeated/reversed vertices, reviewed links, non-shifted G53 moves and exact
 commanded positions across reader-tolerated joins. Deliberately wrong unit scale,
 arc sense, plane, centre sign and G53/work-frame treatment must be detected.
 
-The native suite adds eight representative machine/plane/unit cases and eight
-independent reference programs, plus 20 deliberate geometry corruptions. It uses
-nonzero T/H and WCS values in the existing explicit inch-site fixture convention.
-Native CI results for this release are pending; this paragraph describes the
-added checks, not an observed interpreter pass. The documented four-decimal
-trace tolerance does not relax exact-number Node tests or production output.
+All seven jobs passed in [CI run 36468682474](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36468682474)
+at `a827d3578a32427430b90893de2016e33e42b068`: Windows/Linux Node 20/22/24 and
+the standalone LinuxCNC interpreter. Linux passed all 63 Node groups; Windows
+passed 62 with the POSIX-only skip. Both Python helper tests and example
+reproducibility passed across the six Node jobs.
+
+Native checks passed 20 valid scenarios, 12 independent reference programs and
+40 deliberate corruptions (72 interpreted programs). Eight scenarios, eight
+references and 20 corruptions are new in this release. They use nonzero T/H and
+WCS values in the existing explicit inch-site fixture convention. The first CI
+run caught an H1/H2 mismatch in the new synthetic plan/reference; the fixture
+now explicitly maps H2 and a Node assertion guards that mapping. No production
+motion change was needed. The interpreter package was
+`linuxcnc-uspace 2.9.0~pre1+git20230208.f1270d6ed7-1+deb12u2`.
+The documented four-decimal trace tolerance does not relax exact-number Node
+tests or production output. Synthetic traces were downloaded and their counts
+reconciled locally. Lathe and mill HTML reports were also browser-reviewed;
+five-column table widths and process labels were corrected after that review.
 
 These tests do not connect to hardware or establish physical machine acceptance.
 Earlier release evidence follows.
