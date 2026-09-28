@@ -8,9 +8,10 @@ It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` p
 
 ## Quick start
 
-Version 0.7.0 adds exact STEP-record provenance, internal command validation and
-an automatic ordered completeness audit for both machines. Existing program
-profiles, reviewed plans and G-code (apart from the release banner) are preserved. See
+Version 0.8.0 adds complete, unit-labelled process summaries and automatic job
+requirements for both machines, plus systematic quadrant/arc/unit regressions.
+Existing program profiles, reviewed plans and G-code (apart from the release
+banner) are preserved. See [process summaries](docs/process-summary.md),
 [command/state records](docs/command-state.md) and [validation](docs/validation.md).
 
 Requires Node.js 20 or later; there are no npm dependencies. LinuxCNC is needed only for preview/execution and the optional standalone interpreter tests.
@@ -133,4 +134,4 @@ See [the architecture review and resulting improvements](docs/architecture-resea
 
 The [NIST toolkit review](docs/nist-toolkit-review-plan.md) informed v0.6.0 command/state records and semantic verification. The [STEPNode review](docs/stepnode-review-plan.md) informed v0.7.0 source provenance, command validation and ordered output-completeness checks for both machines.
 
-The [STEPNCpp review and proposed plan](docs/stepncpp-review-plan.md) identifies the next reporting and regression-test improvements for both machines: explicit process quantities, automatic job requirements, and systematic geometry/unit-equivalence checks. These proposals are not yet implemented.
+The [STEPNCpp review](docs/stepncpp-review-plan.md) informed v0.8.0's explicit process quantities, automatic job requirements, and systematic geometry/unit-equivalence checks for both machines. Reports distinguish validated translation and optional table snapshots from unverified controller commissioning; no new machining options are required.

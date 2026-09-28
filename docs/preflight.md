@@ -54,6 +54,16 @@ Use a **diagnostic archive**, not the bare JSON printed by preflight: archives h
 
 Source-map operation ranges now include the exported tool identity, mapped T/H/WCS and initial spindle/coolant. Milling arcs also include `plane`. These are additive fields to source-map/1; existing lathe motion fields retain their meanings.
 
+## v0.8.0 process summaries and requirements
+
+Successful preflight, translation and filter archives now include dimensioned
+source/output quantities for every operation and path, with exact command-line
+bindings and inherited/unknown state. Automatic job requirements include later
+process changes, separate CSS/RPM and G94/G95 ranges, mappings and boundaries.
+They preserve the tool-table snapshot result and explicitly leave controller
+commissioning unverified. The HTML renderer displays these as tables; older
+archives show `Not recorded`. See [the report contract](process-summary.md).
+
 ## v0.7.0 provenance and completeness
 
 Preflight automatically validates the internal command contract and audits every

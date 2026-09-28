@@ -1,3 +1,34 @@
+# v0.8.0 validation update
+
+Local Windows validation: 62 Node groups passed, one POSIX-only filter group
+skipped, and both Python AXIS-helper tests passed. Eight golden programs retain
+their exact G-code after the release banner and their existing fingerprints.
+The CPS, shared reader, profiles and execution-plan schemas are unchanged.
+
+New report tests cover both machines and both units, later spindle/feed/coolant
+changes, CSS conversion, G94/G95, dwells, inherited and unknown M6 state,
+source/command bindings, shutdown exclusion, tool-table evidence, escaped HTML
+and old archives. All STEP-origin process commands are represented in the summary.
+
+The geometry matrix covers lathe XZ and mill XY/XZ/YZ, all four sign quadrants,
+and physically equivalent mm/inch jobs (32 cases, plus corresponding unshifted
+baselines). It compares G-code decoded independently of the source map against
+explicit reference programs and translated-coordinate expectations. Cases
+include 270-degree arcs across the angular wrap, both full-circle senses,
+repeated/reversed vertices, reviewed links, non-shifted G53 moves and exact
+commanded positions across reader-tolerated joins. Deliberately wrong unit scale,
+arc sense, plane, centre sign and G53/work-frame treatment must be detected.
+
+The native suite adds eight representative machine/plane/unit cases and eight
+independent reference programs, plus 20 deliberate geometry corruptions. It uses
+nonzero T/H and WCS values in the existing explicit inch-site fixture convention.
+Native CI results for this release are pending; this paragraph describes the
+added checks, not an observed interpreter pass. The documented four-decimal
+trace tolerance does not relax exact-number Node tests or production output.
+
+These tests do not connect to hardware or establish physical machine acceptance.
+Earlier release evidence follows.
+
 # v0.7.0 validation update
 
 Local Windows validation: 35 translator Node groups passed, one POSIX-only filter group skipped, and two Python AXIS-helper tests passed. The shared Fusion reader has 74 passing Node groups and its generated-post build check passed. Examples were regenerated; only the translator release banners changed. Eight golden programs retain their fingerprints and exact G-code after that banner. Signed-zero inputs retain the existing numeric semantics without a new tolerance.

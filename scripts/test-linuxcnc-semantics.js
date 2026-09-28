@@ -57,3 +57,29 @@ for (const machine of ["lathe", "mill"]) for (const units of ["mm", "inch"]) {
   }
   console.log(`PASS: ${machine} ${units}: complete ordered canonical events, nonzero T/H/WCS, continue/link/retract, reversal/feed/coolant and five corruptions.`);
 }
+// Representative quadrant/plane/unit cases, with independent explicit programs.
+const {geometryFixture, configurations} = require("../test/support/geometry-fixture");
+for (const [machine, plane] of configurations) for (const units of ["mm", "inch"]) {
+  const fixture = geometryFixture(machine, plane, units, [-20,20]);
+  const label = `${machine}-${plane}-${units}-geometry`, result = translate(fixture.text, fixture.plan, {toolTable: fixture.toolTable});
+  const expected = runProgram(label + "-reference", fixture.reference, fixture), actual = runProgram(label, result.gcode, fixture);
+  for (const run of [expected, actual]) { assert.equal(run.status, 0, run.trace); assert.doesNotMatch(run.trace, /(?:error|bad character|unknown word|near line)/i); }
+  compareEvents(actual.events, expected.events);
+  const arcs = actual.events.filter(e => e.type === "ARC_FEED");
+  assert.equal(arcs.length, 4); assert.deepEqual(arcs.map(e => Math.sign(e.args[4])), [-1,1,-1,1]);
+  const mutations = {
+    scale: code => code.replaceAll("G21", "G20"),
+    sense: code => code.replace(/^G2 /m, "G3 "),
+    plane: code => code.replace(/^G2 /m, `${plane === "XY" ? "G18" : "G17"}\nG2 `),
+    center: code => code.replace(/([IJK])(-?\d+(?:\.\d+)?)/, (_,w,n) => w + -Number(n)),
+    frame: code => code.replace("G53 G0", "G0")
+  };
+  // Metric cases suffice to check all five fault types; inch cases still run
+  // against complete independent reference programs, not endpoint-only checks.
+  if (units === "mm") for (const [kind, mutate] of Object.entries(mutations)) {
+    const badCode = mutate(result.gcode); assert.notEqual(badCode, result.gcode);
+    const bad = runProgram(label + "-corrupt-" + kind, badCode, fixture);
+    if (bad.status === 0 && !/(?:error|bad character|unknown word|near line)/i.test(bad.trace)) assert.throws(() => compareEvents(bad.events, expected.events), {name:"AssertionError"});
+  }
+  console.log(`PASS: ${machine} ${plane} ${units}: major arcs, both full circles, repeated/reversed vertices, work link and G53 frame isolation.`);
+}

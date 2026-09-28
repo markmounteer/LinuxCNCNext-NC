@@ -1,6 +1,6 @@
 # STEPNCpp: review and improvement plan
 
-Status: review and proposed implementation only, 2026-09-28. No translator, post-processor or controller behavior is changed by this document.
+Status: steps 1–3 implemented for v0.8.0 on 2026-09-28. See [process summaries and job requirements](process-summary.md) for the delivered report contract and [validation](validation.md) for current test evidence. The pinned review and original plan follow; the deferred feature-cycle, tolerance and feedback research remains outside this release.
 
 ## Recommendation
 
