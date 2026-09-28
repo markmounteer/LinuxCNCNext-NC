@@ -1,6 +1,8 @@
 # Validation scope
 
-Version 0.4.0 development preview.
+Version 0.4.1 development preview.
+
+Header forgery and missing-reference CLI tests also verify empty G-code output and archived source record/line context. Six synthetic jobs and one private seven-operation job match 0.4.0 G-code exactly except for the release comment, with identical source maps. See [architecture research](architecture-research.md).
 
 The 19 Node test groups include offline preflight, optional tool-table snapshots, independent T/H records, aggregated missing records, malformed/duplicate records, no-overwrite and no-partial-output behavior, explicit unverified scope, and exact motion/segment/dwell/transition source maps in both units. Native interpreter fixtures use the same synthetic tool-table snapshot that the translator checks. The filter's tool-table forwarding is also exercised in the native Linux test script.
 

@@ -2,7 +2,7 @@
 
 Source: https://github.com/markmounteer/Fusion360Next-NC
 
-Commit: `9c8f9151573cf36ee6df9cb27cf193600282058f` (v0.1.5).
+Commit: `d00f06f28dc50e961402f38baf474acb429ff697` (v0.1.7).
 
 `part21.js` and `inspect.js` are unchanged copies of `lib/`; `next-nc.js` is the unchanged `src/` writer used to generate synthetic test fixtures. MIT license retained in this directory. No Autodesk code, SDK or private CAM data is included.
 

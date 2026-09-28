@@ -1,7 +1,7 @@
 ISO-10303-21;
 HEADER;
 FILE_DESCRIPTION(('Experimental AP238 toolpath; next-nc/turning-toolpath/0.1'),'2;1');
-FILE_NAME('Synthetic simulation only.stpnc','2026-09-28T00:00:00Z',(''),(''),'Fusion360Next-NC 0.1.5','Fusion360Next-NC','');
+FILE_NAME('Synthetic simulation only.stpnc','2026-09-28T00:00:00Z',(''),(''),'Fusion360Next-NC 0.1.7','Fusion360Next-NC','');
 FILE_SCHEMA(('INTEGRATED_CNC_SCHEMA'));
 ENDSEC;
 DATA;
@@ -28,7 +28,7 @@ DATA;
 #21=PRODUCT_CONTEXT('CNC Machining',#19,'manufacturing');
 #22=PRODUCT_DEFINITION_CONTEXT('CNC Machining',#19,'manufacturing');
 #23=MACHINING_PROJECT('Synthetic simulation only','Synthetic simulation only',$,(#21));
-#24=PRODUCT_DEFINITION_FORMATION('0.1.5','',#23);
+#24=PRODUCT_DEFINITION_FORMATION('0.1.7','',#23);
 #25=PRODUCT_DEFINITION('','',#24,#22);
 #26=MACHINING_WORKPLAN('Synthetic simulation only','','','');
 #27=PRODUCT_DEFINITION_PROCESS('machining','',#26,'');

@@ -3,7 +3,7 @@
  */
 var NextNC = (function () {
   "use strict";
-  var VERSION = "0.1.5";
+  var VERSION = "0.1.7";
   var PROFILE = "next-nc/turning-toolpath/0.1";
   function requireValue(ok, message) { if (!ok) { throw new Error("Next-NC: " + message); } }
   function finite(n, label) {

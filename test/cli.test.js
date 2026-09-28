@@ -32,5 +32,13 @@ test("CLI/filter is all-or-nothing, preserves inputs and archives detailed failu
     assert.equal(linkedReport.inspection.execution.links, 1);
     assert.ok(linkedReport.sourceMap.some(p => p.phase === "link" && p.waypoint === 1));
     for (const args of [[], ["translate", input, "--bogus"], ["inspect", input, "--plan", planFile], ["translate", input, "--output"]]) assert.equal(run(...args).status, 2);
+    const invalid = linked.text.replace("\nENDSEC;\nEND-ISO", "\n#999999=REPRESENTATION('',(#999998),#1);\nENDSEC;\nEND-ISO");
+    fs.writeFileSync(input, invalid); r = run("translate", input, "--plan", planFile);
+    assert.equal(r.status, 1); assert.equal(r.stdout, "");
+    const parseError = JSON.parse(fs.readFileSync(path.join(diagnostics, "latest-error.json"))).error;
+    assert.equal(parseError.code, "INVALID_NEXTNC"); assert.equal(parseError.context.record, "#999999");
+    assert.equal(parseError.context.sourceLine, invalid.split("\n").findIndex(l => l.startsWith("#999999=")) + 1);
+    fs.writeFileSync(input, linked.text.replace("FILE_SCHEMA(('INTEGRATED_CNC_SCHEMA'));", "FILE_SCHEMA(('OTHER'));\nFILE_SCHEMA(('INTEGRATED_CNC_SCHEMA'));"));
+    r = run("translate", input, "--plan", planFile); assert.equal(r.status, 1); assert.equal(r.stdout, "");
   } finally { fs.rmSync(dir, {recursive: true, force: true}); }
 });

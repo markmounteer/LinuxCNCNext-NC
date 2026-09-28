@@ -109,3 +109,7 @@ The first release is for development and simulation. Machine-specific clearance,
 ## License and provenance
 
 MIT. The bounded reader/inspector and synthetic-fixture writer are vendored from Fusion360Next-NC v0.1.5 with their [license and pinned provenance](vendor/fusion360next-nc/PROVENANCE.md). LinuxCNC is a separate dependency. No Autodesk executable/source, private CAD/job data or physical-machine settings are distributed. [Primary references](docs/references.md).
+
+## Architecture research update
+
+See [the architecture review and resulting improvements](docs/architecture-research.md) for the three-paper review, stronger input checks and indexed interpretation. The format and machining semantics remain unchanged.

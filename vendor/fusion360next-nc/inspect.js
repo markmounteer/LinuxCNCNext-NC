@@ -8,14 +8,41 @@ function check(ok, message) { if (!ok) throw new Error("Next-NC inspection: " + 
 function positive(n, label) { check(Number.isFinite(n) && n > 0, label + " must be positive"); return n; }
 function close(a, b, epsilon = 1e-9) { return a.length === b.length && a.every((v, i) => Math.abs(v - b[i]) <= epsilon); }
 function inspect(text) {
-  check(text.includes("FILE_SCHEMA(('INTEGRATED_CNC_SCHEMA'))"), "unsupported schema");
-  const doc = parse(text), types = new Map(), properties = new Map(), links = new Map();
+  return inspectDocument(parse(text));
+}
+// Internal entry point for consumers which already parsed the complete input.
+function inspectDocument(doc) {
+  check(doc.schema === "INTEGRATED_CNC_SCHEMA", "unsupported schema");
+  const types = new Map(), properties = new Map(), links = new Map();
   for (const [id, parts] of doc.records) for (const part of parts) {
     const entry = {id, ...part};
     if (!types.has(part.type)) types.set(part.type, []);
     types.get(part.type).push(entry);
   }
   const all = type => types.get(type) || [];
+  const relationshipTypes = ["MACHINING_PROCESS_SEQUENCE_RELATIONSHIP", "MACHINING_OPERATION_RELATIONSHIP",
+    "MACHINING_TOOLPATH_SEQUENCE_RELATIONSHIP", "MACHINING_TECHNOLOGY_RELATIONSHIP", "MACHINING_FUNCTIONS_RELATIONSHIP"];
+  const relationships = new Map(), consumed = new Set(), toolOwners = new Map();
+  const used = {MACHINING_TOOL: new Set(), MACHINING_TECHNOLOGY: new Set(), MACHINING_FUNCTIONS: new Set()};
+  function recordCheck(ok, message, id) {
+    if (!ok) { const error = new Error("Next-NC inspection: " + message + " at #" + id);
+      error.context = {...doc.locations.get(id), record: "#" + id}; throw error; }
+  }
+  for (const type of relationshipTypes) for (const row of all(type)) {
+    recordCheck(row.args[2] && Number.isSafeInteger(row.args[2].ref) && row.args[3] && Number.isSafeInteger(row.args[3].ref), "invalid relationship endpoints", row.id);
+    const key = type + "|" + row.args[2].ref;
+    if (!relationships.has(key)) relationships.set(key, []);
+    relationships.get(key).push(row);
+  }
+  for (const tool of all("MACHINING_TOOL")) {
+    const owners = tool.args[2];
+    recordCheck(Array.isArray(owners) && owners.length > 0 && new Set(owners.map(r => r && r.ref)).size === owners.length, "invalid tool association", tool.id);
+    for (const owner of owners) {
+      recordCheck(owner && (doc.records.get(owner.ref) || []).some(p => p.type === "TURNING_TYPE_OPERATION"), "tool owner is not an operation", tool.id);
+      if (!toolOwners.has(owner.ref)) toolOwners.set(owner.ref, []);
+      toolOwners.get(owner.ref).push(tool);
+    }
+  }
   function get(ref, type) {
     const parts = ref && doc.records.get(ref.ref);
     const candidates = (parts || []).filter(p => p.type === type);
@@ -38,7 +65,10 @@ function inspect(text) {
     check(ref, `missing ${name} on #${id}`); return get(ref, type);
   }
   function textProp(id, name) { return get(one(prop(id, name)[1], name), "DESCRIPTIVE_REPRESENTATION_ITEM")[1]; }
-  function relationship(type, id) { return all(type).filter(e => e.args[2].ref === id); }
+  function relationship(type, id) {
+    const rows = relationships.get(type + "|" + id) || [];
+    rows.forEach(row => consumed.add(row.id)); return rows;
+  }
   function target(type, id) { return one(relationship(type, id), type + " for #" + id).args[3]; }
   const visited = {MACHINING_WORKINGSTEP: new Set(), TURNING_TYPE_OPERATION: new Set(), MACHINING_TOOLPATH: new Set()};
   function visit(ref, type) {
@@ -97,6 +127,7 @@ function inspect(text) {
   }
   function processState(id) {
     const tech = target("MACHINING_TECHNOLOGY_RELATIONSHIP", id).ref;
+    used.MACHINING_TECHNOLOGY.add(tech);
     check(get({ref: tech}, "MACHINING_TECHNOLOGY")[1] === "turning", "unsupported technology");
     check(textProp(tech, "feedrate reference") === "tool center point", "unsupported feed reference");
     const sr = prop(tech, "spindle", "MACHINING_SPINDLE_SPEED_REPRESENTATION");
@@ -114,6 +145,7 @@ function inspect(text) {
       feed = {value: positive(measure(one(fr[1], "feed measure"), units + (perRev ? "/revolution" : "/minute")), "feed"), mode: perRev ? "perRevolution" : "perMinute"};
     }
     const functions = target("MACHINING_FUNCTIONS_RELATIONSHIP", id).ref;
+    used.MACHINING_FUNCTIONS.add(functions);
     check(get({ref: functions}, "MACHINING_FUNCTIONS")[1] === "turning", "unsupported machine functions");
     const c = textProp(functions, "coolant");
     check(c === "coolant off" || c === "coolant on", "unsupported coolant state");
@@ -179,7 +211,7 @@ function inspect(text) {
     const step = visit(ws, "MACHINING_WORKINGSTEP"), operation = target("MACHINING_OPERATION_RELATIONSHIP", ws.ref);
     const op = visit(operation, "TURNING_TYPE_OPERATION"), id = operation.ref;
     check(step[0] === op[0], "workingstep/operation names differ");
-    const tool = one(all("MACHINING_TOOL").filter(t => t.args[2].some(r => r.ref === id)), "tool for " + op[0]);
+    const tool = one(toolOwners.get(id) || [], "tool for " + op[0]); used.MACHINING_TOOL.add(tool.id);
     check(get(tool.args[3], "ACTION_RESOURCE_TYPE")[0] === "cutting tool", "unsupported tool type");
     const initial = processState(id), start = point(geometry(prop(id, "next-nc entry point")));
     const section = {name: op[0], tool: {number: nonnegativeInteger(tool.args[0], "tool number", 1),
@@ -217,6 +249,8 @@ function inspect(text) {
       spindle: section.initialSpindle, feeds: [...new Map(section.paths.filter(p => p.feed).map(p => [JSON.stringify(p.feed), p.feed])).values()]});
   }
   for (const [type, ids] of Object.entries(visited)) check(ids.size === all(type).length, "orphan " + type);
+  for (const [type, ids] of Object.entries(used)) for (const row of all(type)) recordCheck(ids.has(row.id), "orphan " + type, row.id);
+  for (const type of relationshipTypes) for (const row of all(type)) recordCheck(consumed.has(row.id), "orphan " + type, row.id);
   report.sections = model.sections.length;
   // Stable ordered model, exact decoded numbers, independent of STEP IDs,
   // shared definitions, timestamp and writer release. This is a fingerprint of
@@ -245,4 +279,4 @@ function compare(beforeText, afterText) {
   return {sameProgram: difference === null, beforeFingerprint: before.report.programFingerprint,
     afterFingerprint: after.report.programFingerprint, firstDifference: difference};
 }
-module.exports = {inspect, compare};
+module.exports = {inspect, inspectDocument, compare};

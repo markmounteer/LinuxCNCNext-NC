@@ -1,6 +1,6 @@
 "use strict";
 const {parse} = require("../vendor/fusion360next-nc/part21");
-const {inspect} = require("../vendor/fusion360next-nc/inspect");
+const {inspectDocument} = require("../vendor/fusion360next-nc/inspect");
 const {NextNCError, requireValue: need} = require("./errors");
 const {exitPoint, continuation, connection} = require("./continuity");
 // Intentionally closed to additional executable semantics. This is the emitted
@@ -44,9 +44,8 @@ const endpoints = {
 function readProgram(text) {
   try {
     need(typeof text === "string" && Buffer.byteLength(text) <= 32 * 1024 * 1024, "INPUT_SIZE", "Input must be text no larger than 32 MiB.");
-    const header = text.replace(/\r\n/g, "\n").split("\nDATA;\n")[0];
-    need(/^FILE_SCHEMA\(\('INTEGRATED_CNC_SCHEMA'\)\);$/m.test(header), "SCHEMA", "Expected the Next-NC INTEGRATED_CNC_SCHEMA header.");
     const doc = parse(text), properties = new Map(), propertyRecords = new Map(), propertyRepresentations = new Map();
+    need(doc.schema === "INTEGRATED_CNC_SCHEMA", "SCHEMA", "Expected the Next-NC INTEGRATED_CNC_SCHEMA header.");
     const single = ref => { const parts = doc.get(ref); need(parts?.length === 1, "PROFILE", "Expected a single entity reference."); return parts[0]; };
     for (const e of doc.all("ACTION_PROPERTY_REPRESENTATION")) {
       need(single(e.args[2]).type === "ACTION_PROPERTY" && e.args[0] === "" && e.args[1] === "", "PROFILE", "Unexpected property representation association.");
@@ -91,7 +90,7 @@ function readProgram(text) {
         need(!(properties.get(e.args[3].ref) || []).includes("feedrate"), "AMBIGUOUS_FEED", "Operation initial state cannot carry an unused cutting feed.");
       }
     }
-    const result = inspect(text);
+    const result = inspectDocument(doc);
     for (const [index, section] of result.model.sections.entries()) {
       const context = {section: index + 1, operation: section.name, tool: section.tool.number};
       result.report.operations[index].entry = section.start;
@@ -107,7 +106,7 @@ function readProgram(text) {
     return result;
   } catch (error) {
     if (error instanceof NextNCError) throw error;
-    throw new NextNCError("INVALID_NEXTNC", error.message);
+    throw new NextNCError("INVALID_NEXTNC", error.message, error.context);
   }
 }
 module.exports = {readProgram};
