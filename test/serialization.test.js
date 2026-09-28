@@ -82,6 +82,14 @@ for (const machine of ["lathe", "mill"]) for (const units of ["mm", "inch"]) {
     assert.throws(() => auditGcode(out.gcode.slice(0, -1), out.sourceMap, {machine, units}), e => e.context.invariant === "SERIALIZATION_TEXT");
   });
 }
+test("comment audit requires passive prefixes even when command and text agree on a directive", () => {
+  const f = semanticFixture("lathe", "mm"), out = translate(f.text, f.plan);
+  for (const text of ["DEBUG, data", "PROBEOPEN filename", "PROBECLOSE", "py, command", "m s g, message"]) {
+    const map = structuredClone(out.sourceMap); map[0].command.text = text;
+    const gcode = `(${text})\n` + out.gcode.slice(out.gcode.indexOf("\n") + 1);
+    assert.throws(() => auditGcode(gcode, map, {machine: "lathe", units: "mm"}), e => e.context.invariant === "SERIALIZATION_COMMENT_PREFIX");
+  }
+});
 test("serialization reports retain older archive uncertainty and safely render details", () => {
   const f = semanticFixture("mill", "mm"), out = translate(f.text, f.plan);
   const record = {schema: "linuxcnc-next-nc/diagnostic/1", inspection: out.report};

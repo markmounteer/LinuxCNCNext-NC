@@ -22,8 +22,11 @@ function auditGcode(gcode, sourceMap, {machine, units}) {
         const ch = c.text[i], n = c.text.charCodeAt(i), safe = n >= 32 && n <= 126 && !"();%".includes(ch);
         check(block[i + 1] === (safe ? ch : "_"), "COMMENT", "Comment text differs from the sanitized source.", context);
       }
-      check(!/^\(\s*(?:msg|debug|print|abort|log(?:open|append|close)?|probe(?:open|close))\s*(?:,|\))/i.test(block),
-        "COMMENT", "An active controller comment is not permitted.", context);
+      // Allow only the translator's passive prefixes, including those applied
+      // before user names. This also excludes active directives using spaces
+      // rather than commas, without maintaining a partial directive blacklist.
+      check(/^\((?:LinuxCNCNext-NC |Program fingerprint |Program: |Section [1-9][0-9]*: )/.test(block),
+        "COMMENT_PREFIX", "Comment lacks a translator-owned passive prefix.", context);
       comments++;
     } else {
       const observed = Object.create(null);
@@ -69,8 +72,9 @@ function auditGcode(gcode, sourceMap, {machine, units}) {
       // in initialization; repeated addresses/extra codes must not disappear.
       check(Object.keys(observed).length === Object.keys(expected).length && Object.entries(expected).every(([key, values]) => {
         const actual = observed[key];
+        values.sort((a, b) => a - b);
         return actual?.length === values.length && values.every(v => Number.isFinite(v)) &&
-          actual.sort((a, b) => a - b).every((v, i) => v === values.sort((a, b) => a - b)[i]);
+          actual.sort((a, b) => a - b).every((v, i) => v === values[i]);
       }), "WORDS", "Final G-code words disagree with the validated command.", context);
     }
     count++; offset = end + 1;
