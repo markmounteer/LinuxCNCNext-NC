@@ -1,5 +1,5 @@
 {
-  "schema": "linuxcnc-next-nc/execution-plan/1",
+  "schema": "linuxcnc-next-nc/execution-plan/2",
   "programFingerprint": "e42c4e9acaad470b5dfef0901ed92bff233780fc03112b7bdc5ca8ee495ffd9d",
   "units": "mm",
   "tools": {
@@ -13,6 +13,7 @@
   },
   "sections": [
     {
+      "mode": "retract",
       "retract": [
         {
           "x": 25

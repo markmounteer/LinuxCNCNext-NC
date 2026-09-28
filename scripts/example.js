@@ -17,8 +17,19 @@ function simulationPlan(program) {
   const plan = template(program);
   for (const key of Object.keys(plan.tools)) plan.tools[key] = {tool: 1, offset: 1};
   for (const key of Object.keys(plan.workOffsets)) plan.workOffsets[key] = "G54";
-  plan.sections = program.model.sections.map(s => ({retract: [{x: 25}, {z: 10}], approach: [{z: s.start[2]}, {x: s.start[0]}]}));
+  plan.sections = program.model.sections.map((s, i) => plan.sections[i].mode === "continue" ? plan.sections[i] : {mode: "retract", retract: [{x: 25}, {z: 10}], approach: [{z: s.start[2]}, {x: s.start[0]}]});
   plan.end = [{x: 25}, {z: 10}]; return plan;
+}
+function continuationExample(units = "mm") {
+  const p = new Program({name: "Synthetic continuous operations", units, timestamp: "2026-09-28T00:00:00Z"});
+  const spec = {tool: {number: 1, offset: 1, description: "Simulation tool"}, workOffset: 1, start: [12, 0, 2],
+    spindle: {mode: "css", speed: units === "mm" ? 80000 : 1200, maximumRPM: 1800, clockwise: true}, coolant: "off"};
+  for (const [name, feed, depth] of [["First", 0.18, -1], ["Second", 0.08, -2]]) {
+    const s = p.addSection({name, ...spec});
+    s.rapid([10, 0, 2]); s.linear([10, 0, depth], {mode: "perRevolution", value: feed});
+    s.rapid([12, 0, depth]); s.rapid([12, 0, 2]);
+  }
+  const text = p.toSTEP(); return {text, plan: simulationPlan(readProgram(text))};
 }
 if (require.main === module) {
   const {text, plan} = example(), dir = path.join(__dirname, "../examples");
@@ -26,4 +37,4 @@ if (require.main === module) {
   fs.writeFileSync(path.join(dir, "simulation-plan.json"), JSON.stringify(plan, null, 2) + "\n");
   fs.writeFileSync(path.join(dir, "synthetic.ngc"), translate(text, plan).gcode);
 }
-module.exports = {example, simulationPlan};
+module.exports = {example, simulationPlan, continuationExample};

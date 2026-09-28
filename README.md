@@ -29,7 +29,9 @@ node bin/nextnc.js plan-template /path/1001.stpnc --output /path/1001-plan.json
 node bin/nextnc.js translate /path/1001.stpnc --plan /path/1001-plan.json --output /path/1001.ngc
 ```
 
-The template deliberately has `null` mappings and paths. The export contains each operation's entry point, but no machine-safe approach, tool-change or inter-operation retract. Translation requires explicit LinuxCNC tool/H-offset and work-offset mappings, plus ordered machine-coordinate retract and work-coordinate approach waypoints. It never assumes work offset 0 means the currently active WCS or that a straight rapid between operations is safe.
+The template deliberately has `null` mappings and required approach/retract paths. The export contains each operation's entry point, but no machine-safe approach or tool-change policy. Translation requires explicit LinuxCNC tool/H-offset and work-offset mappings, plus ordered machine-coordinate retract and work-coordinate approach waypoints where needed. It never assumes work offset 0 means the currently active WCS or that a straight rapid between operations is safe.
+
+Version 0.2.0 templates use execution-plan schema 2. When adjacent operations have exactly matching exit/entry, Fusion tool/offset/WCS, spindle state and coolant, the template marks the boundary `{"mode":"continue"}`. Validation rechecks these conditions and mapped offsets. Such a boundary keeps the spindle running and adds no retract or approach. An explicit `"retract"` boundary is always honored; existing schema 1 plans retain all their reviewed retracts. Inspect reports explain each boundary's eligibility. See [execution plans](docs/execution-plan.md).
 
 An execution plan is bound to the exact decoded program fingerprint. A change to tooling, units, offsets, paths, feeds or process states requires a reviewed plan for the new program. Export timestamps, record numbering and equivalent geometry sharing do not invalidate it. See [execution plans](docs/execution-plan.md).
 
@@ -41,7 +43,7 @@ The entire input and plan are checked before any G-code reaches stdout or an out
 | --- | --- |
 | Millimetres / inches, X radius, XZ plane | G21 / G20, G8, G18 |
 | Absolute positions, relative arc centres | G90, G91.1 |
-| Rapid/cutting polylines | Every vertex in order as G0/G1 |
+| Rapid/cutting polylines | Every vertex in order as G0/G1; unchanged X/Z words omitted without rounding |
 | CW/CCW arcs and full circles | G2/G3 with I/K; full circles omit endpoint axes |
 | Feed per minute / revolution | G94 / G95 with explicit F on every feed-mode change |
 | Constant RPM | G97 S, M3/M4 on spindle 0 |
@@ -70,6 +72,8 @@ Preserve existing FILTER entries. The wrapper writes only G-code to stdout, diag
 ## Diagnostics
 
 Every command archives a local JSON report, including input/plan hashes, error code/context or validated program summary, and a generated-line-to-operation/path map for translations.
+
+Inspect reports include per-operation feeds, spindle settings, entry/exit coordinates and continuation eligibility. Translation reports also list the actual boundary decisions and number of unchanged axis words omitted. A difference in CAM feed settings is preserved, not silently normalized to another file's feed.
 
 - Linux: `${XDG_STATE_HOME:-~/.local/state}/LinuxCNCNext-NC/diagnostics/`
 - Windows: `%LOCALAPPDATA%\LinuxCNCNext-NC\diagnostics\`

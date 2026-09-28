@@ -1,6 +1,8 @@
 "use strict";
 const {requireValue: need} = require("./errors");
-const schema = "linuxcnc-next-nc/execution-plan/1";
+const {continuation} = require("./continuity");
+const schema = "linuxcnc-next-nc/execution-plan/2";
+const legacySchema = "linuxcnc-next-nc/execution-plan/1";
 const coordinates = ["G54", "G55", "G56", "G57", "G58", "G59", "G59.1", "G59.2", "G59.3"];
 function keys(value, allowed, label) {
   need(value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).every(k => allowed.includes(k)), "PLAN", `Invalid or unknown fields in ${label}.`);
@@ -20,7 +22,7 @@ function moves(value, label) {
 }
 function validatePlan(plan, program) {
   keys(plan, ["schema", "programFingerprint", "units", "tools", "workOffsets", "sections", "end"], "execution plan");
-  need(plan.schema === schema, "PLAN_SCHEMA", "Unsupported execution plan schema.");
+  need([schema, legacySchema].includes(plan.schema), "PLAN_SCHEMA", "Unsupported execution plan schema.");
   need(plan.programFingerprint === program.report.programFingerprint.value, "PLAN_MISMATCH", "The execution plan belongs to a different decoded program. Regenerate/review the plan; do not reuse unreviewed entry moves.");
   need(plan.units === program.model.units, "PLAN_UNITS", "Plan coordinates must use the same units as the program.");
   need(plan.tools && typeof plan.tools === "object" && !Array.isArray(plan.tools), "TOOL_MAPPING", "Explicit tool mappings are required.");
@@ -33,7 +35,17 @@ function validatePlan(plan, program) {
     keys(tool, ["tool", "offset"], `tool ${key}`);
     need([tool.tool, tool.offset].every(n => Number.isSafeInteger(n) && n > 0 && n <= 99999), "TOOL_MAPPING", "LinuxCNC tool and H-offset records must be explicit positive integers.", context);
     need(Object.hasOwn(plan.workOffsets, String(s.workOffset)) && coordinates.includes(plan.workOffsets[s.workOffset]), "WCS_MAPPING", `Map Fusion work offset ${s.workOffset} explicitly to G54..G59.3.`, context);
-    const transition = plan.sections[i]; keys(transition, ["retract", "approach"], `section ${i + 1}`);
+    const transition = plan.sections[i];
+    if (plan.schema === schema) {
+      keys(transition, ["mode", "retract", "approach"], `section ${i + 1}`);
+      need(["continue", "retract"].includes(transition.mode), "TRANSITION", "Section mode must be continue or retract.", context);
+      if (transition.mode === "continue") {
+        keys(transition, ["mode"], `section ${i + 1} continuation`);
+        const check = continuation(program, i, plan);
+        need(check.eligible, "CONTINUATION", check.reason, context);
+        return;
+      }
+    } else keys(transition, ["retract", "approach"], `section ${i + 1}`);
     moves(transition.retract, `Section ${i + 1} machine-coordinate retract`);
     const end = moves(transition.approach, `Section ${i + 1} work-coordinate approach`);
     need(end.x === s.start[0] && end.z === s.start[2], "ENTRY_MISMATCH", "The reviewed approach must end exactly at the operation's recorded entry X/Z.", {...context, expected: s.start, actual: [end.x, 0, end.z]});
@@ -45,6 +57,6 @@ function template(program) {
   const tools = {}, workOffsets = {};
   for (const s of program.model.sections) { tools[`${s.tool.number}:${s.tool.offset}`] = {tool: null, offset: null}; workOffsets[s.workOffset] = null; }
   return {schema, programFingerprint: program.report.programFingerprint.value, units: program.model.units,
-    tools, workOffsets, sections: program.model.sections.map(() => ({retract: null, approach: null})), end: null};
+    tools, workOffsets, sections: program.model.sections.map((s, i) => continuation(program, i).eligible ? {mode: "continue"} : {mode: "retract", retract: null, approach: null}), end: null};
 }
-module.exports = {validatePlan, template};
+module.exports = {validatePlan, template, schema, legacySchema};

@@ -1,6 +1,7 @@
 "use strict";
 const {readProgram} = require("./profile");
 const {validatePlan} = require("./plan");
+const {continuation} = require("./continuity");
 const {requireValue: need, NextNCError} = require("./errors");
 const version = require("../package.json").version;
 function decimal(n) {
@@ -16,7 +17,7 @@ function decimal(n) {
 function comment(text) { return "(" + String(text).replace(/[^\x20-\x7E]|[();%]/g, "_").slice(0, 150) + ")"; }
 function translate(text, plan) {
   const program = readProgram(text); validatePlan(plan, program);
-  const model = program.model, lines = [], sourceMap = []; let context = {};
+  const model = program.model, lines = [], sourceMap = [], transitions = []; let context = {}, unchangedAxisWordsOmitted = 0;
   function emit(line) { need(line.length <= 240, "LINE_LENGTH", "Generated line exceeds 240 characters.", context); lines.push(line); sourceMap.push({...context}); }
   const common = (model.units === "mm" ? "G21" : "G20") + " G18 G8 G90 G91.1 G40 G80 G94 G61";
   emit(comment(`LinuxCNCNext-NC ${version}; experimental; reviewed execution plan required`));
@@ -40,13 +41,21 @@ function translate(text, plan) {
   for (const [index, section] of model.sections.entries()) {
     context = {section: index + 1, operation: section.name, phase: "transition"};
     emit(comment(`Section ${index + 1}: ${section.name}`));
-    stop(); waypoints(plan.sections[index].retract, true);
-    const tool = plan.tools[`${section.tool.number}:${section.tool.offset}`];
-    if (tool.tool !== selectedTool) { emit("G49"); emit(`T${tool.tool} M6`); selectedTool = tool.tool; }
-    // A site M6 remap may change modes. Reassert the translation contract.
-    emit(common); emit("G92.1"); emit(plan.workOffsets[section.workOffset]); emit(`G43 H${tool.offset}`);
-    waypoints(plan.sections[index].approach, false);
+    const continuous = plan.sections[index].mode === "continue";
+    transitions.push({section: index + 1, operation: section.name, mode: continuous ? "continue" : "retract",
+      reason: continuous ? continuation(program, index, plan).reason : "Execution plan specifies a machine retract and approach."});
+    if (!continuous) {
+      // Header already established stopped state before the first approach.
+      if (index > 0) stop();
+      waypoints(plan.sections[index].retract, true);
+      const tool = plan.tools[`${section.tool.number}:${section.tool.offset}`];
+      if (tool.tool !== selectedTool) { emit("G49"); emit(`T${tool.tool} M6`); selectedTool = tool.tool; }
+      // A site M6 remap may change modes. Reassert the translation contract.
+      emit(common); emit("G92.1"); emit(plan.workOffsets[section.workOffset]); emit(`G43 H${tool.offset}`);
+      waypoints(plan.sections[index].approach, false);
+    }
     state(section.initialSpindle, section.initialCoolant, null);
+    let position = section.start;
     for (const [p, path] of section.paths.entries()) {
       context = {section: index + 1, operation: section.name, path: p + 1, kind: path.kind};
       try {
@@ -58,11 +67,23 @@ function translate(text, plan) {
           block += ` I${decimal(path.center[0] - path.start[0])} K${decimal(path.center[2] - path.start[2])}`;
           if (path.fullCircle) block += " P1";
           emit(block);
-        } else for (const end of path.points.slice(1)) emit((path.kind === "rapid" ? "G0" : "G1") + ` X${decimal(end[0])} Z${decimal(end[2])}`);
+          if (!path.fullCircle) position = path.end;
+        } else for (let vertex = 1; vertex < path.points.length; vertex++) {
+          const start = position, end = path.points[vertex];
+          let axes = "";
+          if (end[0] !== start[0]) axes += ` X${decimal(end[0])}`;
+          if (end[2] !== start[2]) axes += ` Z${decimal(end[2])}`;
+          // Retain a zero-length motion block if present; no vertices disappear.
+          if (!axes) axes = ` X${decimal(end[0])} Z${decimal(end[2])}`;
+          else unchangedAxisWordsOmitted += Number(end[0] === start[0]) + Number(end[2] === start[2]);
+          emit((path.kind === "rapid" ? "G0" : "G1") + axes);
+          position = end;
+        }
       } catch (error) { if (error instanceof NextNCError) error.context = {...context, ...error.context}; throw error; }
     }
   }
   context = {phase: "program-end"}; stop(); waypoints(plan.end, true); emit("G49"); emit("G94"); emit("M2");
-  return {gcode: lines.join("\n") + "\n", report: {...program.report, translator: version, gcodeLines: lines.length}, sourceMap};
+  return {gcode: lines.join("\n") + "\n", report: {...program.report, translator: version, gcodeLines: lines.length,
+    execution: {planSchema: plan.schema, transitions, continuations: transitions.filter(t => t.mode === "continue").length, unchangedAxisWordsOmitted, coordinatesRounded: false}}, sourceMap};
 }
 module.exports = {translate, decimal, comment};
