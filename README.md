@@ -135,3 +135,5 @@ See [the architecture review and resulting improvements](docs/architecture-resea
 The [NIST toolkit review](docs/nist-toolkit-review-plan.md) informed v0.6.0 command/state records and semantic verification. The [STEPNode review](docs/stepnode-review-plan.md) informed v0.7.0 source provenance, command validation and ordered output-completeness checks for both machines.
 
 The [STEPNCpp review](docs/stepncpp-review-plan.md) informed v0.8.0's explicit process quantities, automatic job requirements, and systematic geometry/unit-equivalence checks for both machines. Reports distinguish validated translation and optional table snapshots from unverified controller commissioning; no new machining options are required.
+
+The sixth-repository [Duy247 STEP-NC-Translator review](docs/duy-translator-review-plan.md) proposes automatic verification of final G-code text and an optional saved-file identity check for reports. Synthetic text-only fault injection identified an audit gap in v0.8.0. These improvements are planned, not yet implemented; both retain XZ lathe and fixed-axis XYZ mill support.
