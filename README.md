@@ -146,4 +146,6 @@ The [STEPNCpp review](docs/stepncpp-review-plan.md) informed v0.8.0's explicit p
 
 The sixth-repository [Duy247 STEP-NC-Translator review](docs/duy-translator-review-plan.md) informed v0.9.0's final G-code audit and optional saved-file identity check. These close the demonstrated text-only audit gap and help distinguish an archived candidate from an edited or unrelated saved file, for both machines.
 
-The [EfrainRodriguez/step-nc review](docs/efrain-step-nc-review-plan.md) proposes stricter accepted-profile field checks, independent parser comparisons in CI, and explicit validation coverage. Research probes found useful syntax agreement and limitations in the upstream schema loader. These changes are planned; no upstream runtime dependency has been added.
+The [EfrainRodriguez/step-nc review](docs/efrain-step-nc-review-plan.md) informed v0.10.0's accepted-profile field checks, independent parser comparisons in CI, and explicit validation coverage. The parser tooling remains isolated from the dependency-free translator; general EXPRESS conformance is still unchecked.
+
+The [Mastercam exporter review and plan](docs/mastercam-stepnc-review-plan.md) proposes explicit state restoration after M6 and an independent audit of preparation, reversal and shutdown commands. Synthetic probes found that 16 deliberately omitted policy commands still passed the current audits. These new improvements are planned, not implemented; the exporter and its external SDKs are not dependencies.
