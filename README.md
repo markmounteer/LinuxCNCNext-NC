@@ -132,3 +132,5 @@ MIT. The bounded reader/inspector and synthetic-fixture writer are vendored from
 See [the architecture review and resulting improvements](docs/architecture-research.md) for the three-paper review, stronger input checks and indexed interpretation. The subsequent [adapter review](docs/adapter-review-plan.md) informed the report and installation tools; v0.5.0 also adds a separate XYZ profile without changing legacy turning semantics.
 
 The [NIST toolkit review](docs/nist-toolkit-review-plan.md) informed v0.6.0 command/state records and semantic verification. The [STEPNode review](docs/stepnode-review-plan.md) informed v0.7.0 source provenance, command validation and ordered output-completeness checks for both machines.
+
+The [STEPNCpp review and proposed plan](docs/stepncpp-review-plan.md) identifies the next reporting and regression-test improvements for both machines: explicit process quantities, automatic job requirements, and systematic geometry/unit-equivalence checks. These proposals are not yet implemented.
