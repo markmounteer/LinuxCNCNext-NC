@@ -43,6 +43,9 @@ test("contract distinguishes required/optional/derived values, qualified inherit
   }
   const wrongRef = text.replace(/(ACTION_PROPERTY_REPRESENTATION\('','',)#\d+/, "$1#1");
   assert.throws(() => readProgram(wrongRef), e => e.context.attribute === "ACTION_PROPERTY_REPRESENTATION.property" && e.context.expected.includes("ACTION_PROPERTY"));
+  const derivedId = /#(\d+)=DERIVED_UNIT\(/.exec(text)[1];
+  const derivedOfDerived = text.replace(/(DERIVED_UNIT_ELEMENT\()#\d+/, "$1#" + derivedId);
+  assert.throws(() => readProgram(derivedOfDerived), e => e.code === "PROFILE_SHAPE" && e.context.attribute === "DERIVED_UNIT_ELEMENT.unit");
   const shortPoint = text.replace(/(CARTESIAN_POINT\('[^']*',)\([^)]*\)/, "$1(1.,2.)");
   assert.throws(() => readProgram(shortPoint), e => e.context.actual === "aggregate[2]" && e.context.expected === "aggregate[3:3] of finite number");
   assert.throws(() => readProgram(text.replace("LENGTH_UNIT() NAMED_UNIT(*) SI_UNIT(.MILLI.,.METRE.)", "LENGTH_UNIT() NAMED_UNIT(*) TIME_UNIT() SI_UNIT(.MILLI.,.METRE.)")), e => e.code === "PROFILE_SHAPE" && e.context.attribute === "<components>");

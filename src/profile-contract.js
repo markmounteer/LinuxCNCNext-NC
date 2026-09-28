@@ -32,7 +32,7 @@ const contract = {
   CONVERSION_BASED_UNIT: [field("CONVERSION_BASED_UNIT.name", string), field("CONVERSION_BASED_UNIT.conversion_factor", ref("LENGTH_MEASURE_WITH_UNIT", "TIME_MEASURE_WITH_UNIT"))],
   CONTEXT_DEPENDENT_UNIT: [field("NAMED_UNIT.dimensions", ref("DIMENSIONAL_EXPONENTS")), field("CONTEXT_DEPENDENT_UNIT.name", string)],
   DERIVED_UNIT: [field("DERIVED_UNIT.elements", list(ref("DERIVED_UNIT_ELEMENT"), 2, 2))],
-  DERIVED_UNIT_ELEMENT: [field("DERIVED_UNIT_ELEMENT.unit", unit), field("DERIVED_UNIT_ELEMENT.exponent", number)],
+  DERIVED_UNIT_ELEMENT: [field("DERIVED_UNIT_ELEMENT.unit", ref("NAMED_UNIT", "CONTEXT_DEPENDENT_UNIT")), field("DERIVED_UNIT_ELEMENT.exponent", number)],
   APPLICATION_CONTEXT: strings("APPLICATION_CONTEXT.application"),
   APPLICATION_PROTOCOL_DEFINITION: [...strings("APPLICATION_PROTOCOL_DEFINITION.status", "APPLICATION_PROTOCOL_DEFINITION.application_interpreted_model_schema_name"), field("APPLICATION_PROTOCOL_DEFINITION.application_protocol_year", integer), field("APPLICATION_PROTOCOL_DEFINITION.application", ref("APPLICATION_CONTEXT"))],
   PRODUCT_CONTEXT: [field("APPLICATION_CONTEXT_ELEMENT.name", string), field("APPLICATION_CONTEXT_ELEMENT.frame_of_reference", ref("APPLICATION_CONTEXT")), field("PRODUCT_CONTEXT.discipline_type", string)],
