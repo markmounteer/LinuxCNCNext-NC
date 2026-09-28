@@ -15,3 +15,15 @@ If you do not already have a user command file, create one in your simulation co
 Control+Alt+N opens a separate report-selection process, keeping report generation outside AXIS's event loop. Choose a timestamped diagnostic JSON, then a **new** HTML destination. The helper invokes the same report CLI without a shell and opens the resulting local HTML. Existing destinations are refused. Node.js must be on PATH; the helper also uses Python 3 and Tk supplied with AXIS.
 
 The selection is explicit: neither `latest.json` nor a selected archive is assumed to describe AXIS's currently loaded program. Compare the report's input identity, command, fingerprint and candidate G-code SHA-256 before relying on it. This shortcut neither loads nor runs G-code. The helper's process/argument behavior is tested; visual integration with your AXIS version remains a simulation acceptance step.
+
+Version 0.9.0 adds an optional CLI check of an explicitly selected saved file:
+
+```sh
+node bin/nextnc.js report /path/diagnostic.json --gcode /path/job.ngc --output /path/new-checked-report.html
+```
+
+The helper remains unchanged and its reports say “Not checked”. The CLI compares
+exact bytes, including line endings, with the archived candidate hash; mismatch
+or unavailable/invalid hash gives a marked report and exit 1. A match describes
+the file bytes read, not AXIS's loaded program or a physical acceptance test.
+See [output verification](output-verification.md) for limits and exit behavior.

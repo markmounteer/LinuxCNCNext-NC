@@ -1,6 +1,6 @@
 # Duy247 STEP-NC-Translator: review and improvement plan
 
-Status: reviewed and planned on 2026-09-28 against LinuxCNCNext-NC v0.8.0. The improvements below are **not implemented** by this document.
+Status: both steps implemented for v0.9.0 on 2026-09-28. See [output verification](output-verification.md) for the delivered behavior and [validation](validation.md) for evidence. The pinned v0.8.0 review, historical fault-probe results and original plan follow.
 
 ## Recommendation
 

@@ -1,7 +1,8 @@
-# Command and state records (v0.7.0)
+# Command and state records
 
-Version 0.7.0 extends the existing records with source provenance and two automatic
-checks. These changes apply to XZ lathes and fixed-axis XYZ mills, in mm/inch.
+Version 0.7.0 introduced source provenance and command/completeness checks;
+v0.9.0 additionally audits the final serialized text. These checks apply to
+XZ lathes and fixed-axis XYZ mills, in mm/inch.
 
 ## Source provenance
 
@@ -53,6 +54,16 @@ state after M6 remains unknown even if the requested value was off; this release
 preserves the existing machine integration assumptions and output sequence.
 
 ## Existing state semantics
+
+Before hashing or returning the final G-code string, the independent decoder in
+`src/gcode-audit.js` matches its words and numbers against these command records.
+`inspection.execution.serialization` has schema
+`linuxcnc-next-nc/serialization-audit/1`, status, checked-line/executable/comment
+counts and a scope statement. It complements `completeness`; neither status is
+inferred from the other. Older archives show the missing audit as “Not recorded”.
+Serialization failures retain code `INTERNAL_ERROR`, a `SERIALIZATION_*` invariant,
+one-based line, observed text, expected command and source context. The same
+verified string is hashed and returned. See [output verification](output-verification.md).
 
 Translation builds an internal structured command for each output line. The
 LinuxCNC formatter produces that line and its additive source-map fields together:

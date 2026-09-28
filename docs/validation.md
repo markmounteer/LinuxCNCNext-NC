@@ -1,3 +1,34 @@
+# v0.9.0 validation update
+
+Local Windows / Node 24.13.1: **72 Node groups passed, one POSIX-only filter group
+skipped**, and both Python AXIS-helper tests passed. Example regeneration changes
+only the two version banners. Eight golden programs retain exact G-code after
+the banner and their original fingerprints; the existing 32-case geometry/unit
+matrix now also passes through the automatic final-text audit.
+
+New serialization tests reject 144 text-only corruptions with unchanged command
+records: 33 cases for each machine/unit pair, two additional CSS cases for each
+lathe unit system, and two full-circle cases for each pair. The 20 faults from the
+sixth-repository review are included. They cover arc sense, fractional feeds,
+G53 frames, spindle direction, M2, axes/centres, initialization modes, T/H/WCS,
+coolant, dwell, malformed numbers, duplicate/extra words and comment injection.
+Additional checks cover trailing/missing text and passive prefixes even when
+a command and its text agree on an active directive. CLI tests prove empty
+stdout, no partial publication, preserved existing destinations and archived
+line/operation/STEP context.
+
+Saved-file identity tests cover both machines/units and real translation and
+preflight archives, exact-byte changes (coordinates, line endings, BOMs and
+comments), missing/invalid hashes without fallback, archive-only compatibility,
+escaped metadata, exclusive HTML output and unchanged diagnostic indexes/inputs.
+Resource tests enforce the 64 MiB limit on actual reads, reject missing/non-regular
+files, detect a changing file, and test nonblocking FIFO rejection on POSIX.
+
+The Windows/Linux Node matrix and standalone LinuxCNC interpreter are run in CI;
+their results for this change will be recorded after completion. Local tests do
+not establish physical machine acceptance. Profiles, CPS/shared reader,
+execution-plan schemas and machine configuration are unchanged.
+
 # v0.8.0 validation update
 
 Local Windows validation: 62 Node groups passed, one POSIX-only filter group

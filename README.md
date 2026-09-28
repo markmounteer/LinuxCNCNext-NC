@@ -8,10 +8,11 @@ It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` p
 
 ## Quick start
 
-Version 0.8.0 adds complete, unit-labelled process summaries and automatic job
-requirements for both machines, plus systematic quadrant/arc/unit regressions.
+Version 0.9.0 automatically audits final G-code text against validated commands
+for both machines and adds an optional saved-file identity check to HTML reports.
 Existing program profiles, reviewed plans and G-code (apart from the release
-banner) are preserved. See [process summaries](docs/process-summary.md),
+banner) are preserved. See [output verification](docs/output-verification.md),
+[process summaries](docs/process-summary.md),
 [command/state records](docs/command-state.md) and [validation](docs/validation.md).
 
 Requires Node.js 20 or later; there are no npm dependencies. LinuxCNC is needed only for preview/execution and the optional standalone interpreter tests.
@@ -52,14 +53,18 @@ The entire input and plan are checked before any G-code reaches stdout or an out
 
 The default filename is `tool.tbl`; use the file specified by your existing `[EMCIO]TOOL_TABLE` setting. No table is written or loaded into LinuxCNC. Without `--tool-table`, the report explicitly says `not_checked`. Presence of a record does not establish correct physical tooling, calibrated offsets, changer pockets, work offsets, clearance or safe machine operation; an external tool database or live controller may differ from the file snapshot. See [preflight and source maps](docs/preflight.md).
 
-## Review and installation tools (v0.5.0)
+## Review and installation tools
 
 ```sh
 node bin/nextnc.js doctor
 node bin/nextnc.js report /path/to/timestamped-diagnostic.json --output /path/new-review.html
+# Optionally check a saved file against the report's candidate hash:
+node bin/nextnc.js report /path/to/timestamped-diagnostic.json --gcode /path/job.ngc --output /path/new-checked-review.html
 ```
 
 `doctor` and the LinuxCNC filter use the same resolver for `NEXTNC_PLAN`, `NEXTNC_TOOL_TABLE` and `NEXTNC_DIAGNOSTICS`. Doctor reports runtime, resolved paths, file readability and diagnostics-directory access without creating files. Run preflight with your program for job validation.
+
+`report --gcode` compares exact file bytes with the archived candidate G-code hash, including for preflight archives. A match returns exit 0; a mismatch or missing/invalid candidate hash produces a clearly marked HTML report and exit 1. Without `--gcode`, the report says “Not checked”. Line endings and BOMs are not normalized. Selected files must be regular files of at most 64 MiB. No file is loaded into LinuxCNC or executed. See [output verification](docs/output-verification.md).
 
 The HTML report shows job hashes, grouped tools, mappings, process state, transition decisions and operation links to source lines. It is self-contained, escapes file content, writes only to a new destination and leaves existing diagnostic archives unchanged. Independent execution-plan problems are reported together with operation names and JSON field locations. Checks needing invalid mappings are explicitly marked not completed; malformed files and mismatched fingerprints stop immediately. [Details](docs/preflight.md). An [optional AXIS shortcut](docs/axis-report.md) opens an explicitly selected archive without replacing AXIS or assuming it matches the loaded job.
 
@@ -136,4 +141,4 @@ The [NIST toolkit review](docs/nist-toolkit-review-plan.md) informed v0.6.0 comm
 
 The [STEPNCpp review](docs/stepncpp-review-plan.md) informed v0.8.0's explicit process quantities, automatic job requirements, and systematic geometry/unit-equivalence checks for both machines. Reports distinguish validated translation and optional table snapshots from unverified controller commissioning; no new machining options are required.
 
-The sixth-repository [Duy247 STEP-NC-Translator review](docs/duy-translator-review-plan.md) proposes automatic verification of final G-code text and an optional saved-file identity check for reports. Synthetic text-only fault injection identified an audit gap in v0.8.0. These improvements are planned, not yet implemented; both retain XZ lathe and fixed-axis XYZ mill support.
+The sixth-repository [Duy247 STEP-NC-Translator review](docs/duy-translator-review-plan.md) informed v0.9.0's final G-code audit and optional saved-file identity check. These close the demonstrated text-only audit gap and help distinguish an archived candidate from an edited or unrelated saved file, for both machines.
