@@ -4,7 +4,11 @@ Local Windows validation: 35 translator Node groups passed, one POSIX-only filte
 
 New tests cover both machines and units: successful STEP record/line/column provenance, shared geometry and derived full-circle sources, raw input hashes, renumbered/reformatted inputs, plan JSON Pointers, atomic rejection of invalid internal commands, and ordered output auditing. Fault injection drops or duplicates motions/dwells/waypoints, swaps link waypoints, and corrupts source ownership, arc centers, motion details, line numbers, action types or process state. Each must fail with its intended internal invariant. CLI preflight, translation and filter failures retain structured local diagnostics and publish no output.
 
-The final cross-platform and standalone LinuxCNC CI results for this change will be recorded here after completion. The v0.6.0 evidence below describes the previous implementation, not a new native run. These tests do not connect to hardware or establish physical machine acceptance.
+All seven jobs passed in [translator CI run 36460178068](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36460178068) at code commit `1c0c8a11ee8761dab2484086bb10012fb55d0f05`: Windows/Linux with Node 20/22/24 plus the standalone LinuxCNC interpreter. Linux ran all 36 Node groups; Windows passed 35 with the one POSIX-only skip. Both Python helper tests and example reproducibility passed on all six Node jobs.
+
+Native verification passed all 12 machine/unit scenarios, including the independent reference comparisons and their 20 intentional corruptions. Four additional hand-authored reference programs were interpreted. The interpreter package was `linuxcnc-uspace 2.9.0~pre1+git20230208.f1270d6ed7-1+deb12u2`; precision and fixture-unit limits remain as documented below. [Shared-reader CI run 36459657876](https://github.com/markmounteer/Fusion360Next-NC/actions/runs/36459657876) passed all four jobs at `a6e64622343c41545925ebf6e8dc91e12d320ac1`, including Node 20/22/24, generated-post checks and Windows diagnostic collector tests.
+
+These tests do not connect to hardware or establish physical machine acceptance. The following v0.6.0 section retains the preceding release's evidence for provenance.
 
 # v0.6.0 validation update
 
