@@ -53,3 +53,17 @@ node bin/nextnc.js report /path/to/diagnostics/2026-...json --output new-review.
 Use a **diagnostic archive**, not the bare JSON printed by preflight: archives have `linuxcnc-next-nc/diagnostic/1` and include file hashes. The renderer reads only that archive, never generates G-code, and rejects unknown schemas. It supports older archives with missing fields, shown as unavailable. Names and paths are escaped; no scripts or network assets are used. The candidate G-code hash is separately identified: preflight never writes those bytes to a G-code file. Report/doctor commands do not replace the job's `latest.json` or `latest-error.json`.
 
 Source-map operation ranges now include the exported tool identity, mapped T/H/WCS and initial spindle/coolant. Milling arcs also include `plane`. These are additive fields to source-map/1; existing lathe motion fields retain their meanings.
+
+## v0.7.0 provenance and completeness
+
+Preflight automatically validates the internal command contract and audits every
+required source move/dwell and reviewed plan waypoint in order. The same checks
+run during translation and through the LinuxCNC filter. An internal mismatch
+fails before G-code is published and records `INTERNAL_ERROR`, an `invariant`
+identifier and source context. Success includes `inspection.execution.completeness`.
+
+The additive `provenance` fields and `inspection.traceability.provenance` identify
+source records/locations and plan JSON Pointers. The source sidecar is bound to
+its input SHA-256; the archive retains exact file/plan and candidate G-code hashes.
+See [the command and state contract](command-state.md) for field meanings and
+unknown-state limits. Older `source-map/1` archives still render.

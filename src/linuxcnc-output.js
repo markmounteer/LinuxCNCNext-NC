@@ -1,5 +1,7 @@
 "use strict";
 const {requireValue: need} = require("./errors");
+const {validateCommand} = require("./command-contract");
+const {invariant} = require("./internal-error");
 function decimal(n) {
   need(Number.isFinite(n) && Math.abs(n) < 1e15, "NUMBER", "Cannot encode a nonfinite or excessive G-code value.");
   if (n === 0) return "0";
@@ -17,7 +19,9 @@ const unknownPosition = () => [null, null, null];
 // Each instance belongs to exactly one translation. State describes commands we
 // emitted, not measured position, remap internals or offset-table contents.
 class LinuxCNCOutput {
-  constructor() {
+  constructor({machine = "lathe", units = null} = {}) {
+    invariant(["lathe", "mill"].includes(machine) && (units === null || ["mm", "inch"].includes(units)), "OUTPUT_CONTEXT", "Invalid output machine/units.");
+    this.machine = machine; this.units = units; this.started = false;
     this.lines = []; this.sourceMap = [];
     this.requested = {spindle: null, coolant: "off", feed: null, selectedTool: null};
     this.state = {units: null, plane: null, distanceMode: null, arcDistanceMode: null, diameterMode: null,
@@ -27,6 +31,7 @@ class LinuxCNCOutput {
       workPosition: unknownPosition(), machinePosition: unknownPosition(), ended: false};
   }
   emit(command, source, detail = {}) {
+    validateCommand(command, this, {...source, commandIndex: this.lines.length + 1, provenance: detail.provenance});
     const before = clone(this.state), next = clone(before), c = command;
     let line;
     const words = (axes, letters = "XYZ") => Object.entries(axes).map(([axis, value]) => ` ${letters["xyz".indexOf(axis)]}${decimal(value)}`).join("");
@@ -72,10 +77,12 @@ class LinuxCNCOutput {
     }
     const changed = Object.keys(next).filter(key => JSON.stringify(before[key]) !== JSON.stringify(next[key]));
     const stateChange = Object.fromEntries(changed.map(key => [key, {before: before[key], after: next[key]}]));
-    this.state = next; this.lines.push(line);
-    this.sourceMap.push({line: this.lines.length, action: "state", ...source, ...detail,
+    const entry = {line: this.lines.length + 1, action: "state", ...source, ...detail,
+      ...(detail.provenance ? {provenance: clone(detail.provenance)} : {}),
       command: clone({frame: "modal", ...c}), stateChange,
-      ...(["rapid", "linear", "arc", "dwell"].includes(c.type) ? {modalState: Object.fromEntries(["units", "plane", "feedMode", "feedRate", "spindleMode", "spindleSpeed", "spindleMaximumRPM", "spindleDirection", "coolant", "tool", "toolOffset", "workOffset"].map(key => [key, next[key]]))} : {})});
+      ...(["rapid", "linear", "arc", "dwell"].includes(c.type) ? {modalState: Object.fromEntries(["units", "plane", "feedMode", "feedRate", "spindleMode", "spindleSpeed", "spindleMaximumRPM", "spindleDirection", "coolant", "tool", "toolOffset", "workOffset"].map(key => [key, next[key]]))} : {})};
+    if (c.type === "initialize") { this.started = true; this.units = c.units; }
+    this.state = next; this.lines.push(line); this.sourceMap.push(entry);
   }
 }
 module.exports = {LinuxCNCOutput, decimal, comment};

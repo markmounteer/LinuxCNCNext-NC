@@ -1,4 +1,4 @@
-(LinuxCNCNext-NC 0.6.0_ experimental_ reviewed execution plan required)
+(LinuxCNCNext-NC 0.7.0_ experimental_ reviewed execution plan required)
 (Program fingerprint a53098ce326c478daeed7dc938a7184df5bf7daa3257bc23f3b5592c49dfd5d1)
 (Program: Synthetic XYZ simulation only)
 G21 G17 G8 G90 G91.1 G40 G80 G94 G61

@@ -1,5 +1,6 @@
 "use strict";
 const {ValidationError} = require("./validation-error");
+const {createHash} = require("node:crypto");
 // Independent reader for the Part 21 subset emitted by Next-NC, not an interpreter.
 function decodeString(value) {
   return value.replace(/''/g, "'").replace(/\\\\|\\X2\\([0-9A-Fa-f]+)\\X0\\/g, (match, hex) => {
@@ -10,6 +11,7 @@ function decodeString(value) {
 }
 function parse(text) {
   if (typeof text !== "string" || Buffer.byteLength(text) > 32 * 1024 * 1024) throw new ValidationError("Input must be text no larger than 32 MiB", {stage: "parse", rule: "INPUT_SIZE"});
+  const inputSHA256 = createHash("sha256").update(text, "utf8").digest("hex");
   text = text.replace(/\r\n/g, "\n"); // Native Windows post engine uses CRLF.
   const lineStarts = [0];
   for (let i = 0; i < text.length; ++i) if (text[i] === "\n") lineStarts.push(i + 1);
@@ -93,7 +95,7 @@ function parse(text) {
   }
   for (const [id, parts] of records) { activeRecord = id; references(parts); }
   return {
-    records, locations, header, schema: schema[0][0],
+    records, locations, header, inputSHA256, schema: schema[0][0],
     all(type) { return types.get(type) || []; },
     get(ref) { return records.get(ref.ref); }
   };

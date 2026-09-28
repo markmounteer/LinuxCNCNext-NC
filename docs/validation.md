@@ -1,3 +1,11 @@
+# v0.7.0 validation update
+
+Local Windows validation: 34 translator Node groups passed, one POSIX-only filter group skipped, and two Python AXIS-helper tests passed. The shared Fusion reader has 74 passing Node groups and its generated-post build check passed. Examples were regenerated; only the translator release banners changed. Eight golden programs retain their fingerprints and exact G-code after that banner.
+
+New tests cover both machines and units: successful STEP record/line/column provenance, shared geometry and derived full-circle sources, raw input hashes, renumbered/reformatted inputs, plan JSON Pointers, atomic rejection of invalid internal commands, and ordered output auditing. Fault injection drops or duplicates motions/dwells/waypoints, swaps link waypoints, and corrupts source ownership, arc centers, motion details, line numbers, action types or process state. Each must fail with its intended internal invariant. CLI preflight, translation and filter failures retain structured local diagnostics and publish no output.
+
+The final cross-platform and standalone LinuxCNC CI results for this change will be recorded here after completion. The v0.6.0 evidence below describes the previous implementation, not a new native run. These tests do not connect to hardware or establish physical machine acceptance.
+
 # v0.6.0 validation update
 
 The shared-reader suite has 73 passing Node groups. Translator tests have 30 passing groups on Windows, with the POSIX filter group skipped there; two Python AXIS-helper tests pass. Eight golden fixture hashes retain exact pre-refactor G-code after the release comment and unchanged fingerprints. Both machines are checked in mm/inch.

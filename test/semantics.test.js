@@ -61,7 +61,8 @@ test("compacted and explicit polylines preserve every repeated and reversed vert
     const unshared = compact.replace(curve[0], curve[0].replace("(#" + id + ",", "(#999999,"))
       .replace("\nENDSEC;\nEND-ISO", "\n" + point.replace(/^#\d+=/, "#999999=") + "\nENDSEC;\nEND-ISO");
     const c = translate(unshared, examples.simulationPlan(readProgram(compact)));
-    assert.equal(c.gcode, a.gcode); assert.deepEqual(c.sourceMap, a.sourceMap);
+    assert.equal(c.gcode, a.gcode); assert.deepEqual(c.sourceMap.map(({provenance, ...entry}) => entry), a.sourceMap.map(({provenance, ...entry}) => entry));
+    assert.notDeepEqual(c.sourceMap, a.sourceMap);
   }
 });
 test("canonical comparison detects wrong plane, arc center, feed, spindle and offset events", () => {

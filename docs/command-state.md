@@ -1,4 +1,58 @@
-# Command and state records (v0.6.0)
+# Command and state records (v0.7.0)
+
+Version 0.7.0 extends the existing records with source provenance and two automatic
+checks. These changes apply to XZ lathes and fixed-axis XYZ mills, in mm/inch.
+
+## Source provenance
+
+Each source-map entry now has `provenance.origin`: `step`, `execution-plan`, or
+`translator-policy`. STEP entries identify the owning workingstep/operation and
+toolpath, with one-based source line/column and actual record IDs. Linear moves
+identify both source vertices; arcs retain circle/placement/center/end references,
+including the derivation of full-circle endpoints. Process commands identify
+their representation/property records. The source curve start remains separate
+from the commanded start at a tolerance-accepted join.
+
+Plan movements identify a JSON Pointer, for example `/sections/0/retract/0`;
+T/H and WCS commands identify their mapping fields. Header/reset/end policy has
+no invented STEP record. `inspection.traceability.provenance` holds the complete
+source sidecar, including process properties that did not require a new modal
+command. It is bound to the parsed input text's SHA-256. CLI archives additionally
+retain the exact file-byte input/plan hashes and candidate G-code hash.
+
+This sidecar is outside the decoded model/fingerprint. STEP renumbering and
+formatting can change provenance while preserving plan acceptance and G-code.
+These are identities within one input, not permanent Fusion IDs. The HTML report
+displays provenance with operation commands and in the full archive.
+
+## Command and completion checks
+
+The internal emitter validates command fields, enum/numeric values, machine axes,
+units, work offsets, tool/H IDs, frames, arc planes and lifecycle before mutation.
+It rejects commands after M2, invalid axes and arc plane/modal mismatches. M6 can
+invalidate state; the existing explicit initialization sequence reestablishes it.
+Full circles retain empty endpoint words and in-plane center offsets.
+
+Before returning G-code, a separate input traversal checks every required
+polyline segment, arc, dwell and plan waypoint against the ordered output, with
+balanced operation/path boundaries. It checks command/motion/source consistency,
+the process state at each source use, line mapping, operation ranges and program
+completion. Repeated points, reversals and shared geometry each retain their
+individual uses. Expected uses are streamed rather than copied into another full
+motion list. `inspection.execution.completeness` records the successful counts.
+
+Internal failures have code `INTERNAL_ERROR` and a structured `invariant`, command
+or line context and source references where available. Preflight, translation
+and the filter all perform the audit; failures publish no output. Existing
+geometry/plan error codes and atomic file behavior are retained. No setting can
+disable these checks or skip errors.
+
+The audit describes offline source consumption and commanded state. It does not
+read live offsets or verify physical movement. In particular, an unknown coolant
+state after M6 remains unknown even if the requested value was off; this release
+preserves the existing machine integration assumptions and output sequence.
+
+## Existing state semantics
 
 Translation builds an internal structured command for each output line. The
 LinuxCNC formatter produces that line and its additive source-map fields together:

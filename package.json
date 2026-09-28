@@ -1,6 +1,6 @@
 {
   "name": "linuxcnc-next-nc",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Next-NC XZ lathe and XYZ mill translator, offline review tools and LinuxCNC input filter",
   "license": "MIT",
   "repository": {
@@ -24,7 +24,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node --test test/translation.test.js test/links.test.js test/cli.test.js test/preflight.test.js test/milling.test.js test/review.test.js test/filter.test.js test/semantics.test.js",
+    "test": "node --test test/translation.test.js test/links.test.js test/cli.test.js test/preflight.test.js test/milling.test.js test/review.test.js test/filter.test.js test/semantics.test.js test/pipeline.test.js",
     "example": "node scripts/example.js",
     "test:linuxcnc": "node scripts/test-linuxcnc.js && node scripts/test-linuxcnc-semantics.js",
     "test:axis-helper": "python test/axis-report.test.py"

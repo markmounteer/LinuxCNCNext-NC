@@ -1,6 +1,6 @@
 # STEPNode: review and improvement plan
 
-Status: reviewed and planned on 2026-09-28. The changes below are **not implemented**.
+Status: steps 1–3 implemented for v0.7.0 on 2026-09-28. See [command/state records](command-state.md) for the delivered contract and [validation](validation.md) for test evidence. The original review and pinned baseline follow; SDK integration and other deferred research remain outside this release.
 
 ## Recommendation
 

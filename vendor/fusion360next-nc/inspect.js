@@ -18,6 +18,7 @@ function inspectDocument(doc) {
   function positive(n, label) { check(Number.isFinite(n) && n > 0, label + " must be positive"); return n; }
   check(doc.schema === "INTEGRATED_CNC_SCHEMA", "unsupported schema");
   const types = new Map(), properties = new Map(), links = new Map();
+  const propertyRecords = new Map(), propertyLinks = new Map(), processSources = new Map();
   for (const [id, parts] of doc.records) for (const part of parts) {
     const entry = {id, ...part};
     if (!types.has(part.type)) types.set(part.type, []);
@@ -55,12 +56,13 @@ function inspectDocument(doc) {
   function one(items, label) { check(Array.isArray(items) && items.length === 1, "expected one " + label); return items[0]; }
   for (const p of all("ACTION_PROPERTY_REPRESENTATION")) {
     const id = p.args[2].ref;
-    check(!links.has(id), "duplicate property representation"); links.set(id, p.args[3]);
+    check(!links.has(id), "duplicate property representation"); links.set(id, p.args[3]); propertyLinks.set(id, p.id);
   }
   for (const p of all("ACTION_PROPERTY")) {
     const key = p.args[2].ref + "|" + p.args[0];
     check(!properties.has(key) && links.has(p.id), "duplicate or unrepresented property " + p.args[0]);
     properties.set(key, links.get(p.id));
+    propertyRecords.set(key, p.id);
   }
   function prop(id, name, type = "REPRESENTATION", optional = false) {
     const ref = properties.get(id + "|" + name);
@@ -68,6 +70,18 @@ function inspectDocument(doc) {
     check(ref, `missing ${name} on #${id}`); return get(ref, type);
   }
   function textProp(id, name) { return get(one(prop(id, name)[1], name), "DESCRIPTIVE_REPRESENTATION_ITEM")[1]; }
+  // Source identities are deliberately outside the semantic model/fingerprint.
+  // Called only for properties whose values have already been validated.
+  function propertySource(id, name) {
+    const key = id + "|" + name, ref = properties.get(key);
+    if (!ref) return null;
+    const property = propertyRecords.get(key), rep = doc.records.get(ref.ref)[0];
+    return {property: location(property), association: location(propertyLinks.get(property)), representation: location(ref),
+      items: rep.args[1].map(item => {
+        const value = doc.records.get(item.ref)?.find(p => p.type === "MEASURE_REPRESENTATION_ITEM");
+        return {...location(item), ...(value ? {unit: location(value.args[2])} : {})};
+      })};
+  }
   function relationship(type, id) {
     const rows = relationships.get(type + "|" + id) || [];
     rows.forEach(row => consumed.add(row.id)); return rows;
@@ -155,6 +169,9 @@ function inspectDocument(doc) {
     check(c === "coolant off" || c === "coolant on", "unsupported coolant state");
     const coolant = c === "coolant off" ? "off" : textProp(functions, "coolant type");
     check(["off", "flood", "mist", "through tool"].includes(coolant), "unsupported coolant type");
+    processSources.set(id, {technology: location(tech), functions: location(functions),
+      spindle: propertySource(tech, "spindle"), feed: propertySource(tech, "feedrate"),
+      coolant: propertySource(functions, "coolant"), coolantType: propertySource(functions, "coolant type")});
     return {spindle, feed, coolant};
   }
   function point(ref) {
@@ -223,6 +240,8 @@ function inspectDocument(doc) {
   }
   // Keep the legacy turning model/fingerprint stable. Milling identifies its machine explicitly.
   const model = {name: plan.args[0], units, ...(milling ? {machine: "mill"} : {}), sections: []};
+  const provenance = {schema: "next-nc/source-provenance/1", inputSHA256: doc.inputSHA256,
+    workplan: location(plan.id), geometryContext: location(context.id), sections: []};
   for (const ws of sequence("MACHINING_PROCESS_SEQUENCE_RELATIONSHIP", plan.id)) {
     diagnostic = {stage: "profile", rule: "PROFILE", section: model.sections.length + 1, ...location(ws)};
     const step = visit(ws, "MACHINING_WORKINGSTEP"), operation = target("MACHINING_OPERATION_RELATIONSHIP", ws.ref);
@@ -237,14 +256,19 @@ function inspectDocument(doc) {
       offset: nonnegativeInteger(textProp(id, "next-nc tool offset"), "tool offset"), description: tool.args[1]},
       workOffset: nonnegativeInteger(textProp(id, "next-nc work offset"), "work offset"), start,
       initialSpindle: initial.spindle, initialCoolant: initial.coolant, paths: []};
+    const sectionSource = {workingstep: location(ws), operation: location(operation), tool: location(tool.id),
+      toolOffset: propertySource(id, "next-nc tool offset"), workOffset: propertySource(id, "next-nc work offset"),
+      entry: propertySource(id, "next-nc entry point"), process: processSources.get(id), paths: []};
     let position = start, commandedExit = start; bounds(start);
     for (const pathRef of sequence("MACHINING_TOOLPATH_SEQUENCE_RELATIONSHIP", id)) {
       diagnostic = {...operationContext, path: section.paths.length + 1, pathRecord: "#" + pathRef.ref, ...location(pathRef)};
       const path = visit(pathRef, "MACHINING_TOOLPATH"), pid = pathRef.ref, state = processState(pid);
       check(textProp(pid, "priority") === "required", "unsupported path priority");
       let decoded;
+      const pathSource = {toolpath: location(pathRef), process: processSources.get(pid)};
       if (path[1] === "feedstop") {
         decoded = {kind: "dwell", seconds: positive(measure(one(prop(pid, "dwell")[1], "dwell"), "second", "TIME_MEASURE"), "dwell")}; ++report.dwells;
+        pathSource.dwell = propertySource(pid, "dwell");
       } else {
         check(path[1] === "cutter location trajectory" && textProp(pid, "trajectory type") === "trajectory path" &&
           textProp(pid, "direction") === "beginning to end", "unsupported trajectory");
@@ -252,12 +276,24 @@ function inspectDocument(doc) {
         diagnostic = {...diagnostic, stage: "geometry", curveRecord: "#" + curve.ref, ...location(curve)};
         const rapid = Boolean(speed);
         if (speed) check(get(one(speed[1], "rapid speed"), "DESCRIPTIVE_REPRESENTATION_ITEM")[1] === "rapid", "unsupported speed profile");
+        pathSource.basicCurve = propertySource(pid, "basic curve");
+        pathSource.curve = location(curve);
+        pathSource.speedProfile = propertySource(pid, "speed profile");
         if (doc.records.get(curve.ref).some(e => e.type === "POLYLINE")) {
           const points = get(curve, "POLYLINE")[1].map(point);
           check(points.length >= 2, "polyline needs two points"); points.forEach(bounds);
           decoded = {kind: rapid ? "rapid" : "linear", points};
+          pathSource.vertices = get(curve, "POLYLINE")[1].map(location);
           ++report[rapid ? "rapidPaths" : "linearPaths"]; report[rapid ? "rapidSegments" : "cuttingSegments"] += points.length - 1;
-        } else { check(!rapid, "rapid arcs are unsupported"); decoded = arc(curve); ++report.arcs; }
+        } else {
+          check(!rapid, "rapid arcs are unsupported"); decoded = arc(curve); ++report.arcs;
+          const trim = get(curve, "TRIMMED_CURVE"), circle = get(trim[1], "CIRCLE"), axis = get(circle[1], "AXIS2_PLACEMENT_3D");
+          const derived = {derivation: "center + radius * referenceDirection", center: location(axis[1]),
+            radius: {...location(trim[1]), attribute: "radius"}, referenceDirection: location(axis[3])};
+          pathSource.arc = {circle: location(trim[1]), placement: location(circle[1]), center: location(axis[1]),
+            normal: location(axis[2]), referenceDirection: location(axis[3]),
+            start: decoded.fullCircle ? derived : location(trim[2][0]), end: decoded.fullCircle ? derived : location(trim[3][0])};
+        }
         check(rapid ? state.feed === null : state.feed !== null, rapid ? "rapid has cutting feed" : "cutting path has no feed");
         const sourceStart = decoded.start || decoded.points[0];
         check(close(position, sourceStart), `path discontinuity in ${op[0]} at #${pid}`, {...location(pid), rule: "PATH_CONTINUITY", previousExit: position, previousCommandedExit: commandedExit, sourceStart, threshold: 1e-9, maximumDelta: Math.max(...position.map((v, i) => Math.abs(v - sourceStart[i])))});
@@ -265,8 +301,10 @@ function inspectDocument(doc) {
         if (!decoded.fullCircle) commandedExit = position;
       }
       section.paths.push({...decoded, ...state}); ++report.paths;
+      sectionSource.paths.push(pathSource);
     }
     model.sections.push(section);
+    provenance.sections.push(sectionSource);
     report.operations.push({name: section.name, tool: section.tool.number, toolOffset: section.tool.offset,
       workOffset: section.workOffset, paths: section.paths.length, arcs: section.paths.filter(p => p.kind === "arc").length,
       spindle: section.initialSpindle, feeds: [...new Map(section.paths.filter(p => p.feed).map(p => [JSON.stringify(p.feed), p.feed])).values()]});
@@ -282,7 +320,7 @@ function inspectDocument(doc) {
   const schema = "next-nc/decoded-program/1";
   report.programFingerprint = {schema, algorithm: "sha256",
     value: createHash("sha256").update(JSON.stringify({schema, model})).digest("hex")};
-  return {model, report};
+  return {model, report, provenance};
 }
 function firstDifference(before, after, location = "program") {
   if (before === after) return null;
