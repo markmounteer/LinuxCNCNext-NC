@@ -1,6 +1,6 @@
 # EfrainRodriguez/step-nc: review and improvement plan
 
-Status: reviewed on 2026-09-28 against LinuxCNCNext-NC v0.9.0. The improvements below are **planned, not implemented**. Research probes ran separately from the translator checkout.
+Status: all three steps implemented for v0.10.0 on 2026-09-28. See [profile validation](profile-validation.md), the [isolated parser harness](../tools/step-conformance/README.md), and [validation evidence](validation.md). The pinned v0.9.0 review and original plan follow; its research probes ran separately from the translator checkout.
 
 ## Recommendation
 

@@ -42,6 +42,19 @@ Suh et al., [STEP-compliant CNC system for turning: Data model, architecture, an
 
 Tool-table syntax and configuration ownership follow the [LinuxCNC tool compensation reference](https://www.linuxcnc.org/docs/stable/html/gcode/tool-compensation.html).
 
+## v0.10.0 field diagnostics and validation coverage
+
+All supported entity fields are now shape-checked before property indexing.
+`PROFILE_SHAPE` identifies the source record, qualified attribute and parameter,
+expected shape and actual kind. This also catches invalid metadata previously
+ignored. Existing standard diagnostic locations and all-or-nothing output
+behavior are unchanged.
+
+JSON/HTML archives add `validationCoverage`, recording completed, failed and
+unrun stages. General EXPRESS and full AP238 checks remain `not_checked` even
+after successful translation. Older archives show “Not recorded”. See
+[profile validation](profile-validation.md) for the contract and stage meanings.
+
 ## Aggregated plan diagnostics and HTML
 
 Schema/fingerprint/unit/root-shape failures are fatal. With a valid root, independent tool/WCS mappings, retracts, approaches and program-end moves are checked together. The first error's existing `code`, `message` and operation context remain stable; `error.context.issues` adds all independent findings with JSON field locations and corrections. `notChecked` records boundary checks skipped because required mappings are invalid. Tool-table validation follows a valid plan. This does not combine unrelated parser or unexpected programming failures into ordinary plan errors.

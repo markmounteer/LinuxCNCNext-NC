@@ -1,3 +1,35 @@
+# v0.10.0 validation update
+
+Local Windows / Node 24.13.1: **80 Node groups passed, one POSIX-only filter
+group skipped**, plus both Python AXIS-helper tests. New regressions reject all
+12 previously accepted numeric metadata substitutions (three for each
+machine/unit pair), distinguish inherited fields, required/optional/derived
+values, typed measures, references, aggregates and complex components, and
+retain Unicode metadata. CLI tests verify shape failures produce no output,
+preserve existing destinations, and archive the exact field and stage coverage.
+Fault-injection tests verify failed command and text audits leave subsequent
+stages unchecked. General EXPRESS/full AP238 stages are never inferred passed.
+
+The isolated independent parser check passed **56 cases: 20 valid and 36
+invalid controls**, with no unexpected outcomes. Source bytes were verified
+against all 31 pinned upstream Git objects; source and ordinary TypeScript
+build hashes are enforced. Cases preserve all normalized values/references and
+record the upstream parser's known omissions as named stage discrepancies.
+The harness does not invoke the experimental schema loader. See its
+[scope and reproducible command](../tools/step-conformance/README.md).
+
+Eight golden programs retain exact G-code after the banner and original
+fingerprints. Example regeneration changes only the two version banners. An
+`npm pack --dry-run` inspection confirms development tooling and compiler
+dependencies are excluded from the installed translator. The production
+writer/shared reader, profiles, execution-plan schemas and machine settings
+are unchanged.
+
+CI adds dedicated Windows/Linux independent-parser jobs alongside the existing
+six Node matrix jobs and offline LinuxCNC interpreter job. Local Windows checks
+do not establish interpreter or physical machine acceptance. Native CI outcomes
+are recorded separately when available.
+
 # v0.9.0 validation update
 
 Local Windows / Node 24.13.1: **72 Node groups passed, one POSIX-only filter group

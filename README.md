@@ -8,14 +8,17 @@ It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` p
 
 ## Quick start
 
-Version 0.9.0 automatically audits final G-code text against validated commands
-for both machines and adds an optional saved-file identity check to HTML reports.
+Version 0.10.0 validates every supported entity's field shapes before decoding,
+reports the exact record/attribute on failure, and records which validation
+stages actually ran. Both lathe and XYZ mill profiles are covered in mm/inch.
+An isolated development harness compares our parser with a pinned independent
+Part 21 parser. See [profile validation](docs/profile-validation.md).
 Existing program profiles, reviewed plans and G-code (apart from the release
 banner) are preserved. See [output verification](docs/output-verification.md),
 [process summaries](docs/process-summary.md),
 [command/state records](docs/command-state.md) and [validation](docs/validation.md).
 
-Requires Node.js 20 or later; there are no npm dependencies. LinuxCNC is needed only for preview/execution and the optional standalone interpreter tests.
+Requires Node.js 20 or later; the translator has no npm dependencies. The optional independent parser development tool has its own compiler lockfile and is excluded from the installed package. LinuxCNC is needed only for preview/execution and the optional standalone interpreter tests.
 
 ```sh
 git clone https://github.com/markmounteer/LinuxCNCNext-NC.git
