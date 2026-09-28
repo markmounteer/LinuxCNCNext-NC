@@ -34,7 +34,7 @@ class LinuxCNCOutput {
       case "comment": line = comment(c.text); break;
       case "initialize":
         line = (c.units === "mm" ? "G21" : "G20") + ` ${planes[c.plane]} G8 G90 G91.1 G40 G80 G94 G61`;
-        Object.assign(next, {units: c.units, plane: c.plane, diameterMode: false, distanceMode: "absolute", arcDistanceMode: "incremental", cutterCompensation: "off", cycle: "off", feedMode: "perMinute", motionControl: "exactPath"}); break;
+        Object.assign(next, {units: c.units, plane: c.plane, diameterMode: false, distanceMode: "absolute", arcDistanceMode: "incremental", cutterCompensation: "off", cycle: "off", feedMode: "perMinute", feedRate: 0, motionControl: "exactPath"}); break;
       case "clearTemporaryOffsets": line = "G92.1"; next.temporaryOffsets = "cleared"; next.workPosition = unknownPosition(); break;
       case "spindleStop": line = "M5 $0"; next.spindleDirection = "stopped"; break;
       case "spindleMode":
@@ -42,7 +42,7 @@ class LinuxCNCOutput {
         Object.assign(next, {spindleMode: c.mode, spindleSpeed: c.speed, spindleMaximumRPM: c.mode === "css" ? c.maximumRPM : null}); break;
       case "spindleStart": line = c.clockwise ? "M3 $0" : "M4 $0"; next.spindleDirection = c.clockwise ? "clockwise" : "counterclockwise"; break;
       case "coolant": line = {off: "M9", flood: "M8", mist: "M7"}[c.value]; next.coolant = c.value; break;
-      case "feed": line = (c.mode === "perRevolution" ? "G95" : "G94") + (c.value === undefined ? "" : ` F${decimal(c.value)}`); next.feedMode = c.mode; if (c.value !== undefined) next.feedRate = c.value; break;
+      case "feed": line = (c.mode === "perRevolution" ? "G95" : "G94") + (c.value === undefined ? "" : ` F${decimal(c.value)}`); next.feedMode = c.mode; next.feedRate = c.value === undefined ? 0 : c.value; break;
       case "cancelToolOffset": line = "G49"; next.toolOffset = 0; next.workPosition = unknownPosition(); break;
       case "toolChange":
         line = `T${c.tool} M6`;
@@ -57,7 +57,12 @@ class LinuxCNCOutput {
         line = (c.frame === "machine" ? "G53 " : "") + (c.type === "rapid" ? "G0" : "G1") + words(c.axes); break;
       case "arc": line = (c.clockwise ? "G2" : "G3") + words(c.axes) + words(c.centerOffset, "IJK") + (c.fullCircle ? " P1" : ""); break;
       case "dwell": line = `G4 P${decimal(c.seconds)}`; break;
-      case "end": line = "M2"; next.ended = true; break;
+      case "end":
+        line = "M2";
+        // The controller performs its program-end reset. Our commanded-state
+        // model ends here rather than retaining a misleading pre-M2 plane/WCS.
+        for (const key of Object.keys(next)) next[key] = null;
+        Object.assign(next, {workPosition: unknownPosition(), machinePosition: unknownPosition(), ended: true}); break;
       default: throw new TypeError("Unknown internal machining command: " + c.type);
     }
     need(typeof line === "string" && line.length <= 240, "LINE_LENGTH", "Generated line exceeds 240 characters.", source);

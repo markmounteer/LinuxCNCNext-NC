@@ -11,10 +11,15 @@ function runProgram(label, gcode, fixture) {
     fs.writeFileSync(path.join(dir, "input.ngc"), gcode);
     fs.writeFileSync(path.join(dir, "tool.tbl"), fixture.toolTable);
     fs.writeFileSync(path.join(dir, "rs274.var"), fixture.parameters);
+    // Standalone rs274 otherwise defaults external (machine/table) units to
+    // inches, independently of the program's G20/G21. Pin this synthetic site.
+    const ini = "[TRAJ]\nLINEAR_UNITS = mm\n";
+    fs.writeFileSync(path.join(dir, "machine.ini"), ini);
     fs.writeFileSync(path.join(artifacts, label + ".ngc"), gcode);
     fs.writeFileSync(path.join(artifacts, label + ".tool.tbl"), fixture.toolTable);
     fs.writeFileSync(path.join(artifacts, label + ".var"), fixture.parameters);
-    const run = spawnSync(process.env.LINUXCNC_RS274 || "rs274", ["-t", "tool.tbl", "-v", "rs274.var", "-n", "0", "-g", "input.ngc"], {cwd: dir, encoding: "utf8", timeout: 30000});
+    fs.writeFileSync(path.join(artifacts, label + ".ini"), ini);
+    const run = spawnSync(process.env.LINUXCNC_RS274 || "rs274", ["-i", "machine.ini", "-t", "tool.tbl", "-v", "rs274.var", "-n", "0", "-g", "input.ngc"], {cwd: dir, encoding: "utf8", timeout: 30000});
     const trace = (run.stdout || "") + (run.stderr || ""); fs.writeFileSync(path.join(artifacts, label + ".trace.txt"), trace);
     if (run.error) throw run.error;
     return {trace, events: canonicalEvents(trace), status: run.status};

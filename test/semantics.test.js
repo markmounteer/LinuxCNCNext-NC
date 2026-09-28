@@ -25,6 +25,7 @@ test("both machines match a hand-authored oracle; modal/source state does not le
     assert.equal(cut.modalState.spindleDirection, "counterclockwise"); assert.equal(cut.modalState.coolant, "mist");
     assert.equal(cut.modalState.tool, 1); assert.equal(cut.modalState.toolOffset, 3);
     const firstRapid = result.sourceMap.find(e => e.command.type === "rapid");
+    assert.equal(firstRapid.modalState.feedRate, 0);
     assert.equal(firstRapid.command.frame, "machine"); assert.ok(!firstRapid.motion.start);
     assert.ok(!firstRapid.stateChange.workPosition); // All work axes remain unknown.
     const toolChange = result.sourceMap.find(e => e.command.type === "toolChange");
@@ -32,6 +33,8 @@ test("both machines match a hand-authored oracle; modal/source state does not le
     const lastCut = result.sourceMap.find(e => e.section === 4 && e.action === "motion" && e.phase === "toolpath");
     assert.equal(lastCut.modalState.plane, machine === "mill" ? "XY" : "XZ");
     assert.equal(lastCut.modalState.tool, 2); assert.equal(lastCut.modalState.toolOffset, 1); assert.equal(lastCut.modalState.workOffset, "G55");
+    assert.equal(result.sourceMap.at(-1).stateChange.ended.after, true);
+    assert.equal(result.sourceMap.at(-1).stateChange.workOffset.after, null);
     translate(examples.example().text, examples.example().plan);
     assert.deepEqual(translate(f.text, f.plan), result);
     const corrupt = structuredClone(result); corrupt.sourceMap.find(e => e.action === "motion" && e.path).path += 1;
