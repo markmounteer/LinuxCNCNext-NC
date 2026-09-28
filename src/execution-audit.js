@@ -1,6 +1,13 @@
 "use strict";
-const {isDeepStrictEqual: equal} = require("node:util");
 const {invariant} = require("./internal-error");
+// The existing reader/formatter treat +0 and -0 as the same coordinate. Keep
+// that exact numeric contract without tolerances or JSON's NaN-to-null coercion.
+function equal(a, b) {
+  if (a === b) return true;
+  if (!a || !b || typeof a !== "object" || typeof b !== "object" || Array.isArray(a) !== Array.isArray(b)) return false;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every(k => Object.hasOwn(b, k) && equal(a[k], b[k]));
+}
 // Enumerate source USES, not unique geometry: repeated vertices and shared curves
 // each remain required. This traversal does not consume the emitter's loop state.
 function* expectedUses(program, plan) {

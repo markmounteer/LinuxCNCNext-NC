@@ -1,6 +1,6 @@
 # v0.7.0 validation update
 
-Local Windows validation: 34 translator Node groups passed, one POSIX-only filter group skipped, and two Python AXIS-helper tests passed. The shared Fusion reader has 74 passing Node groups and its generated-post build check passed. Examples were regenerated; only the translator release banners changed. Eight golden programs retain their fingerprints and exact G-code after that banner.
+Local Windows validation: 35 translator Node groups passed, one POSIX-only filter group skipped, and two Python AXIS-helper tests passed. The shared Fusion reader has 74 passing Node groups and its generated-post build check passed. Examples were regenerated; only the translator release banners changed. Eight golden programs retain their fingerprints and exact G-code after that banner. Signed-zero inputs retain the existing numeric semantics without a new tolerance.
 
 New tests cover both machines and units: successful STEP record/line/column provenance, shared geometry and derived full-circle sources, raw input hashes, renumbered/reformatted inputs, plan JSON Pointers, atomic rejection of invalid internal commands, and ordered output auditing. Fault injection drops or duplicates motions/dwells/waypoints, swaps link waypoints, and corrupts source ownership, arc centers, motion details, line numbers, action types or process state. Each must fail with its intended internal invariant. CLI preflight, translation and filter failures retain structured local diagnostics and publish no output.
 

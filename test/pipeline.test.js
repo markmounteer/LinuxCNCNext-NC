@@ -73,6 +73,15 @@ test("successful source maps bind STEP uses and plan pointers without changing G
     assert.match(html, /sourceColumn/); assert.match(html, /completeness/);
   }
 });
+test("signed zero preserves the existing decoded fingerprint, reviewed plan and exact G-code", () => {
+  for (const factory of [example, millingExample]) for (const units of ["mm", "inch"]) {
+    const f = factory(units), baseline = translate(f.text, f.plan);
+    const signed = translate(f.text.replace(/,0\.(?=[,)])/g, ",-0."), f.plan);
+    assert.equal(signed.gcode, baseline.gcode);
+    assert.deepEqual(signed.report.programFingerprint, baseline.report.programFingerprint);
+    assert.equal(signed.report.execution.completeness.status, "passed");
+  }
+});
 test("ordered audit detects dropped, duplicated, reordered and corrupted uses for both machines/units", () => {
   const original = LinuxCNCOutput.prototype.emit;
   const cases = [
