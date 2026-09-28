@@ -1,4 +1,5 @@
 "use strict";
+const {ValidationError} = require("../vendor/fusion360next-nc/validation-error");
 const {parse} = require("../vendor/fusion360next-nc/part21");
 const {inspectDocument} = require("../vendor/fusion360next-nc/inspect");
 const {NextNCError, requireValue: need} = require("./errors");
@@ -107,7 +108,7 @@ function readProgram(text) {
     }
     return result;
   } catch (error) {
-    if (error instanceof NextNCError) throw error;
+    if (!(error instanceof ValidationError)) throw error;
     throw new NextNCError("INVALID_NEXTNC", error.message, error.context);
   }
 }

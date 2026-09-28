@@ -66,7 +66,7 @@ else {
     if (archivePath) console.error("Next-NC report: " + archivePath);
     }
   } catch (error) {
-    const record = {code: error.code || "IO_ERROR", message: error.message, context: error.context || {}};
+    const record = {code: error.code || "INTERNAL_ERROR", message: error.message, context: error.context || {}};
     const archivePath = archive({status: "failed", error: record});
     console.error(`Next-NC ${record.code}: ${record.message}`);
     if (Object.keys(record.context).length) console.error(JSON.stringify(record.context));

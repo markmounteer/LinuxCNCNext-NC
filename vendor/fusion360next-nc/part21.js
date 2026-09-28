@@ -1,14 +1,15 @@
 "use strict";
+const {ValidationError} = require("./validation-error");
 // Independent reader for the Part 21 subset emitted by Next-NC, not an interpreter.
 function decodeString(value) {
   return value.replace(/''/g, "'").replace(/\\\\|\\X2\\([0-9A-Fa-f]+)\\X0\\/g, (match, hex) => {
     if (!hex) return "\\";
-    if (hex.length % 4) throw new Error("Invalid X2 string escape");
+    if (hex.length % 4) throw new ValidationError("Invalid X2 string escape", {stage: "parse", rule: "STRING_ESCAPE"});
     return hex.match(/.{4}/g).map(part => String.fromCharCode(parseInt(part, 16))).join("");
   });
 }
 function parse(text) {
-  if (typeof text !== "string" || Buffer.byteLength(text) > 32 * 1024 * 1024) throw new Error("Input must be text no larger than 32 MiB");
+  if (typeof text !== "string" || Buffer.byteLength(text) > 32 * 1024 * 1024) throw new ValidationError("Input must be text no larger than 32 MiB", {stage: "parse", rule: "INPUT_SIZE"});
   text = text.replace(/\r\n/g, "\n"); // Native Windows post engine uses CRLF.
   const lineStarts = [0];
   for (let i = 0; i < text.length; ++i) if (text[i] === "\n") lineStarts.push(i + 1);
@@ -18,14 +19,14 @@ function parse(text) {
     return {sourceLine: lo + 1, sourceColumn: offset - lineStarts[lo] + 1};
   }
   const start = text.indexOf("\nDATA;\n");
-  if (!text.startsWith("ISO-10303-21;\nHEADER;\n") || start < 0 || !text.endsWith("ENDSEC;\nEND-ISO-10303-21;\n")) throw new Error("Incomplete Part 21 document");
+  if (!text.startsWith("ISO-10303-21;\nHEADER;\n") || start < 0 || !text.endsWith("ENDSEC;\nEND-ISO-10303-21;\n")) throw new ValidationError("Incomplete Part 21 document", {stage: "parse", rule: "ENVELOPE"});
   let tokens, offsets, cursor = 0, depth = 0, activeRecord;
   function tokenize(from, to) {
     const matches = [...text.slice(from, to).matchAll(/'(?:[^']|'')*'|#[0-9]+|[A-Z_][A-Z_0-9]*|\.[A-Z_]+\.|[-+]?(?:\d+\.\d*|\d*\.\d+|\d+)(?:E[-+]?\d+)?|[(),;=$*]|\S/g)];
     tokens = matches.map(m => m[0]); offsets = matches.map(m => from + m.index); offsets.push(to); cursor = 0;
   }
   function fail(message, offset = offsets[Math.min(cursor, offsets.length - 1)]) {
-    const error = new Error(message); error.context = location(offset);
+    const error = new ValidationError(message, {stage: "parse", rule: "SYNTAX", ...location(offset)});
     if (activeRecord) error.context.record = "#" + activeRecord;
     throw error;
   }
@@ -47,7 +48,7 @@ function parse(text) {
     }
     if (/^'/.test(token)) {
       if (token.length < 2 || !token.endsWith("'")) fail("Unterminated Part 21 string");
-      take(); try { return decodeString(token.slice(1, -1)); } catch (error) { fail(error.message); }
+      take(); try { return decodeString(token.slice(1, -1)); } catch (error) { if (!(error instanceof ValidationError)) throw error; fail(error.message); }
     }
     if (/^[A-Z_]/.test(token)) return entity();
     take();
@@ -85,7 +86,7 @@ function parse(text) {
     if (Array.isArray(value)) value.forEach(references);
     else if (value && typeof value === "object") {
       if (value.ref && !records.has(value.ref)) {
-        const error = new Error(`Missing reference #${value.ref}`); error.context = {...locations.get(activeRecord), record: "#" + activeRecord}; throw error;
+        throw new ValidationError(`Missing reference #${value.ref}`, {stage: "parse", rule: "MISSING_REFERENCE", ...locations.get(activeRecord), record: "#" + activeRecord, missingRecord: "#" + value.ref});
       }
       if (value.args) references(value.args);
     }
