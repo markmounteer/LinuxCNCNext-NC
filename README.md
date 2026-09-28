@@ -142,3 +142,5 @@ The [NIST toolkit review](docs/nist-toolkit-review-plan.md) informed v0.6.0 comm
 The [STEPNCpp review](docs/stepncpp-review-plan.md) informed v0.8.0's explicit process quantities, automatic job requirements, and systematic geometry/unit-equivalence checks for both machines. Reports distinguish validated translation and optional table snapshots from unverified controller commissioning; no new machining options are required.
 
 The sixth-repository [Duy247 STEP-NC-Translator review](docs/duy-translator-review-plan.md) informed v0.9.0's final G-code audit and optional saved-file identity check. These close the demonstrated text-only audit gap and help distinguish an archived candidate from an edited or unrelated saved file, for both machines.
+
+The [EfrainRodriguez/step-nc review](docs/efrain-step-nc-review-plan.md) proposes stricter accepted-profile field checks, independent parser comparisons in CI, and explicit validation coverage. Research probes found useful syntax agreement and limitations in the upstream schema loader. These changes are planned; no upstream runtime dependency has been added.
