@@ -29,6 +29,13 @@ Transition entries identify retract, approach, reviewed link or program end, one
 
 These records support diagnosis and comparison. They neither monitor execution nor provide restart, tool-breakage recovery or automatic replacement-tool selection.
 
+Version 0.6.0 adds `command`, `stateChange` and motion/dwell `modalState` fields.
+Unknown coordinates and modal state use `null`; machine and work positions stay
+separate. See [command and state records](command-state.md). Geometry failures
+now include the responsible source record/line, owning operation/path, stable
+rule and stage, and the actual numeric radius or continuity threshold. HTML
+reports explain whether to correct source geometry, plan fields or tool mappings.
+
 ## Research rationale
 
 Suh et al., [STEP-compliant CNC system for turning: Data model, architecture, and implementation](https://doi.org/10.1016/j.cad.2006.02.006), *Computer-Aided Design* 38 (2006), 677–688, separates authoring, machine adaptation/verification and execution (pp. 681–685; Figs. 7, 16–17). Its execution layer relates generated control code to workingsteps (pp. 685–686). This implementation adopts bounded offline checks and diagnostic traceability from those ideas. Fusion continues to plan cutting paths; LinuxCNC continues to interpret and control motion. Full feature/stock models, multi-turret scheduling and autonomous recovery described in the paper are outside this toolpath bridge.

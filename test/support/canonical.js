@@ -4,7 +4,7 @@ const assert = require("node:assert/strict");
 // never uses it to validate sub-0.0001 geometry or round production coordinates.
 const TOLERANCE = 0.00011;
 function canonicalEvents(trace) {
-  return [...trace.matchAll(/^\s*\d+\s+N[.\d]+\s+([A-Z_]+)\((.*)\)\s*$/gm)]
+  return [...trace.matchAll(/^\s*\d+\s+N[.\d]+\s+([A-Z][A-Z_0-9]*)\((.*)\)\s*$/gm)]
     .filter(m => m[1] !== "COMMENT")
     .map(m => ({type: m[1], args: m[2].trim() ? m[2].trim().split(/[,\s]+/).map(s => /^[-+]?\d+(?:\.\d+)?$/.test(s) ? Number(s) : s) : []}));
 }

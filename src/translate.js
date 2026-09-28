@@ -2,7 +2,7 @@
 const {readProgram} = require("./profile");
 const {validatePlan, machineOf, axesOf} = require("./plan");
 const {continuation, connection, exitPoint} = require("./continuity");
-const {requireValue: need, NextNCError} = require("./errors");
+const {NextNCError} = require("./errors");
 const {checkToolTable} = require("./tool-table");
 const crypto = require("node:crypto");
 const version = require("../package.json").version;

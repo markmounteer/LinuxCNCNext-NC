@@ -56,6 +56,7 @@ test("compacted and explicit polylines preserve every repeated and reversed vert
 test("canonical comparison detects wrong plane, arc center, feed, spindle and offset events", () => {
   const trace = "1 N..... SELECT_PLANE(CANON_PLANE_XZ)\n2 N..... ARC_FEED(-2.0000, 8.0000, 0.0000, 8.0000, 1, 0.0000)\n3 N..... SET_FEED_MODE(0, 1)\n4 N..... START_SPINDLE_COUNTERCLOCKWISE(0)\n5 N..... USE_TOOL_LENGTH_OFFSET(4.0000 0.0000 6.0000, 0.0000 0.0000 0.0000, 0.0000 0.0000 0.0000)\n";
   const expected = canonicalEvents(trace); assert.equal(expected.length, 5);
+  assert.deepEqual(canonicalEvents("6 N..... SET_G5X_OFFSET(2, 40.0000, 50.0000, 60.0000)\n"), [{type: "SET_G5X_OFFSET", args: [2, 40, 50, 60]}]);
   for (const change of [t => t.replace("PLANE_XZ", "PLANE_XY"), t => t.replace("0.0000, 8.0000", "1.0000, 8.0000"), t => t.replace("MODE(0, 1)", "MODE(0, 0)"), t => t.replace("COUNTERCLOCKWISE", "CLOCKWISE"), t => t.replace("OFFSET(4.0000", "OFFSET(7.0000")]) assert.throws(() => compareEvents(canonicalEvents(change(trace)), expected));
 });
 test("geometry failure archives agree across preflight/translate; formatter failure writes no G-code", () => {
