@@ -11,6 +11,9 @@ LinuxCNC formatter produces that line and its additive source-map fields togethe
 - `modalState`: plane, feed, spindle, coolant, tool/H and WCS state at each motion
   or dwell. This describes emitted commands, not measured controller feedback.
 
+G94/G95 explicitly reset the feed value before an F word establishes the new
+value. M2 ends tracking; post-reset controller state is left unknown.
+
 G53 waypoints record one machine-axis target. They do not create a known work
 position or assume zero offsets. Work moves similarly do not invent machine
 coordinates. M6 invalidates recorded modal/position knowledge until subsequent

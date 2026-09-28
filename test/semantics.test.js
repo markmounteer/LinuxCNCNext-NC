@@ -54,6 +54,14 @@ test("compacted and explicit polylines preserve every repeated and reversed vert
     const motions = r => r.sourceMap.filter(e => e.action === "motion" && e.phase === "toolpath").map(e => [e.motion.start, e.motion.end, e.modalState]);
     assert.deepEqual(motions(a), motions(b)); assert.equal(motions(a).length, 4);
     assertSourceAssociations(readProgram(compact), a); assertSourceAssociations(readProgram(explicit), b);
+    // Duplicate a point definition for just one polyline use. Geometry sharing
+    // is storage only: the existing reviewed plan and complete output must match.
+    const curve = compact.match(/^#\d+=POLYLINE\('',\(#(\d+),/m), id = curve[1];
+    const point = compact.split("\n").find(line => line.startsWith("#" + id + "="));
+    const unshared = compact.replace(curve[0], curve[0].replace("(#" + id + ",", "(#999999,"))
+      .replace("\nENDSEC;\nEND-ISO", "\n" + point.replace(/^#\d+=/, "#999999=") + "\nENDSEC;\nEND-ISO");
+    const c = translate(unshared, examples.simulationPlan(readProgram(compact)));
+    assert.equal(c.gcode, a.gcode); assert.deepEqual(c.sourceMap, a.sourceMap);
   }
 });
 test("canonical comparison detects wrong plane, arc center, feed, spindle and offset events", () => {

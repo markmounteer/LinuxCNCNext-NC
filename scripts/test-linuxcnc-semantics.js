@@ -11,9 +11,10 @@ function runProgram(label, gcode, fixture) {
     fs.writeFileSync(path.join(dir, "input.ngc"), gcode);
     fs.writeFileSync(path.join(dir, "tool.tbl"), fixture.toolTable);
     fs.writeFileSync(path.join(dir, "rs274.var"), fixture.parameters);
-    // Standalone rs274 otherwise defaults external (machine/table) units to
-    // inches, independently of the program's G20/G21. Pin this synthetic site.
-    const ini = "[TRAJ]\nLINEAR_UNITS = mm\n";
+    // Debian's 2023 standalone build fixes external units to inches; newer
+    // rs274 can read TRAJ units. Use an explicit inch site for both versions,
+    // independently of G20/G21, and assert its actual converted offsets below.
+    const ini = "[TRAJ]\nLINEAR_UNITS = inch\n";
     fs.writeFileSync(path.join(dir, "machine.ini"), ini);
     fs.writeFileSync(path.join(artifacts, label + ".ngc"), gcode);
     fs.writeFileSync(path.join(artifacts, label + ".tool.tbl"), fixture.toolTable);
@@ -33,15 +34,15 @@ for (const machine of ["lathe", "mill"]) for (const units of ["mm", "inch"]) {
   for (const run of [expected, actual]) { assert.equal(run.status, 0, run.trace); assert.doesNotMatch(run.trace, /(?:error|bad character|unknown word|near line)/i); }
   compareEvents(actual.events, expected.events);
   assert.ok(actual.events.some(e => e.type === "PROGRAM_END"));
-  // Independent physical-offset assertions: machine table is mm, even when
-  // the program is inch. T1 uses H3, T2 uses H1, and G54 differs from G55.
-  const scale = units === "mm" ? 1 : 25.4;
+  // Independent physical-offset assertions: this synthetic machine/table is
+  // inch, even when the program is mm. T1 uses H3, T2 H1; G54 differs from G55.
+  const scale = units === "mm" ? 25.4 : 1;
   for (const offset of [[4, machine === "mill" ? 5 : 0, 6], [1, machine === "mill" ? 2 : 0, 3]]) {
-    assert.ok(actual.events.some(e => e.type === "USE_TOOL_LENGTH_OFFSET" && offset.every((v,i) => Math.abs(e.args[i] - v / scale) < 0.00011)), "Nonzero independent H offsets");
+    assert.ok(actual.events.some(e => e.type === "USE_TOOL_LENGTH_OFFSET" && offset.every((v,i) => Math.abs(e.args[i] - v * scale) < 0.00011)), "Nonzero independent H offsets in program units");
   }
-  assert.ok(actual.events.some(e => e.type === "SET_G5X_OFFSET" && e.args[0] === 2 && Math.abs(e.args[1] - 40 / scale) < 0.00011), "Nonzero G55");
+  assert.ok(actual.events.some(e => e.type === "SET_G5X_OFFSET" && e.args[0] === 2 && Math.abs(e.args[1] - 40 * scale) < 0.00011), "Nonzero G55 in program units");
   const corruptions = {
-    plane: code => code.replace(machine === "mill" ? "G19\n" : "G18 G8", machine === "mill" ? "G17\n" : "G17 G8"),
+    plane: code => machine === "mill" ? code.replace("G19\n", "G17\n") : code.replace(/^G3 /m, "G17\nG3 "),
     center: code => code.replace(machine === "mill" ? "J-2 K0" : "I-2 K0", machine === "mill" ? "J-1 K0" : "I-1 K0"),
     feedMode: code => code.replace("G95 F0.2", "G94 F0.2"),
     spindle: code => code.replace("M4 $0", "M3 $0"),

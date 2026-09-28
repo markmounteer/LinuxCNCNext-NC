@@ -24,11 +24,14 @@ test("HTML renders lathe/mill archives and old failures without executing hostil
     const before = JSON.stringify(record), html = renderReport(record);
     assert.match(html, /Tools in use/); assert.match(html, /href="#operation-0"/); assert.match(html, /Preflight computes candidate lines but writes no G-code/);
     assert.ok(html.includes(out.report.traceability.gcodeSHA256)); assert.equal(JSON.stringify(record), before);
+    assert.match(html, /stateChange/); assert.match(html, /modalState/); assert.match(html, /spindleDirection/);
   }
   const hostile = '</pre><script>alert("x")</script><img src="https://example.com/pixel">';
   const html = renderReport({schema: "linuxcnc-next-nc/diagnostic/1", input: hostile, error: {message: hostile}});
   assert.doesNotMatch(html, /<script|<img|<iframe/i); assert.match(html, /&lt;script&gt;/); assert.match(html, /Not recorded/); assert.match(html, /default-src 'none'/);
   assert.throws(() => renderReport({schema: "linuxcnc-next-nc/diagnostic/2"}), e => e.code === "REPORT_SCHEMA");
+  const diagnostic = renderReport({schema: "linuxcnc-next-nc/diagnostic/1", error: {code: "INVALID_NEXTNC", message: "arc endpoint radius mismatch", context: {stage: "geometry", rule: "ARC_RADIUS", operation: "Facing", path: 3, record: "#123", sourceLine: 131, mismatch: 0.01, threshold: 0.000002}}});
+  assert.match(diagnostic, /Review the named Fusion operation/); assert.match(diagnostic, /ARC_RADIUS/); assert.match(diagnostic, /0.000002/);
 });
 test("doctor/filter share configuration precedence; report is exclusive and leaves job diagnostics unchanged", () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "nextnc review "));

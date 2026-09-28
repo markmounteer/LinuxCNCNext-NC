@@ -10,6 +10,15 @@ The expanded native suite compares every parsed canonical event (except comments
 
 The standalone canonical printer has four-decimal output. Comparisons allow 0.00011 in printed numeric fields, while Node tests retain exact-coordinate and threshold checks; canonical traces are not a sub-0.0001 precision oracle. CI archives synthetic inputs, reference/corrupted programs, tool/parameter tables and traces, including on failure. Nothing connects to a live machine.
 
+The new offset fixtures specify an **inch machine/table** and test both G20 and
+G21 programs, asserting the interpreted conversion of nonzero offsets. Debian's
+2023 standalone build fixes external units to inches even with a millimetre
+TRAJ setting; the newer 2.9 driver supports that setting. The fixture uses inch
+TRAJ units explicitly for portability rather than silently assuming its table
+follows the program units. This does not change the translator or the user's
+machine configuration. Sources: [packaged driver](https://github.com/LinuxCNC/linuxcnc/blob/f1270d6ed7/src/emc/sai/driver.cc#L677)
+and archived interpreter traces.
+
 # v0.5.0 validation update
 
 The new suites cover XYZ mill paths in both units; all three principal arc planes, both senses and full circles; nonzero Y; two tools and independent H/WCS mappings; schema 4 and exact XYZ transitions; aggregated plan problems and skipped dependent checks; escaped HTML, old archives and exclusive report output; doctor/filter configuration precedence and failure isolation. POSIX CI also tests the real shell wrapper, paths with spaces/quotes and missing Node. The optional AXIS helper has process/argument tests; no AXIS GUI was launched.
