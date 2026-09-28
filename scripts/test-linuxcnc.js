@@ -19,6 +19,14 @@ for (const units of ["mm", "inch"]) {
     assert.match(run.stdout, /ARC_FEED/); assert.match(run.stdout, /PROGRAM_END/);
     assert.equal((run.stdout.match(/ARC_FEED\(/g) || []).length, 3);
     assert.match(run.stdout, /SET_SPINDLE_MODE/);
+    const arcs = [...run.stdout.matchAll(/ARC_FEED\(([^)]*)\)/g)].map(m => m[1].split(",").slice(0, 5).map(Number));
+    // In the selected G18 plane LinuxCNC's canonical order is Z, X.
+    // Validate actual interpreted endpoint/centre/sense, not just G-code text.
+    assert.deepEqual(arcs, [[-2, 8, 0, 8, 1], [0, 10, 0, 8, -1], [0, 10, 0, 8, -1]]);
+    const speeds = [...run.stdout.matchAll(/SET_SPINDLE_SPEED\(0,\s*([\d.]+)\)/g)].map(m => Number(m[1]));
+    assert.ok(speeds.includes(units === "mm" ? 80 : 100)); assert.ok(speeds.includes(700));
+    assert.match(run.stdout, /SET_SPINDLE_MODE\(0[, ]\s*1800\.0000\)/);
+    assert.match(run.stdout, /SET_FEED_MODE\(0, 1\)/); assert.match(run.stdout, /SET_FEED_RATE\(0\.1000\)/);
     console.log(run.stdout.split("\n").filter(line => /ARC_FEED|SET_SPINDLE_MODE|SET_SPINDLE_SPEED|SET_FEED_MODE|SET_FEED_RATE/.test(line)).join("\n"));
     console.log(`PASS: LinuxCNC rs274 ${units}, lines/arcs/full circle/CSS/G95/dwell/tool offsets.`);
   } finally { fs.rmSync(temporary, {recursive: true, force: true}); }

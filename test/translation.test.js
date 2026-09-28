@@ -37,6 +37,7 @@ test("unknown required semantics, incomplete documents and ambiguous dwell are r
     text.replace("MACHINING_TOOLPATH(", "MACHINING_NC_FUNCTION("), text.replace("#1=", "#999999=")]) assert.throws(() => translate(corrupted, plan));
   assert.throws(() => readProgram(text.replace("'tool center point'", "'other reference'")), /feed reference/);
   assert.throws(() => readProgram(text.replace("'mist'", "'through tool'")), /Through-tool/);
+  assert.throws(() => readProgram(text.replace("ACTION_PROPERTY('dwell',", "ACTION_PROPERTY('basic curve',")), /motion\/dwell/);
 });
 test("plan templates fail closed; changed program, mappings, units and entries are diagnosed", () => {
   const {text, plan} = example();
