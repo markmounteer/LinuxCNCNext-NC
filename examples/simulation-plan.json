@@ -1,0 +1,42 @@
+{
+  "schema": "linuxcnc-next-nc/execution-plan/1",
+  "programFingerprint": "e42c4e9acaad470b5dfef0901ed92bff233780fc03112b7bdc5ca8ee495ffd9d",
+  "units": "mm",
+  "tools": {
+    "1:1": {
+      "tool": 1,
+      "offset": 1
+    }
+  },
+  "workOffsets": {
+    "1": "G54"
+  },
+  "sections": [
+    {
+      "retract": [
+        {
+          "x": 25
+        },
+        {
+          "z": 10
+        }
+      ],
+      "approach": [
+        {
+          "z": 2
+        },
+        {
+          "x": 12
+        }
+      ]
+    }
+  ],
+  "end": [
+    {
+      "x": 25
+    },
+    {
+      "z": 10
+    }
+  ]
+}

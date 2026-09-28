@@ -1,0 +1,2 @@
+* text=auto eol=lf
+bin/nextnc-filter text eol=lf

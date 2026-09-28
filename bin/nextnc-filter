@@ -1,0 +1,6 @@
+#!/bin/sh
+# LinuxCNC passes the input filename as the only argument. G-code only on stdout.
+set -eu
+script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+plan=${NEXTNC_PLAN:-"${XDG_CONFIG_HOME:-$HOME/.config}/LinuxCNCNext-NC/plan.json"}
+exec node "$script_dir/nextnc.js" translate "$@" --plan "$plan"

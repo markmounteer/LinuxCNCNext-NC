@@ -1,0 +1,32 @@
+name: Tests
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  node:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20, 22, 24]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm test
+      - run: npm run example
+      - run: git diff --exit-code -- examples
+  linuxcnc:
+    runs-on: ubuntu-latest
+    container: debian:bookworm
+    steps:
+      - name: Install offline LinuxCNC interpreter
+        run: apt-get update && apt-get install -y --no-install-recommends git ca-certificates linuxcnc-uspace
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: Record interpreter package version
+        run: dpkg-query -W linuxcnc-uspace
+      - run: npm run test:linuxcnc
