@@ -48,6 +48,7 @@ function renderReport(record) {
   const sections = [
     ["Identity and provenance", table([["Status", record.status], ["Recorded UTC", record.timeUTC], ["Translator", record.translator], ["Command", record.command], ["Machine", inspection.machine], ["Profile", inspection.profile], ["Units", inspection.units], ["Input", record.input], ["Input SHA-256", record.inputSHA256], ["Program fingerprint", inspection.programFingerprint?.value], ["Execution plan", record.plan], ["Plan SHA-256", record.planSHA256], ["Tool-table snapshot", record.toolTable], ["Tool-table SHA-256", record.toolTableSHA256], ["Output", record.output], ["Output SHA-256", record.outputSHA256], ["G-code SHA-256", trace.gcodeSHA256], ["Source records bound to input SHA-256", trace.provenance?.inputSHA256]])],
     ["Diagnostics", record.error ? `<p>${escape(correctionFor(record.error))}</p>` + pre(record.error) : "<p>No failure recorded in this archive.</p>"],
+    ["Final G-code serialization audit", execution.serialization?.schema === "linuxcnc-next-nc/serialization-audit/1" ? pre(execution.serialization) : "<p>Not recorded.</p>"],
     ["Plan issues", Array.isArray(errors) ? errors.map(issue => `<article><h3>${escape(issue.code)} — ${escape(issue.context?.operation || issue.context?.field)}</h3><p>${escape(issue.message)}</p><p>${escape(issue.correction)}</p>${pre(issue.context)}</article>`).join("") : "<p>No aggregated issues recorded.</p>"],
     ["Checks not completed", pre(record.error?.context?.notChecked)],
     ["Job requirements", requirementsView(inspection.jobRequirements)],
