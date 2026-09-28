@@ -26,18 +26,25 @@ The example coordinates and tool table assumptions are **for simulation only**. 
 node bin/nextnc.js inspect /path/1001.stpnc
 node bin/nextnc.js plan-template /path/1001.stpnc --output /path/1001-plan.json
 # Fill and review the template's mappings and transition paths.
-node bin/nextnc.js translate /path/1001.stpnc --plan /path/1001-plan.json --output /path/1001.ngc
+node bin/nextnc.js preflight /path/1001.stpnc --plan /path/1001-plan.json --tool-table /path/to/config/tool.tbl
+node bin/nextnc.js translate /path/1001.stpnc --plan /path/1001-plan.json --tool-table /path/to/config/tool.tbl --output /path/1001.ngc
 ```
 
 The template deliberately has `null` mappings and required approach/retract paths. The export contains each operation's entry point, but no machine-safe approach or tool-change policy. Translation requires explicit LinuxCNC tool/H-offset and work-offset mappings, plus ordered machine-coordinate retract and work-coordinate approach waypoints where needed. It never assumes work offset 0 means the currently active WCS or that a straight rapid between operations is safe.
 
-Version 0.3.0 templates use execution-plan schema 3. When adjacent operations have exactly matching exit/entry, Fusion tool/offset/WCS, spindle state and coolant, the template marks the boundary `{"mode":"continue"}`. Validation rechecks these conditions and mapped offsets. Such a boundary keeps the spindle running and adds no retract or approach.
+Version 0.4.0 templates use execution-plan schema 3. When adjacent operations have exactly matching exit/entry, Fusion tool/offset/WCS, spindle state and coolant, the template marks the boundary `{"mode":"continue"}`. Validation rechecks these conditions and mapped offsets. Such a boundary keeps the spindle running and adds no retract or approach.
 
 When compatible operations have different exit/entry points, schema 3 can accept an explicitly reviewed `{"mode":"link","moves":[...]}` path in work coordinates while preserving process state. The template **never invents this path**; it leaves a retract boundary until you supply a reviewed connection. Waypoints are one axis at a time and must reach the exact next entry. Existing schema 1/2 plans and explicit retract boundaries keep their reviewed paths. Inspect reports explain eligibility. See [execution plans](docs/execution-plan.md).
 
 An execution plan is bound to the exact decoded program fingerprint. A change to tooling, units, offsets, paths, feeds or process states requires a reviewed plan for the new program. Export timestamps, record numbering and equivalent geometry sharing do not invalidate it. See [execution plans](docs/execution-plan.md).
 
 The entire input and plan are checked before any G-code reaches stdout or an output file. Existing files are never overwritten. The final output path is created atomically; failed writes do not leave a partial program there.
+
+## Offline preflight
+
+Version 0.4.0 adds `preflight`, which performs the same translation checks but returns a JSON review instead of G-code. `--output` saves that JSON to a new file. Optional `--tool-table` checks a snapshot of your existing LinuxCNC table for syntax, duplicate tool numbers and the presence of every mapped T and H record. Missing records are reported together with all affected operations. Supply the same table to `translate` to repeat the check at generation time; preflight is not a reusable authorization token.
+
+The default filename is `tool.tbl`; use the file specified by your existing `[EMCIO]TOOL_TABLE` setting. No table is written or loaded into LinuxCNC. Without `--tool-table`, the report explicitly says `not_checked`. Presence of a record does not establish correct physical tooling, calibrated offsets, changer pockets, work offsets, clearance or safe machine operation; an external tool database or live controller may differ from the file snapshot. See [preflight and source maps](docs/preflight.md).
 
 ## Supported translation
 
@@ -71,11 +78,15 @@ stpnc = /home/you/LinuxCNCNext-NC/bin/nextnc-filter
 
 Preserve existing FILTER entries. The wrapper writes only G-code to stdout, diagnostics to stderr, and exits nonzero on failure. It does not start LinuxCNC, connect to a controller or modify your INI. [Installation and operating limits](docs/linuxcnc.md) include tool changes, offsets, entry sequencing and restart considerations.
 
+To use the same tool-table check in the filter, set `NEXTNC_TOOL_TABLE` to the existing table's absolute path before starting LinuxCNC. This is an input file reference, not a second set of tooling settings.
+
 ## Diagnostics
 
 Every command archives a local JSON report, including input/plan hashes, error code/context or validated program summary, and a generated-line-to-operation/path map for translations.
 
 Inspect reports include per-operation feeds, spindle settings, entry/exit coordinates and continuation/connection eligibility. Translation reports also list the actual boundary decisions, link starts/ends/waypoints, source-line mapping and number of unchanged axis words omitted. A difference in CAM feed settings is preserved, not silently normalized to another file's feed.
+
+The 0.4.0 source map gives explicit one-based G-code line numbers, operation line ranges, polyline segment/vertex numbers, motion starts/ends, arc centre offsets and source geometry, dwell positions and machine/work frames for transition waypoints. The map is bound to the candidate G-code SHA-256 and decoded program fingerprint. It describes generated commands, not execution progress, and does not enable run-from-line recovery.
 
 - Linux: `${XDG_STATE_HOME:-~/.local/state}/LinuxCNCNext-NC/diagnostics/`
 - Windows: `%LOCALAPPDATA%\LinuxCNCNext-NC\diagnostics\`

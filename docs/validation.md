@@ -1,6 +1,8 @@
 # Validation scope
 
-Version 0.3.0 development preview.
+Version 0.4.0 development preview.
+
+The 19 Node test groups include offline preflight, optional tool-table snapshots, independent T/H records, aggregated missing records, malformed/duplicate records, no-overwrite and no-partial-output behavior, explicit unverified scope, and exact motion/segment/dwell/transition source maps in both units. Native interpreter fixtures use the same synthetic tool-table snapshot that the translator checks. The filter's tool-table forwarding is also exercised in the native Linux test script.
 
 The automated Node suites cover metric/inch output, CSS scale and cap, RPM/direction changes, G94/G95 feeds, arc senses/full circles, every linear vertex, dwell, coolant, logical tool/H/WCS mappings, separate repeated operations, machine transitions, exact decimal formatting and rejection before output. CLI tests preserve inputs/existing outputs, check stale/incomplete plans, archive diagnostics, retain the last error after success, and block active G-code/comment injection from names.
 

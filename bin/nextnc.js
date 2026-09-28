@@ -5,35 +5,39 @@ const {translate} = require("../src/translate"), {readProgram} = require("../src
 const {NextNCError} = require("../src/errors"), diagnostics = require("../src/diagnostics");
 const {writeExclusive} = require("../src/files");
 const version = require("../package.json").version;
-const usage = "Usage: nextnc-linuxcnc inspect|plan-template|translate input.stpnc [--plan plan.json] [--output NEW_FILE]";
+const usage = "Usage: nextnc-linuxcnc inspect|plan-template|preflight|translate input.stpnc [--plan plan.json] [--tool-table tool.tbl] [--output NEW_FILE]";
 const args = process.argv.slice(2);
 if (args.length === 1 && ["--help", "--version"].includes(args[0])) { console.log(args[0] === "--help" ? usage : version); }
 else {
-  let input, planPath, output, command, inputHash, planHash;
+  let input, planPath, toolTablePath, output, command, inputHash, planHash, toolTableHash;
   function hash(bytes) { return crypto.createHash("sha256").update(bytes).digest("hex"); }
   function read(file, limit) { const stat = fs.statSync(file); if (!stat.isFile() || stat.size > limit) throw new NextNCError("INPUT_SIZE", `Expected a regular file of at most ${limit} bytes: ${file}`); return fs.readFileSync(file); }
   function archive(report) {
-    try { return diagnostics.save({translator: version, command, input, inputSHA256: inputHash, plan: planPath, planSHA256: planHash, ...report}); }
+    try { return diagnostics.save({translator: version, command, input, inputSHA256: inputHash, plan: planPath, planSHA256: planHash, toolTable: toolTablePath, toolTableSHA256: toolTableHash, ...report}); }
     catch (error) { console.error("Could not save diagnostics: " + error.message); return null; }
   }
   try {
     command = args.shift();
-    if (!["inspect", "plan-template", "translate"].includes(command)) throw new NextNCError("USAGE", usage);
+    if (!["inspect", "plan-template", "preflight", "translate"].includes(command)) throw new NextNCError("USAGE", usage);
     while (args.length) {
       const arg = args.shift();
       if (arg === "--plan" && !planPath && args[0] && !args[0].startsWith("--")) planPath = path.resolve(args.shift());
+      else if (arg === "--tool-table" && !toolTablePath && args[0] && !args[0].startsWith("--")) toolTablePath = path.resolve(args.shift());
       else if (arg === "--output" && !output && args[0] && !args[0].startsWith("--")) output = path.resolve(args.shift());
       else if (!arg.startsWith("--") && !input) input = path.resolve(arg);
       else throw new NextNCError("USAGE", usage);
     }
-    if (!input || (command !== "translate" && planPath)) throw new NextNCError("USAGE", usage);
+    if (!input || (!["preflight", "translate"].includes(command) && (planPath || toolTablePath))) throw new NextNCError("USAGE", usage);
     const bytes = read(input, 32 * 1024 * 1024); inputHash = hash(bytes); const text = bytes.toString("utf8");
     let content, report;
-    if (command === "translate") {
+    if (command === "translate" || command === "preflight") {
       if (!planPath) throw new NextNCError("PLAN_REQUIRED", "Supply --plan with reviewed tool/WCS mappings and entry/retract paths. Run plan-template to create an intentionally incomplete template.");
       const planBytes = read(planPath, 1024 * 1024); planHash = hash(planBytes);
       let plan; try { plan = JSON.parse(planBytes); } catch (error) { throw new NextNCError("PLAN_JSON", error.message); }
-      const result = translate(text, plan); content = result.gcode; report = {inspection: result.report, sourceMap: result.sourceMap};
+      let toolTable;
+      if (toolTablePath) { const tableBytes = read(toolTablePath, 1024 * 1024); toolTableHash = hash(tableBytes); toolTable = tableBytes.toString("utf8"); }
+      const result = translate(text, plan, {toolTable}); report = {inspection: result.report, sourceMap: result.sourceMap};
+      content = command === "translate" ? result.gcode : JSON.stringify({status: "passed", gcodeWritten: false, scope: "Offline program, execution-plan and optional tool-table validation; not machine acceptance.", ...report}, null, 2) + "\n";
     } else {
       const program = readProgram(text); report = {inspection: program.report};
       content = JSON.stringify(command === "inspect" ? program.report : template(program), null, 2) + "\n";

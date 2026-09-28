@@ -1,6 +1,6 @@
 {
   "name": "linuxcnc-next-nc",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Next-NC XZ turning translator and LinuxCNC input filter",
   "license": "MIT",
   "repository": {"type": "git", "url": "https://github.com/markmounteer/LinuxCNCNext-NC.git"},
@@ -9,7 +9,7 @@
   "bin": {"nextnc-linuxcnc": "bin/nextnc.js"},
   "files": ["src", "bin", "vendor", "examples", "docs", "README.md", "LICENSE"],
   "scripts": {
-    "test": "node --test test/translation.test.js test/links.test.js test/cli.test.js",
+    "test": "node --test test/translation.test.js test/links.test.js test/cli.test.js test/preflight.test.js",
     "example": "node scripts/example.js",
     "test:linuxcnc": "node scripts/test-linuxcnc.js"
   }
