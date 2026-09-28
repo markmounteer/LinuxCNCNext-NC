@@ -25,10 +25,22 @@ dependencies are excluded from the installed translator. The production
 writer/shared reader, profiles, execution-plan schemas and machine settings
 are unchanged.
 
-CI adds dedicated Windows/Linux independent-parser jobs alongside the existing
-six Node matrix jobs and offline LinuxCNC interpreter job. Local Windows checks
-do not establish interpreter or physical machine acceptance. Native CI outcomes
-are recorded separately when available.
+All **nine jobs passed** in [CI run 36493004100](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36493004100)
+at code commit `27521300850d088893ddfcf479b09dd249a4bd2a`: six Windows/Linux
+Node 20/22/24 jobs, two independent-parser jobs and standalone LinuxCNC.
+Linux passed 81 Node groups; Windows passed 80 with the POSIX-only skip.
+Both Python helper tests and example reproducibility passed in each Node job.
+Both parser jobs passed all 56 cases and produced identical compiled-parser
+SHA-256 `e241a05a73726a6d97f2c87f00f07d3c24e2b920036ccecbf3fefe644d4db06f`.
+The downloaded artifacts retain all case outcomes, hashes, spans and inputs.
+
+The native suite passed 20 valid scenarios, 12 independent reference programs
+and 40 deliberate corruptions (72 interpreted programs, confirmed in the
+downloaded artifact). Interpreter package:
+`linuxcnc-uspace 2.9.0~pre1+git20230208.f1270d6ed7-1+deb12u2`.
+The canonical printer's four-decimal precision and 0.00011 comparison allowance
+remain unchanged. These are offline results, not physical machine acceptance
+or full EXPRESS/AP238 conformance.
 
 # v0.9.0 validation update
 
