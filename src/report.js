@@ -29,7 +29,15 @@ function requirementsView(r) {
     `<h3>Controller requirements — not checked</h3>` + grid(["Requirement", "Status", "Meaning"], r.evidence.controller.checks.map(c => [c.id, label(c.status), c.detail])) +
     r.limitations.map(l => `<p>${escape(l)}</p>`).join("");
 }
-function renderReport(record) {
+function identityView(identity) {
+  const status = identity?.schema === "linuxcnc-next-nc/artifact-identity/1" ? identity.status : "not_checked";
+  const labels = {match: "Match", mismatch: "Mismatch", not_recorded: "Not recorded", invalid_hash: "Invalid recorded hash", not_checked: "Not checked"};
+  const explanation = status === "match" ? "The selected file bytes match the archived candidate hash. This does not establish authenticity, execution or what the controller currently has loaded." :
+    "All operation line ranges and source mappings below describe the archived candidate. They are not verified for a selected file.";
+  return `<p><strong>Saved G-code identity: ${escape(labels[status] || "Not checked")}</strong></p><p>${explanation}</p>` +
+    (status === "not_checked" ? "<p>No saved G-code file was checked in this review.</p>" : table([["Selected file", identity.file], ["Bytes read", identity.bytes], ["Checked UTC", identity.checkedUTC], ["Expected candidate SHA-256", identity.expectedSHA256], ["Observed file SHA-256", identity.observedSHA256], ["Scope", identity.scope]]));
+}
+function renderReport(record, {artifactIdentity} = {}) {
   need(record && typeof record === "object" && !Array.isArray(record) && record.schema === "linuxcnc-next-nc/diagnostic/1", "REPORT_SCHEMA", "Expected a linuxcnc-next-nc/diagnostic/1 archive; unsupported schemas are not rendered.");
   const inspection = record.inspection || {}, trace = inspection.traceability || {}, execution = inspection.execution || {};
   const errors = record.error?.context?.issues;
@@ -46,6 +54,7 @@ function renderReport(record) {
     return `<article id="operation-${index}"><h3>${escape(op.section)}: ${escape(op.operation)}</h3>${table([["Fusion tool / offset", op.tool ? `${op.tool.number} / ${op.tool.offset}` : undefined], ["LinuxCNC T / H", op.mappedTool ? `${op.mappedTool.tool} / ${op.mappedTool.offset}` : undefined], ["LinuxCNC WCS", op.mappedWorkOffset], ["G-code line range", `${op.firstLine}–${op.lastLine}`]])}${processView(process)}<details><summary>Show this operation's detailed source lines</summary>${pre({initialSpindle: op.initialSpindle, initialCoolant: op.initialCoolant})}${grid(["Line", "Phase", "Path / segment", "Recorded action"], entries.map(e => [e.line, e.phase, [e.path, e.segment].filter(x => x !== undefined).join(" / "), json(e.command ? {command: e.command, stateChange: e.stateChange, modalState: e.modalState, motion: e.motion, provenance: e.provenance} : e.motion || (e.action === "dwell" ? {seconds: e.seconds, position: e.position} : e.action))]))}</details></article>`;
   }).join("");
   const sections = [
+    ["Saved G-code identity", identityView(artifactIdentity)],
     ["Identity and provenance", table([["Status", record.status], ["Recorded UTC", record.timeUTC], ["Translator", record.translator], ["Command", record.command], ["Machine", inspection.machine], ["Profile", inspection.profile], ["Units", inspection.units], ["Input", record.input], ["Input SHA-256", record.inputSHA256], ["Program fingerprint", inspection.programFingerprint?.value], ["Execution plan", record.plan], ["Plan SHA-256", record.planSHA256], ["Tool-table snapshot", record.toolTable], ["Tool-table SHA-256", record.toolTableSHA256], ["Output", record.output], ["Output SHA-256", record.outputSHA256], ["G-code SHA-256", trace.gcodeSHA256], ["Source records bound to input SHA-256", trace.provenance?.inputSHA256]])],
     ["Diagnostics", record.error ? `<p>${escape(correctionFor(record.error))}</p>` + pre(record.error) : "<p>No failure recorded in this archive.</p>"],
     ["Final G-code serialization audit", execution.serialization?.schema === "linuxcnc-next-nc/serialization-audit/1" ? pre(execution.serialization) : "<p>Not recorded.</p>"],
