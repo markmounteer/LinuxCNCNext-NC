@@ -1,6 +1,6 @@
 "use strict";
 const test = require("node:test"), assert = require("node:assert/strict"), fs = require("node:fs"), os = require("node:os"), path = require("node:path");
-const {spawnSync} = require("node:child_process"), {example} = require("../scripts/example");
+const {spawnSync} = require("node:child_process"), {example, linkExample} = require("../scripts/example");
 test("CLI/filter is all-or-nothing, preserves inputs and archives detailed failures locally", () => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "linuxcnc-nextnc-test-"));
   try {
@@ -20,6 +20,17 @@ test("CLI/filter is all-or-nothing, preserves inputs and archives detailed failu
     plan.sections[0].approach[1].x = 999; fs.writeFileSync(planFile, JSON.stringify(plan)); r = run("translate", input, "--plan", planFile);
     assert.equal(r.status, 1); assert.equal(r.stdout, ""); const error = JSON.parse(fs.readFileSync(path.join(diagnostics, "latest-error.json"))).error;
     assert.equal(error.code, "ENTRY_MISMATCH"); assert.equal(error.context.section, 1); assert.ok(error.context.operation);
+    const linked = linkExample(); fs.writeFileSync(input, linked.text);
+    linked.plan.sections[1].moves = [{x: 13}]; fs.writeFileSync(planFile, JSON.stringify(linked.plan));
+    r = run("translate", input, "--plan", planFile);
+    assert.equal(r.status, 1); assert.equal(r.stdout, "");
+    const linkError = JSON.parse(fs.readFileSync(path.join(diagnostics, "latest-error.json"))).error;
+    assert.equal(linkError.code, "LINK_ENDPOINT"); assert.equal(linkError.context.section, 2);
+    linked.plan.sections[1].moves = [{x: 14}]; fs.writeFileSync(planFile, JSON.stringify(linked.plan));
+    r = run("translate", input, "--plan", planFile); assert.equal(r.status, 0, r.stderr);
+    const linkedReport = JSON.parse(fs.readFileSync(path.join(diagnostics, "latest.json")));
+    assert.equal(linkedReport.inspection.execution.links, 1);
+    assert.ok(linkedReport.sourceMap.some(p => p.phase === "link" && p.waypoint === 1));
     for (const args of [[], ["translate", input, "--bogus"], ["inspect", input, "--plan", planFile], ["translate", input, "--output"]]) assert.equal(run(...args).status, 2);
   } finally { fs.rmSync(dir, {recursive: true, force: true}); }
 });

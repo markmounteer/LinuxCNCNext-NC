@@ -31,10 +31,24 @@ function continuationExample(units = "mm") {
   }
   const text = p.toSTEP(); return {text, plan: simulationPlan(readProgram(text))};
 }
+function linkExample(units = "mm") {
+  const p = new Program({name: "Synthetic reviewed connection", units, timestamp: "2026-09-28T00:00:00Z"});
+  const spec = {tool: {number: 1, offset: 1, description: "Simulation tool"}, workOffset: 1,
+    spindle: {mode: "css", speed: units === "mm" ? 80000 : 1200, maximumRPM: 1800, clockwise: true}, coolant: "off"};
+  for (const [name, x, feed, depth] of [["First", 12, 0.18, -1], ["Second", 14, 0.08, -2]]) {
+    const s = p.addSection({name, start: [x, 0, 2], ...spec});
+    s.rapid([10, 0, 2]); s.linear([10, 0, depth], {mode: "perRevolution", value: feed});
+    s.rapid([x, 0, depth]); s.rapid([x, 0, 2]);
+  }
+  const text = p.toSTEP(), plan = simulationPlan(readProgram(text));
+  // Synthetic simulation path: deliberately preserve the explicit detour/order.
+  plan.sections[1] = {mode: "link", moves: [{z: 3}, {x: 14}, {z: 2}]};
+  return {text, plan};
+}
 if (require.main === module) {
   const {text, plan} = example(), dir = path.join(__dirname, "../examples");
   fs.writeFileSync(path.join(dir, "synthetic.stpnc"), text);
   fs.writeFileSync(path.join(dir, "simulation-plan.json"), JSON.stringify(plan, null, 2) + "\n");
   fs.writeFileSync(path.join(dir, "synthetic.ngc"), translate(text, plan).gcode);
 }
-module.exports = {example, simulationPlan, continuationExample};
+module.exports = {example, simulationPlan, continuationExample, linkExample};

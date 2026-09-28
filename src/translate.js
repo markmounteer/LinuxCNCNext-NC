@@ -1,7 +1,7 @@
 "use strict";
 const {readProgram} = require("./profile");
 const {validatePlan} = require("./plan");
-const {continuation} = require("./continuity");
+const {continuation, connection, exitPoint} = require("./continuity");
 const {requireValue: need, NextNCError} = require("./errors");
 const version = require("../package.json").version;
 function decimal(n) {
@@ -41,10 +41,12 @@ function translate(text, plan) {
   for (const [index, section] of model.sections.entries()) {
     context = {section: index + 1, operation: section.name, phase: "transition"};
     emit(comment(`Section ${index + 1}: ${section.name}`));
-    const continuous = plan.sections[index].mode === "continue";
-    transitions.push({section: index + 1, operation: section.name, mode: continuous ? "continue" : "retract",
-      reason: continuous ? continuation(program, index, plan).reason : "Execution plan specifies a machine retract and approach."});
-    if (!continuous) {
+    const transition = plan.sections[index], mode = transition.mode || "retract";
+    const record = {section: index + 1, operation: section.name, mode,
+      reason: mode === "continue" ? continuation(program, index, plan).reason : mode === "link" ? connection(program, index, plan).reason : "Execution plan specifies a machine retract and approach."};
+    if (mode === "link") Object.assign(record, {start: exitPoint(model.sections[index - 1]), end: section.start, moves: transition.moves});
+    transitions.push(record);
+    if (mode === "retract") {
       // Header already established stopped state before the first approach.
       if (index > 0) stop();
       waypoints(plan.sections[index].retract, true);
@@ -53,6 +55,13 @@ function translate(text, plan) {
       // A site M6 remap may change modes. Reassert the translation contract.
       emit(common); emit("G92.1"); emit(plan.workOffsets[section.workOffset]); emit(`G43 H${tool.offset}`);
       waypoints(plan.sections[index].approach, false);
+    } else if (mode === "link") {
+      const boundaryContext = context;
+      transition.moves.forEach((move, waypoint) => {
+        context = {...boundaryContext, phase: "link", waypoint: waypoint + 1};
+        waypoints([move], false);
+      });
+      context = boundaryContext;
     }
     state(section.initialSpindle, section.initialCoolant, null);
     let position = section.start;
@@ -84,6 +93,7 @@ function translate(text, plan) {
   }
   context = {phase: "program-end"}; stop(); waypoints(plan.end, true); emit("G49"); emit("G94"); emit("M2");
   return {gcode: lines.join("\n") + "\n", report: {...program.report, translator: version, gcodeLines: lines.length,
-    execution: {planSchema: plan.schema, transitions, continuations: transitions.filter(t => t.mode === "continue").length, unchangedAxisWordsOmitted, coordinatesRounded: false}}, sourceMap};
+    execution: {planSchema: plan.schema, transitions, continuations: transitions.filter(t => t.mode === "continue").length,
+      links: transitions.filter(t => t.mode === "link").length, unchangedAxisWordsOmitted, coordinatesRounded: false}}, sourceMap};
 }
 module.exports = {translate, decimal, comment};

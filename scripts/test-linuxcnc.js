@@ -1,7 +1,7 @@
 "use strict";
 // Offline standalone interpreter only: no LinuxCNC task, HAL or controller connection.
 const fs = require("node:fs"), path = require("node:path"), os = require("node:os"), assert = require("node:assert/strict");
-const {spawnSync} = require("node:child_process"), {example, continuationExample} = require("./example"), {translate} = require("../src/translate");
+const {spawnSync} = require("node:child_process"), {example, continuationExample, linkExample} = require("./example"), {translate} = require("../src/translate");
 const root = path.resolve(__dirname, ".."), artifacts = path.join(root, "artifacts", "linuxcnc"); fs.mkdirSync(artifacts, {recursive: true});
 const executable = process.env.LINUXCNC_RS274 || "rs274";
 for (const units of ["mm", "inch"]) {
@@ -31,16 +31,16 @@ for (const units of ["mm", "inch"]) {
     console.log(`PASS: LinuxCNC rs274 ${units}, lines/arcs/full circle/CSS/G95/dwell/tool offsets.`);
   } finally { fs.rmSync(temporary, {recursive: true, force: true}); }
 }
-for (const units of ["mm", "inch"]) {
-  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "nextnc-continuation-rs274-"));
+for (const mode of ["continue", "link"]) for (const units of ["mm", "inch"]) {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "nextnc-connection-rs274-"));
   try {
-    const {text, plan} = continuationExample(units), result = translate(text, plan);
+    const {text, plan} = (mode === "link" ? linkExample : continuationExample)(units), result = translate(text, plan);
     const input = path.join(temporary, "sample.ngc"), tool = path.join(temporary, "tool.tbl"), vars = path.join(temporary, "rs274.var");
     fs.writeFileSync(input, result.gcode); fs.writeFileSync(tool, "T1 P1 X0 Z0 D0.8 I0 J0 Q1 ; synthetic\n"); fs.writeFileSync(vars, "");
     const run = spawnSync(executable, ["-t", tool, "-v", vars, "-n", "0", "-g", input], {cwd: temporary, encoding: "utf8", timeout: 30000});
     if (run.error) throw run.error;
-    fs.writeFileSync(path.join(artifacts, units + "-continuation.ngc"), result.gcode);
-    fs.writeFileSync(path.join(artifacts, units + "-continuation.trace.txt"), run.stdout + run.stderr);
+    fs.writeFileSync(path.join(artifacts, units + "-" + mode + ".ngc"), result.gcode);
+    fs.writeFileSync(path.join(artifacts, units + "-" + mode + ".trace.txt"), run.stdout + run.stderr);
     assert.equal(run.status, 0, run.stdout + run.stderr);
     assert.doesNotMatch(run.stdout + run.stderr, /(?:error|bad character|unknown word|near line)/i);
     assert.match(run.stdout, /PROGRAM_END/);
@@ -48,7 +48,13 @@ for (const units of ["mm", "inch"]) {
     assert.deepEqual(feeds, [[10, 0, -1], [10, 0, -2]]);
     assert.equal((run.stdout.match(/START_SPINDLE_CLOCKWISE\(/g) || []).length, 1);
     assert.match(run.stdout, /SET_FEED_RATE\(0\.1800\)/); assert.match(run.stdout, /SET_FEED_RATE\(0\.0800\)/);
+    if (mode === "link") {
+      const traverses = [...run.stdout.matchAll(/STRAIGHT_TRAVERSE\(([^)]*)\)/g)].map(m => m[1].split(",").slice(0, 3).map(Number));
+      const index = traverses.findIndex(p => p[0] === 12 && p[1] === 0 && p[2] === 3);
+      assert.ok(index >= 0, "First reviewed link waypoint was interpreted.");
+      assert.deepEqual(traverses.slice(index, index + 3), [[12, 0, 3], [14, 0, 3], [14, 0, 2]]);
+    }
     console.log(run.stdout.split("\n").filter(line => /STRAIGHT_FEED|START_SPINDLE|SET_FEED_RATE/.test(line)).join("\n"));
-    console.log(`PASS: LinuxCNC rs274 ${units}, continuation with one spindle start, preserved omitted-axis endpoints and feed change.`);
+    console.log(`PASS: LinuxCNC rs274 ${units} ${mode}, one spindle start, exact cutting endpoints/feeds and reviewed waypoint order.`);
   } finally { fs.rmSync(temporary, {recursive: true, force: true}); }
 }

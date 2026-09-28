@@ -2,7 +2,7 @@
 const {parse} = require("../vendor/fusion360next-nc/part21");
 const {inspect} = require("../vendor/fusion360next-nc/inspect");
 const {NextNCError, requireValue: need} = require("./errors");
-const {exitPoint, continuation} = require("./continuity");
+const {exitPoint, continuation, connection} = require("./continuity");
 // Intentionally closed to additional executable semantics. This is the emitted
 // Next-NC profile, not a general AP238 or arbitrary STEP interpreter.
 const arities = {
@@ -97,6 +97,7 @@ function readProgram(text) {
       result.report.operations[index].entry = section.start;
       result.report.operations[index].exit = exitPoint(section);
       result.report.operations[index].continuation = continuation(result, index);
+      result.report.operations[index].connection = connection(result, index);
       need(section.initialCoolant !== "through tool", "COOLANT", "Through-tool coolant needs a separately specified machine mapping and is unsupported.", context);
       for (const [p, path] of section.paths.entries()) {
         need(path.coolant !== "through tool", "COOLANT", "Through-tool coolant is unsupported.", {...context, path: p + 1});
