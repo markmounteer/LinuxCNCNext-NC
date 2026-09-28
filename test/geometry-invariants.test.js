@@ -13,6 +13,7 @@ for (const [machine, plane] of configurations) for (const shift of [[20,20],[-20
     const outputs = [];
     for (const units of ["mm", "inch"]) {
       const f = geometryFixture(machine, plane, units, shift), r = translate(f.text, f.plan, {toolTable: f.toolTable});
+      assert.match(r.gcode, /G43 H2\n/); assert.equal(r.report.toolTable.mappings[0].offset, 2);
       const actual = decodedGeometry(r.gcode), expected = decodedGeometry(f.reference);
       equivalent(actual, expected); outputs.push({r, actual});
       const base = geometryFixture(machine, plane, units), baseline = translate(base.text, base.plan), decodedBase = decodedGeometry(baseline.gcode);

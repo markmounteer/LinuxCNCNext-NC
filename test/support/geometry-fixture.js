@@ -21,6 +21,7 @@ function geometryFixture(machine, plane, units, shift = [0, 0]) {
   s.dwell(0.25);
   p.addSection({...spec, name: "Reviewed work link", start: link}).linear(end, {mode: "perRevolution", value: 0.01 * scale});
   const text = p.toSTEP(), plan = simulationPlan(readProgram(text)), axes = machine === "mill" ? [0,1,2] : [0,2];
+  plan.tools["1:2"] = {tool: 1, offset: 2};
   const retract = machine === "mill" ? [{z: 40 * scale}, {x: 0}, {y: 0}] : [{x: 40 * scale}, {z: 40 * scale}];
   plan.sections[0] = {mode: "retract", retract, approach: axes.map(i => ({["xyz"[i]]: a[i]}))};
   plan.sections[1] = {mode: "link", moves: [{["xyz"[u]]: link[u]}]}; plan.end = retract;
