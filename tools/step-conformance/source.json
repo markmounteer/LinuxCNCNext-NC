@@ -1,0 +1,164 @@
+{
+  "repository": "https://github.com/EfrainRodriguez/step-nc",
+  "commit": "14148ea1e8bcb692ecf53fa8d03ccafea8b02157",
+  "license": "MIT; upstream/LICENSE",
+  "files": {
+    "upstream/LICENSE": "8d27f79bac61a501633258b0647aa5374ef6404d0588e13cf580b8b1aa4cefd8",
+    "upstream/package.json": "3ed99f5b80ceea2c050261c9d7e9b48309b4771b54751a453a220df68f46bfc5",
+    "upstream/src/ast/anchor.ts": "f65633556c9f3d3e88d55c725b2379a7ee4918bc2f1c4d9bb93ad2a89a82e0a3",
+    "upstream/src/ast/base.ts": "8150d0f1bba4fd61c4ff651a5c6eee5121a06939a208a7e446420be343794e84",
+    "upstream/src/ast/children.ts": "db461bb0487196087eeb877602ef606857fb4cdb0f4fbae9f35d19ad0652e13d",
+    "upstream/src/ast/data.ts": "4d64169c7bfa215f41f4abf12ddae23447abb6ec21322cc9b6cba617c3194779",
+    "upstream/src/ast/document.ts": "e4f6afbccf008e5ca7b49a334ff2e2f6feada8911df8d7cd5877e65b43ace9cf",
+    "upstream/src/ast/header.ts": "1c28fed489c190efc02f84c2f850a598853ac3a538c0be179b265782538e3497",
+    "upstream/src/ast/parameter.ts": "3bab83a8ec3e8327a6b3c3a8c2fbe8631711eca4835e5666499271c8429d5625",
+    "upstream/src/ast/reference.ts": "63adedc24ce0c6ab81f4fcdf1c1580ec481e516c40958db89856c0630a270bcb",
+    "upstream/src/ast/signature.ts": "1a90f06e3699ba0227750e1d7bd0a632c56189f71b79c0ac78f67f595a559c08",
+    "upstream/src/index.ts": "2af6ebe8493412b5a42123227fe8fe437dab0215c93749abb70510c339c8d7eb",
+    "upstream/src/lexer/context.ts": "d41ef464fc262a65d05171bd26de4ad1df81c97cb43bba0267f3eee2370e7143",
+    "upstream/src/lexer/helpers.ts": "4d22ceb0ae88f5b088e2e9d435d96ebdb7d9105e0ea962082e288320ff3309ea",
+    "upstream/src/lexer/lexer.ts": "336840aa9995cab05db676e9fa1880a26e7297da19010ba0be51b436969c40ce",
+    "upstream/src/lexer/scanner.ts": "70a91cb392026e986b90c237912066ba601004228fd34f39d0016d96a1e0bab1",
+    "upstream/src/lexer/tables.ts": "41c2c2de37fb166725a9afd97a00febbcdf4a94dbb770caaa179f538b1e9ef9a",
+    "upstream/src/lexer/types.ts": "c52ddf7c85cd3352be600be5fcb59471c5e70da0c1d6d3fd0728525581056065",
+    "upstream/src/parser/anchor.ts": "f9f58376b75da5bbf3ba20d1d26fefda03ca8cab4394bf7e604d93512e0bc396",
+    "upstream/src/parser/common.ts": "6143d83c319e1ce94918f795f3ba10158ca0cd90a7ef1f769c124802891013e1",
+    "upstream/src/parser/context.ts": "a5454d7c48344c9f7cccf31cbf42314ed151e1404a701a040e1954a694c498b3",
+    "upstream/src/parser/data.ts": "60bbea5dbb7c71b44737406a92315f75b6db838d9abb7705a1a78469225a71c5",
+    "upstream/src/parser/header.ts": "f27d97d948e2e9c2898d9e58769f1994b055f305744dcda661ab8e6936da4f7c",
+    "upstream/src/parser/parameter.ts": "1b8848d0275e8001271f322d9288ecda02adf9417dafec19593ea341b5e42574",
+    "upstream/src/parser/parser.ts": "bbec1dd6b71a075556487b7e67a51e43f6dbdb97d07b07483640f6bb060dba38",
+    "upstream/src/parser/reference.ts": "06d3d11622f16627a44e206a486001be5ba2396f1a571897e4ab25462da98375",
+    "upstream/src/parser/signature.ts": "08f57d4f4d91fc94621ad7d513d586f4fd4b739b5d0eb6ed2260b0fb584e5d7e",
+    "upstream/src/parser/types.ts": "c424a1b40d3c46b7b32d7cfaca8ed3536d91d733370bfdb3190880be5826a139",
+    "upstream/src/visitor/types.ts": "2a1e1c7ab3a3515b4be3041d747d6ed0191ff08dabf148471c81e1e7f05bd379",
+    "upstream/src/visitor/visit.ts": "dd69305392f501d21f58cb1107e703975bfd71d3f288e40d55fb321cd26c9b1e",
+    "upstream/src/visitor/walk.ts": "2041f468ee10e34b2e4d04a79932de6398930076ad2e76b2f5566e1362d2b326"
+  },
+  "gitBlobs": {
+    "upstream/LICENSE": {
+      "path": "LICENSE",
+      "gitBlobSHA1": "7bbb313e97671483e50a577eac5f44d2fa6ce364"
+    },
+    "upstream/package.json": {
+      "path": "packages/p21-parser/package.json",
+      "gitBlobSHA1": "93c40f3e6901d9523b9f32a6fd310895a0d628c7"
+    },
+    "upstream/src/ast/anchor.ts": {
+      "path": "packages/p21-parser/src/ast/anchor.ts",
+      "gitBlobSHA1": "97236fff4c4c9b92d48e71a958bad90308d15a1f"
+    },
+    "upstream/src/ast/base.ts": {
+      "path": "packages/p21-parser/src/ast/base.ts",
+      "gitBlobSHA1": "91f9d44477c26eb9434a467ddd429a385c8a88dc"
+    },
+    "upstream/src/ast/children.ts": {
+      "path": "packages/p21-parser/src/ast/children.ts",
+      "gitBlobSHA1": "e89652d603652ec9b088ed5bd2401c57425ccd1b"
+    },
+    "upstream/src/ast/data.ts": {
+      "path": "packages/p21-parser/src/ast/data.ts",
+      "gitBlobSHA1": "a2a52fd13eddbf0b39506fe8a7be7e3c12a0b371"
+    },
+    "upstream/src/ast/document.ts": {
+      "path": "packages/p21-parser/src/ast/document.ts",
+      "gitBlobSHA1": "36444bee4cb8f7409a1c5a22c803bbdb67ea9798"
+    },
+    "upstream/src/ast/header.ts": {
+      "path": "packages/p21-parser/src/ast/header.ts",
+      "gitBlobSHA1": "ee7b28e6647f0607391fb397b0bf120bbdad7a7d"
+    },
+    "upstream/src/ast/parameter.ts": {
+      "path": "packages/p21-parser/src/ast/parameter.ts",
+      "gitBlobSHA1": "db98de9c7671315c2d583b99d571320395786bed"
+    },
+    "upstream/src/ast/reference.ts": {
+      "path": "packages/p21-parser/src/ast/reference.ts",
+      "gitBlobSHA1": "1eff7da7c6b25cb120b383d4f7595545067ca246"
+    },
+    "upstream/src/ast/signature.ts": {
+      "path": "packages/p21-parser/src/ast/signature.ts",
+      "gitBlobSHA1": "133c35bdc408a035198b5abdac0f562ba6f693f3"
+    },
+    "upstream/src/index.ts": {
+      "path": "packages/p21-parser/src/index.ts",
+      "gitBlobSHA1": "b768351f11a8a170c04e6af6e4d5b71db578ff5f"
+    },
+    "upstream/src/lexer/context.ts": {
+      "path": "packages/p21-parser/src/lexer/context.ts",
+      "gitBlobSHA1": "97145f83acad6f439c2dc9ee285be5afade80803"
+    },
+    "upstream/src/lexer/helpers.ts": {
+      "path": "packages/p21-parser/src/lexer/helpers.ts",
+      "gitBlobSHA1": "64bf4d6e077d80822edd8f44fbed26a0f8cab1eb"
+    },
+    "upstream/src/lexer/lexer.ts": {
+      "path": "packages/p21-parser/src/lexer/lexer.ts",
+      "gitBlobSHA1": "70ceaa49662812d4d0ad78f45faef385c89ddbcb"
+    },
+    "upstream/src/lexer/scanner.ts": {
+      "path": "packages/p21-parser/src/lexer/scanner.ts",
+      "gitBlobSHA1": "aabb5111e03bd86a73766a62ce201b696138cd8c"
+    },
+    "upstream/src/lexer/tables.ts": {
+      "path": "packages/p21-parser/src/lexer/tables.ts",
+      "gitBlobSHA1": "26426aae776e5a24262824be4e3e9502e1469f91"
+    },
+    "upstream/src/lexer/types.ts": {
+      "path": "packages/p21-parser/src/lexer/types.ts",
+      "gitBlobSHA1": "6e4a0556aa394a41bde27176d76c59834e13b02d"
+    },
+    "upstream/src/parser/anchor.ts": {
+      "path": "packages/p21-parser/src/parser/anchor.ts",
+      "gitBlobSHA1": "339995cefd2824d61a9bc6aa4cece9c80345dca7"
+    },
+    "upstream/src/parser/common.ts": {
+      "path": "packages/p21-parser/src/parser/common.ts",
+      "gitBlobSHA1": "3df45f6c5f794a199d6176ac6f369deab8b8cd2a"
+    },
+    "upstream/src/parser/context.ts": {
+      "path": "packages/p21-parser/src/parser/context.ts",
+      "gitBlobSHA1": "2ef81c8f28352edfc8077ae7652cc6cfe376e94f"
+    },
+    "upstream/src/parser/data.ts": {
+      "path": "packages/p21-parser/src/parser/data.ts",
+      "gitBlobSHA1": "e7fa814b555b6788f45b6a8efe97c04af59b346a"
+    },
+    "upstream/src/parser/header.ts": {
+      "path": "packages/p21-parser/src/parser/header.ts",
+      "gitBlobSHA1": "b541b7b9c922ff0d778a800e03651a1aa7b92bda"
+    },
+    "upstream/src/parser/parameter.ts": {
+      "path": "packages/p21-parser/src/parser/parameter.ts",
+      "gitBlobSHA1": "6f0dd0712066c4d866125bfdd466939330860a12"
+    },
+    "upstream/src/parser/parser.ts": {
+      "path": "packages/p21-parser/src/parser/parser.ts",
+      "gitBlobSHA1": "fbf52e2aeb2d6f705674c16faedba929665d33fb"
+    },
+    "upstream/src/parser/reference.ts": {
+      "path": "packages/p21-parser/src/parser/reference.ts",
+      "gitBlobSHA1": "54712e44b8436f945b4631d8259e9b6a91ef9b63"
+    },
+    "upstream/src/parser/signature.ts": {
+      "path": "packages/p21-parser/src/parser/signature.ts",
+      "gitBlobSHA1": "0028fe44d982bb039bbeb35edf1b3a6482ac0117"
+    },
+    "upstream/src/parser/types.ts": {
+      "path": "packages/p21-parser/src/parser/types.ts",
+      "gitBlobSHA1": "88c9ac044aba004b47120252949a90fe09a7aaf5"
+    },
+    "upstream/src/visitor/types.ts": {
+      "path": "packages/p21-parser/src/visitor/types.ts",
+      "gitBlobSHA1": "177ad382a31a3ed7de8d4409c09a20bd8d511073"
+    },
+    "upstream/src/visitor/visit.ts": {
+      "path": "packages/p21-parser/src/visitor/visit.ts",
+      "gitBlobSHA1": "d00d9131f0220a579b2e374b4e754957590ff4df"
+    },
+    "upstream/src/visitor/walk.ts": {
+      "path": "packages/p21-parser/src/visitor/walk.ts",
+      "gitBlobSHA1": "62bd561f622895b761835bdca1117f4ab7c4bdd5"
+    }
+  }
+}

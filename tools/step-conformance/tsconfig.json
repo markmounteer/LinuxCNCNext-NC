@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "rootDir": "upstream/src",
+    "outDir": "build",
+    "strict": true,
+    "noEmitOnError": true,
+    "newLine": "lf",
+    "lib": ["ES2022"]
+  },
+  "include": ["upstream/src/**/*.ts"]
+}

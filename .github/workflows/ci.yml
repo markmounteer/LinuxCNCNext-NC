@@ -18,6 +18,27 @@ jobs:
       - run: npm run test:axis-helper
       - run: npm run example
       - run: git diff --exit-code -- examples
+  conformance:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+      - name: Install isolated pinned compiler (no lifecycle scripts)
+        run: npm --prefix tools/step-conformance ci --ignore-scripts --no-audit --no-fund
+      - run: npm run test:conformance
+      - name: Preserve parser comparison and synthetic inputs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: step-conformance-${{ matrix.os }}
+          path: artifacts/step-conformance/
+          if-no-files-found: warn
   linuxcnc:
     runs-on: ubuntu-latest
     container: debian:bookworm

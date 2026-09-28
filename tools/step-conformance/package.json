@@ -1,0 +1,14 @@
+{
+  "name": "nextnc-independent-p21-check",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "commonjs",
+  "scripts": {
+    "build": "node build.js",
+    "test": "npm run build && node run.js"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}
