@@ -151,3 +151,5 @@ The sixth-repository [Duy247 STEP-NC-Translator review](docs/duy-translator-revi
 The [EfrainRodriguez/step-nc review](docs/efrain-step-nc-review-plan.md) informed v0.10.0's accepted-profile field checks, independent parser comparisons in CI, and explicit validation coverage. The parser tooling remains isolated from the dependency-free translator; general EXPRESS conformance is still unchecked.
 
 The [Mastercam exporter review](docs/mastercam-stepnc-review-plan.md) informed v0.11.0's post-M6 state restoration, independent policy audit and process-transition tests. All 16 deliberately omitted commands accepted by the v0.10.0 probes are now rejected. The exporter and its external SDKs are not dependencies.
+
+The [step-nc-adapters review and plan](docs/step-nc-adapters-review-plan.md) identifies comment/whitespace parsing gaps and proposes clearer profile compatibility diagnostics plus a small public API. These changes are planned, not implemented; APT/additive import and the Windows STEP Tools backend are outside the proposed scope.
