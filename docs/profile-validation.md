@@ -51,6 +51,7 @@ dependent stages remain `not_checked`.
 | `executionPlan` | Existing plan validation and schema |
 | `toolTable` | Optional snapshot hash/count, or reason it was not checked |
 | `completeness` | Candidate generation and existing ordered audit result |
+| `policy` | Independent command-state obligations at execution boundaries (v0.11.0) |
 | `serialization` | Existing final G-code text audit result |
 | `expressSchema`, `expressAttributes`, `entityWhere`, `typeWhere`, `uniqueness`, `globalRules`, `fullAP238` | Always `not_checked`; profile validation does not establish these |
 

@@ -7,7 +7,8 @@ execution plans, fingerprints or numerical G-code output.
 ## Automatic final-text audit
 
 Translation validates source geometry and the reviewed plan, creates typed
-commands, and checks ordered source/plan consumption. It then constructs the
+commands, checks ordered source/plan consumption and (since v0.11.0) independently
+checks [translator policy](policy-verification.md). It then constructs the
 final G-code string and independently decodes that string against the commands.
 Only after this audit succeeds does it hash and return the string for publication.
 `preflight`, `translate` and the LinuxCNC filter all use this path; there is no

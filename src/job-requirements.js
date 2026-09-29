@@ -38,7 +38,7 @@ function jobRequirements(program, process, sourceMap, ranges, transitions, toolT
     quantityRanges: [...quantities.values()].map(r => ({...r, sections: [...r.sections]})),
     mappings: ranges.map(r => ({section: r.section, operation: r.operation, fusionTool: r.tool.number, fusionOffset: r.tool.offset, tool: r.mappedTool.tool, offset: r.mappedTool.offset, workOffset: r.mappedWorkOffset})),
     boundaries: Object.fromEntries(["continue", "link", "retract"].map(mode => [mode, transitions.filter(t => t.mode === mode).length])),
-    evidence: {translation: {status: "passed", scope: "Supported profile, reviewed plan, internal command contract and ordered source/output completeness only."},
+    evidence: {translation: {status: "passed", scope: "Supported profile, reviewed plan, command contract, ordered completeness, independent policy state and final-text checks."},
       toolTable, controller: {status: "not_checked", checks: controllerChecks.map(c => ({...c, status: "not_checked"}))}},
     limitations: ["Requested ranges exclude translator initialization and shutdown; they are not measured motion or spindle history.", "CSS and its RPM cap do not predict actual spindle speed.", "No HAL, INI, live controller or physical clearance checks were performed."]};
 }

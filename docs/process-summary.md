@@ -35,10 +35,11 @@ dimensioned quantities where present, and state invalidated by M6 or program
 end. A mode-only final `G94` has no invented F quantity. Source-requested spindle
 speeds never include policy shutdown `S0` in their ranges.
 
-An M6 remap may change coolant or other state. If the translator has not emitted
-a command establishing a value afterward, the report retains `unknown` even
-when the source requests off. This documents the existing commissioning limit;
-it does not infer what the remap did or change generation behavior.
+An M6 remap may change coolant or other state. M6 still records that state as
+unknown; v0.11.0 then explicitly commands stopped spindle, coolant off and zero
+RPM before approach. An initial off request can inherit this known commanded
+value. Historical archives retain their original uncertainty. Commands do not
+establish physical feedback or validate the installed remap.
 
 ## Job requirements
 
@@ -51,7 +52,8 @@ contribute, including a later switch to G95 or a different spindle/coolant state
 Evidence remains explicitly separated:
 
 - Translation checks passed: supported profile, plan, command contract and
-  ordered completeness checks ran before this summary was built.
+  ordered completeness, independent policy and final-text checks ran before
+  this summary was built.
 - Tool table: the existing optional snapshot result is carried through exactly.
   A successful snapshot check is not a live-table or physical-tool verification.
 - Controller commissioning: always `not_checked`. G95 adds the actual spindle

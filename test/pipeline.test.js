@@ -145,6 +145,7 @@ test("audit failures publish no G-code or preflight result and retain structured
       const record = JSON.parse(fs.readFileSync(path.join(diagnostics, "latest-error.json")));
       assert.equal(record.inspection.validationCoverage.stages.executionPlan.status, "passed");
       assert.equal(record.inspection.validationCoverage.stages.completeness.status, "failed");
+      assert.equal(record.inspection.validationCoverage.stages.policy.status, "not_checked");
       assert.equal(record.inspection.validationCoverage.stages.serialization.status, "not_checked");
       assert.equal(record.error.code, "INTERNAL_ERROR"); assert.equal(record.error.context.invariant, "USE_ORDER");
       assert.ok(record.error.context.expectedProvenance.operation.record);

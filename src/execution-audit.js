@@ -87,9 +87,7 @@ function auditExecution(program, plan, output, ranges, boundaries) {
       modal.workOffset === plan.workOffsets[s.workOffset] && modal.spindleMode === p.spindle.mode && modal.spindleSpeed === speed &&
       modal.spindleMaximumRPM === (p.spindle.mode === "css" ? p.spindle.maximumRPM : null) &&
       modal.spindleDirection === (p.spindle.clockwise ? "clockwise" : "counterclockwise") &&
-      // Existing M6 integration leaves coolant unknown when requested off was
-      // suppressed. Unknown is not proof of off; do not strengthen that claim.
-      (modal.coolant === p.coolant || modal.coolant === null && p.coolant === "off") &&
+      modal.coolant === p.coolant &&
       (!p.feed || modal.feedMode === p.feed.mode && modal.feedRate === p.feed.value),
     "PROCESS_STATE", "State at the source use disagrees with the validated process or mappings.", context);
     if (p.kind === "dwell") {

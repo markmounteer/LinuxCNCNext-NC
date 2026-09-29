@@ -30,7 +30,7 @@ function geometryFixture(machine, plane, units, shift = [0, 0]) {
   const init = `${units === "mm" ? "G21" : "G20"} ${machine === "mill" ? "G17" : "G18"} G8 G90 G91.1 G40 G80 G94 G61`;
   const stop = ["M5 $0", "M9", "G97 S0 $0"], retractCode = retract.map(q => "G53 " + waypoint(q));
   // Hand-specified command order; do not call production output/conversion code.
-  const reference = [init, "G92.1", ...stop, ...retractCode, "G49", "T1 M6", init, "G92.1", "G54", "G43 H2",
+  const reference = [init, "G92.1", ...stop, ...retractCode, "G49", "T1 M6", init, ...stop, "G92.1", "G54", "G43 H2",
     ...axes.map(i => `G0 ${"XYZ"[i]}${a[i]}`),
     machine === "lathe" ? `G96 D1800 S${units === "mm" ? 30.48 : 100} $0` : "G97 S600 $0", "M3 $0", "M9", "M8", `G94 F${4 * scale}`];
   if (plane !== (machine === "mill" ? "XY" : "XZ")) reference.push({XY:"G17",XZ:"G18",YZ:"G19"}[plane]);

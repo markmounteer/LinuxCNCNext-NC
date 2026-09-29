@@ -67,7 +67,7 @@ test("coverage comes from completed validators and leaves unrun stages explicitl
   assert.equal(inspection.validationCoverage.stages.executionPlan.status, "not_checked");
   for (const supplied of [undefined, toolTable]) {
     const report = translate(text, plan, {toolTable: supplied}).report, stages = report.validationCoverage.stages;
-    for (const stage of ["part21", "profileShape", "semantics", "executionPlan", "completeness", "serialization"]) assert.equal(stages[stage].status, "passed");
+    for (const stage of ["part21", "profileShape", "semantics", "executionPlan", "completeness", "policy", "serialization"]) assert.equal(stages[stage].status, "passed");
     assert.equal(stages.toolTable.status, supplied ? "passed" : "not_checked");
     for (const stage of ["expressSchema", "expressAttributes", "entityWhere", "typeWhere", "uniqueness", "globalRules", "fullAP238"]) assert.equal(stages[stage].status, "not_checked");
     assert.deepEqual(report.programFingerprint, original);

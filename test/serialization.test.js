@@ -110,6 +110,7 @@ test("text corruption leaves CLI output empty, preserves existing destinations a
       const r = run([]); assert.equal(r.status, 1); assert.equal(r.stdout, "");
       const archive = JSON.parse(fs.readFileSync(path.join(diagnostics, "latest-error.json"))), error = archive.error;
       assert.equal(archive.inspection.validationCoverage.stages.completeness.status, "passed");
+      assert.equal(archive.inspection.validationCoverage.stages.policy.status, "passed");
       assert.equal(archive.inspection.validationCoverage.stages.serialization.status, "failed");
       assert.equal(archive.inspection.validationCoverage.stages.globalRules.status, "not_checked");
       assert.equal(error.code, "INTERNAL_ERROR"); assert.equal(error.context.invariant, "SERIALIZATION_WORDS");

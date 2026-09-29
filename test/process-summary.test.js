@@ -36,10 +36,13 @@ for (const machine of ["lathe", "mill"]) for (const units of ["mm", "inch"]) tes
   const html = renderReport({schema: "linuxcnc-next-nc/diagnostic/1", inspection: r.report, sourceMap: r.sourceMap});
   assert.match(html, /700 RPM/); assert.match(html, /0.25 s/); assert.match(html, /counterclockwise/); assert.match(html, /inherited \(no new command\)/);
 });
-test("summary preserves unknown M6 coolant, old archives, and escaped phase text", () => {
+test("summary restores M6 coolant and preserves old archive uncertainty and escaped text", () => {
   const f = example(), r = translate(f.text, f.plan), initial = r.report.processSummary.operations[0].phases[0];
-  assert.equal(get(initial, "coolant").source.value, "off"); assert.equal(get(initial, "coolant").output.value, null); assert.equal(get(initial, "coolant").disposition, "unknown");
+  assert.equal(get(initial, "coolant").source.value, "off"); assert.equal(get(initial, "coolant").output.value, "off"); assert.equal(get(initial, "coolant").disposition, "inherited");
   const archive = {schema: "linuxcnc-next-nc/diagnostic/1", inspection: structuredClone(r.report), sourceMap: r.sourceMap};
+  const oldCoolant = get(archive.inspection.processSummary.operations[0].phases[0], "coolant");
+  oldCoolant.output.value = null; oldCoolant.disposition = "unknown";
+  assert.match(renderReport(archive), /Unknown/);
   const hostile = '</td><script>alert("x")</script>';
   archive.inspection.processSummary.operations[0].phases[0].quantities[0].source.value = hostile;
   const before = JSON.stringify(archive), html = renderReport(archive);

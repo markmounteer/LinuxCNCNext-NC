@@ -3,6 +3,29 @@ const test = require("node:test"), assert = require("node:assert/strict");
 const {geometryFixture, decodedGeometry, configurations, frames} = require("./support/geometry-fixture");
 const {translate} = require("../src/translate"), {readProgram} = require("../src/profile"), {simulationPlan} = require("../scripts/example");
 const {Program} = require("../vendor/fusion360next-nc/next-nc");
+test("negative normals, tilted frames, helices and compensation remain outside the accepted profile", () => {
+  for (const [machine, plane] of configurations) for (const units of ["mm", "inch"]) {
+    const f = geometryFixture(machine, plane, units), source = readProgram(f.text).provenance.sections[0].paths[0].arc;
+    const normalAxis = {XY:2, XZ:1, YZ:0}[plane];
+    const replaceVector = (ref, vector) => f.text.split("\n").map(line => line.startsWith(ref.record + "=") ?
+      line.replace(/\([^()]*\)(?=\);$)/, "(" + vector.join(",") + ")") : line).join("\n");
+    const negative = [0,0,0]; negative[normalAxis] = -1;
+    const tilted = [0,0,0]; tilted[normalAxis] = 0.8; tilted[(normalAxis + 1) % 3] = 0.6;
+    for (const vector of [negative, tilted]) {
+      const text = replaceVector(source.normal, vector); assert.notEqual(text, f.text);
+      assert.throws(() => readProgram(text), e => e.context?.rule === "ARC_PLANE");
+    }
+    const end = [...f.b]; end[normalAxis] += 1;
+    // Lathe's nonzero Y is rejected even before the planar-arc check.
+    const helix = replaceVector(source.end, end); assert.notEqual(helix, f.text);
+    assert.throws(() => readProgram(helix), e => machine === "lathe" ? /invalid XZ point/.test(e.message) : e.context?.rule === "ARC_PLANAR");
+    const compensated = f.text.replaceAll("'tool center point'", "'tool contact point'");
+    assert.notEqual(compensated, f.text); assert.throws(() => readProgram(compensated), /unsupported feed reference/);
+    const convention = machine === "mill" ? "fixed +Z tool axis" : "X radius";
+    const oriented = f.text.replace(convention, "tilted tool frame");
+    assert.notEqual(oriented, f.text); assert.throws(() => readProgram(oriented), /unsupported coordinate convention/);
+  }
+});
 function equivalent(a, b) {
   if (typeof a === "number" && typeof b === "number") { assert.ok(Math.abs(a - b) < 1e-10, `${a} != ${b}`); return; }
   if (a && b && typeof a === "object" && typeof b === "object") { assert.deepEqual(Object.keys(a), Object.keys(b)); for (const k of Object.keys(a)) equivalent(a[k], b[k]); return; }

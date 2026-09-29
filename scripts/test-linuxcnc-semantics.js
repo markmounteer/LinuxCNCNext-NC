@@ -4,6 +4,7 @@ const fs = require("node:fs"), path = require("node:path"), os = require("node:o
 const {spawnSync} = require("node:child_process"), {translate} = require("../src/translate");
 const {semanticFixture, referenceGcode} = require("../test/support/semantic-fixture");
 const {canonicalEvents, compareEvents} = require("../test/support/canonical");
+const {processStateFixture} = require("../test/support/process-state-fixture");
 const artifacts = path.resolve(__dirname, "../artifacts/linuxcnc"); fs.mkdirSync(artifacts, {recursive: true});
 function runProgram(label, gcode, fixture) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "nextnc-semantics-"));
@@ -56,6 +57,16 @@ for (const machine of ["lathe", "mill"]) for (const units of ["mm", "inch"]) {
     if (bad.status === 0 && !/(?:error|bad character|unknown word|near line)/i.test(bad.trace)) assert.throws(() => compareEvents(bad.events, expected.events), {name: "AssertionError"});
   }
   console.log(`PASS: ${machine} ${units}: complete ordered canonical events, nonzero T/H/WCS, continue/link/retract, reversal/feed/coolant and five corruptions.`);
+}
+// Equal numeric values with different process meanings; dwell-only state
+// changes, all coolant requests, first/later M6 and same-tool H/WCS boundaries.
+for (const machine of ["lathe", "mill"]) for (const units of ["mm", "inch"]) for (const coolant of ["off", "flood", "mist"]) {
+  const f = processStateFixture(machine, units, coolant), label = `${machine}-${units}-${coolant}-process-state`;
+  const result = translate(f.text, f.plan, {toolTable: f.toolTable});
+  const expected = runProgram(label + "-reference", f.reference, f), actual = runProgram(label, result.gcode, f);
+  for (const run of [expected, actual]) { assert.equal(run.status, 0, run.trace); assert.doesNotMatch(run.trace, /(?:error|bad character|unknown word|near line)/i); }
+  compareEvents(actual.events, expected.events);
+  console.log(`PASS: ${machine} ${units} ${coolant}: equal-value modes, reversal, dwell state changes, post-M6 restoration and same-tool remapping.`);
 }
 // Representative quadrant/plane/unit cases, with independent explicit programs.
 const {geometryFixture, configurations} = require("../test/support/geometry-fixture");

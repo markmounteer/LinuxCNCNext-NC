@@ -1,3 +1,38 @@
+# v0.11.0 validation update
+
+Local Windows / Node 24.13.1: **93 Node groups passed, one POSIX-only filter
+group skipped**, and both Python AXIS-helper tests passed. The independent
+parser harness again passed all **56 cases (20 valid, 36 invalid)** with no
+unexpected outcomes; all 31 pinned upstream source objects were verified.
+
+The original eight golden hashes and fingerprints are retained. Tests remove
+only the deliberate three reset lines after each M6 initialization before
+comparison with those old hashes. Example regeneration changes only the version
+banners and those same reset lines; source examples and reviewed plans are
+unchanged. Installed package inspection excludes the development compiler,
+parser harness and tests; no production dependencies were added.
+
+New policy tests reject all 16 omissions from the Mastercam review and cover
+startup, first/later M6, every restoration command, missing initial operation
+state, late preparation, premature offset cancellation, early restart,
+wrong-boundary stops and misleading emitter state. They also verify that known
+state can satisfy obligations without redundant commands. CLI/preflight/filter
+failures leave stdout empty, preserve existing destinations, retain expected
+and observed state plus boundary/plan context, and mark serialization unchecked.
+Old JSON/HTML archives retain missing audit data as "Not recorded".
+
+Twelve new synthetic state scenarios (both machines/units x off/flood/mist)
+match hand-authored instruction sequences: equal-RPM reversal, equal-value
+G94/G95 changes, rapid-to-feed, dwell-only changes, lathe CSS-cap-only changes,
+equal emitted S across RPM/CSS modes, independent T/H/WCS, and same-tool retracts.
+Targeted negative geometry tests retain rejection of negative/tilted normals,
+helices, changed coordinate orientation and cutter-contact compensation.
+
+Native LinuxCNC and Windows/Linux CI evidence for this version is pending below;
+local Node checks do not establish native interpretation or physical acceptance.
+Installed M6 remaps, feedback, actual offsets, clearance and physical execution
+remain untested; general EXPRESS/AP238 conformance remains unchecked.
+
 # v0.10.0 validation update
 
 Local Windows / Node 24.13.1: **80 Node groups passed, one POSIX-only filter

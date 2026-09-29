@@ -8,13 +8,15 @@ It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` p
 
 ## Quick start
 
-Version 0.10.0 validates every supported entity's field shapes before decoding,
-reports the exact record/attribute on failure, and records which validation
-stages actually ran. Both lathe and XYZ mill profiles are covered in mm/inch.
-An isolated development harness compares our parser with a pinned independent
-Part 21 parser. See [profile validation](docs/profile-validation.md).
-Existing program profiles, reviewed plans and G-code (apart from the release
-banner) are preserved. See [output verification](docs/output-verification.md),
+Version 0.11.0 explicitly restores stopped spindle, coolant off and zero RPM
+after each actual M6, before the reviewed approach. An independent command-state
+audit checks preparation, tool changes, operation entry, reversals and shutdown
+before G-code can be published. Both lathe and XYZ mill profiles are covered in
+mm/inch. These checks add no machining options or runtime dependencies.
+Existing profiles, reviewed plans, fingerprints and numerical toolpaths are
+preserved; G-code gains three reset lines after each M6 initialization.
+See [policy verification](docs/policy-verification.md),
+[profile validation](docs/profile-validation.md), [output verification](docs/output-verification.md),
 [process summaries](docs/process-summary.md),
 [command/state records](docs/command-state.md) and [validation](docs/validation.md).
 
@@ -148,4 +150,4 @@ The sixth-repository [Duy247 STEP-NC-Translator review](docs/duy-translator-revi
 
 The [EfrainRodriguez/step-nc review](docs/efrain-step-nc-review-plan.md) informed v0.10.0's accepted-profile field checks, independent parser comparisons in CI, and explicit validation coverage. The parser tooling remains isolated from the dependency-free translator; general EXPRESS conformance is still unchecked.
 
-The [Mastercam exporter review and plan](docs/mastercam-stepnc-review-plan.md) proposes explicit state restoration after M6 and an independent audit of preparation, reversal and shutdown commands. Synthetic probes found that 16 deliberately omitted policy commands still passed the current audits. These new improvements are planned, not implemented; the exporter and its external SDKs are not dependencies.
+The [Mastercam exporter review](docs/mastercam-stepnc-review-plan.md) informed v0.11.0's post-M6 state restoration, independent policy audit and process-transition tests. All 16 deliberately omitted commands accepted by the v0.10.0 probes are now rejected. The exporter and its external SDKs are not dependencies.

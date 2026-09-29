@@ -1,7 +1,8 @@
 # Command and state records
 
 Version 0.7.0 introduced source provenance and command/completeness checks;
-v0.9.0 additionally audits the final serialized text. These checks apply to
+v0.9.0 audits the final serialized text, and v0.11.0 independently audits
+required process-control state and order. These checks apply to
 XZ lathes and fixed-axis XYZ mills, in mm/inch.
 
 ## Source provenance
@@ -49,9 +50,9 @@ geometry/plan error codes and atomic file behavior are retained. No setting can
 disable these checks or skip errors.
 
 The audit describes offline source consumption and commanded state. It does not
-read live offsets or verify physical movement. In particular, an unknown coolant
-state after M6 remains unknown even if the requested value was off; this release
-preserves the existing machine integration assumptions and output sequence.
+read live offsets or verify physical movement. M6 invalidates knowledge;
+v0.11.0 explicitly restores stopped/off/zero-RPM state after initialization and
+before approach. Older archives retain their recorded uncertainty.
 
 ## Existing state semantics
 
@@ -83,9 +84,10 @@ G53 waypoints record one machine-axis target. They do not create a known work
 position or assume zero offsets. Work moves similarly do not invent machine
 coordinates. M6 invalidates recorded modal/position knowledge until subsequent
 commands reestablish it; no remap is executed by this tool. The requested-state
-cache separately preserves existing emission/reset behavior. In particular,
-unknown state after a custom M6 is not evidence that its spindle/coolant policy
-was checked. Existing machine integration assumptions still apply.
+cache is reconciled by the explicit post-M6 stop sequence. The independent
+[policy audit](policy-verification.md) reconstructs state from commands and
+checks obligations without trusting these emitter snapshots. Neither audit
+executes or validates the user's installed M6 remap.
 
 Full circles preserve the commanded endpoint. Arc source starts/centers remain
 separate from commanded starts and incremental center offsets. Polyline vertices,
@@ -97,8 +99,9 @@ execution-plan schemas 1–4, decoded fingerprints and `source-map/1` are retain
 Older archives render without these optional fields. The HTML report shows the
 new command, state changes and state at each motion.
 
-Eight pre-v0.6.0 golden fixture hashes guard exact G-code apart from the release
-comment. Separate hand-authored lathe/mill programs exercise plane changes,
+Eight pre-v0.6.0 golden fixture hashes guard exact G-code after removing only
+the release comment and the deliberate v0.11.0 post-M6 reset trio. Separate
+hand-authored lathe/mill programs exercise plane changes,
 continue/link/retract boundaries, major arcs, reversals, feed changes and
 independent T/H and WCS values. Native LinuxCNC tests compare complete ordered
 canonical events against those programs, including nonzero offset-table values.

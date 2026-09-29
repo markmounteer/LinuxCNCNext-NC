@@ -30,7 +30,7 @@ function referenceGcode(machine, units) {
   const initialize = `${units === "mm" ? "G21" : "G20"} ${mill ? "G17" : "G18"} G8 G90 G91.1 G40 G80 G94 G61`;
   const stop = "M5 $0\nM9\nG97 S0 $0";
   const retract = mill ? "G53 G0 Z20\nG53 G0 X0\nG53 G0 Y0" : "G53 G0 X25\nG53 G0 Z10";
-  return [initialize, "G92.1", stop, retract, "G49", "T1 M6", initialize, "G92.1", "G54", "G43 H3",
+  return [initialize, "G92.1", stop, retract, "G49", "T1 M6", initialize, stop, "G92.1", "G54", "G43 H3",
     mill ? "G0 Z10\nG0 X4\nG0 Y0\nG0 Z2" : "G0 Z2\nG0 X4",
     mill ? "G97 S600 $0" : `G96 D1800 S${units === "mm" ? 80 : 100} $0`, "M3 $0", "M9", "M8", "G94 F100",
     mill ? "G19\nG3 Y-2 Z0 J-2 K0" : "G3 X2 Z0 I-2 K0",
@@ -38,7 +38,7 @@ function referenceGcode(machine, units) {
     mill ? "G0 Z2\nG0 X6\nG0 Y2" : "G0 Z2\nG0 X6", "G94 F100",
     mill ? "G17\nG2 X4 Y4 I-2 J0" : "G2 X4 Z0 I-2 K0", "G4 P0.25", "G0 Z3",
     "M5 $0", "G97 S700 $0", "M4 $0", "M9", "M7", "G95 F0.2", mill ? "G1 X3 Y3 Z1" : "G1 X3 Z1",
-    stop, retract, "G49", "T2 M6", initialize, "G92.1", "G55", "G43 H1",
+    stop, retract, "G49", "T2 M6", initialize, stop, "G92.1", "G55", "G43 H1",
     mill ? "G0 Z10\nG0 X8\nG0 Y1\nG0 Z4" : "G0 Z4\nG0 X8",
     "G97 S900 $0", "M3 $0", "M9", "M8", "G94 F60", mill ? "G1 X7 Y2 Z0" : "G1 X7 Z0",
     stop, retract, "G49", "G94", "M2", ""].join("\n");

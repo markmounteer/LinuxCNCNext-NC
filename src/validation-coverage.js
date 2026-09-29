@@ -6,6 +6,7 @@ const scopes = {
   executionPlan: "Reviewed plan binding, mappings and transitions",
   toolTable: "Optional file snapshot syntax and mapped T/H record presence",
   completeness: "Candidate command generation and ordered execution completeness",
+  policy: "Independent commanded-state and translator-policy obligations at execution boundaries",
   serialization: "Final candidate G-code text against audited command records",
   expressSchema: "General EXPRESS schema parse/build and instance loading",
   expressAttributes: "General EXPRESS attribute and SELECT type conformance",

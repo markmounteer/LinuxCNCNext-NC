@@ -5,11 +5,17 @@ const examples = require("../scripts/example"), {translate} = require("../src/tr
 const {Program} = require("../vendor/fusion360next-nc/next-nc");
 const {semanticFixture, referenceGcode} = require("./support/semantic-fixture");
 const {assertSourceAssociations, canonicalEvents, compareEvents} = require("./support/canonical");
-test("eight pre-refactor golden programs retain exact G-code and fingerprints", () => {
+test("eight golden programs change only by post-M6 resets and retain fingerprints", () => {
   for (const b of require("./emission-baseline.json")) {
     const f = examples[b.name](b.units), result = translate(f.text, f.plan);
     assert.equal(result.report.programFingerprint.value, b.fingerprint);
-    assert.equal(crypto.createHash("sha256").update(result.gcode.split("\n").slice(1).join("\n")).digest("hex"), b.gcodeSHA256);
+    // Keep the original hashes. Remove ONLY the intentional new reset trio,
+    // immediately after M6 and initialization, to prove every other byte equal.
+    let resets = 0;
+    const original = result.gcode.split("\n").slice(1).join("\n").replace(/(T\d+ M6\n[^\n]+\n)M5 \$0\nM9\nG97 S0 \$0\n/g, (_, prefix) => { ++resets; return prefix; });
+    assert.equal(resets, result.sourceMap.filter(e => e.command.type === "toolChange").length);
+    assert.ok(resets > 0);
+    assert.equal(crypto.createHash("sha256").update(original).digest("hex"), b.gcodeSHA256);
   }
 });
 test("both machines match a hand-authored oracle; modal/source state does not leak between calls", () => {

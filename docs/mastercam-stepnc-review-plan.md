@@ -1,8 +1,10 @@
 # mastercam-stepnc: review and improvement plan
 
-Status: reviewed on 2026-09-28 against LinuxCNCNext-NC v0.10.0. The changes below
-are **planned, not implemented**. This review changed documentation only in
-the translator checkout; research probes and synthetic outputs remain local.
+Status: reviewed on 2026-09-28 against LinuxCNCNext-NC v0.10.0; the three-step
+plan below is **implemented in v0.11.0**. The review findings and experiments
+below describe the pinned v0.10.0 baseline. See
+[policy verification](policy-verification.md) for the implementation and
+[validation](validation.md) for test evidence. Research probes remain local.
 
 ## Recommendation
 

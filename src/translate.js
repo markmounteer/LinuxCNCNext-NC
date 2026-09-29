@@ -8,6 +8,7 @@ const crypto = require("node:crypto");
 const version = require("../package.json").version;
 const {LinuxCNCOutput, decimal, comment} = require("./linuxcnc-output");
 const {auditExecution} = require("./execution-audit");
+const {auditPolicy} = require("./policy-audit");
 const {auditGcode} = require("./gcode-audit");
 const {processSummary} = require("./process-summary");
 const {jobRequirements} = require("./job-requirements");
@@ -70,9 +71,16 @@ function translate(text, plan, options = {}) {
       waypoints(plan.sections[index].retract, true, "retract", `/sections/${index}/retract`);
       const tool = plan.tools[`${section.tool.number}:${section.tool.offset}`];
       const toolPointer = `/tools/${section.tool.number}:${section.tool.offset}`;
-      if (tool.tool !== requested.selectedTool) { emit({type: "cancelToolOffset"}); emit({type: "toolChange", tool: tool.tool}, {provenance: planSource(toolPointer + "/tool")}); requested.selectedTool = tool.tool; }
+      const toolChanged = tool.tool !== requested.selectedTool;
+      if (toolChanged) {
+        emit({type: "cancelToolOffset"}); emit({type: "toolChange", tool: tool.tool}, {provenance: planSource(toolPointer + "/tool")});
+        requested.selectedTool = tool.tool;
+      }
       // A site M6 remap may change modes. Reassert the translation contract.
-      emit(common); emit({type: "clearTemporaryOffsets"}); emit({type: "workOffset", value: plan.workOffsets[section.workOffset]}, {provenance: planSource(`/workOffsets/${section.workOffset}`)}); emit({type: "toolOffset", offset: tool.offset}, {provenance: planSource(toolPointer + "/offset")});
+      emit(common);
+      // Restore stopped/off state and request caches after actual M6 only.
+      if (toolChanged) stop();
+      emit({type: "clearTemporaryOffsets"}); emit({type: "workOffset", value: plan.workOffsets[section.workOffset]}, {provenance: planSource(`/workOffsets/${section.workOffset}`)}); emit({type: "toolOffset", offset: tool.offset}, {provenance: planSource(toolPointer + "/offset")});
       waypoints(plan.sections[index].approach, false, "approach", `/sections/${index}/approach`);
     } else if (mode === "link") {
       const boundaryContext = context;
@@ -115,7 +123,9 @@ function translate(text, plan, options = {}) {
   }
   context = {phase: "program-end"}; stop(); waypoints(plan.end, true, "program-end", "/end"); emit({type: "cancelToolOffset"}); emit({type: "feed", mode: "perMinute"}); emit({type: "end"});
   const completeness = auditExecution(program, plan, output, operationRanges, boundaries);
-  validation.pass({audit: completeness}); validation.start("serialization");
+  validation.pass({audit: completeness}); validation.start("policy");
+  const policy = auditPolicy(program, plan, sourceMap, boundaries);
+  validation.pass({audit: policy}); validation.start("serialization");
   const gcode = lines.join("\n") + "\n";
   const serialization = auditGcode(gcode, sourceMap, {machine, units: model.units});
   validation.pass({audit: serialization});
@@ -126,7 +136,7 @@ function translate(text, plan, options = {}) {
     processSummary: process,
     jobRequirements: jobRequirements(program, process, sourceMap, operationRanges, transitions, toolTable),
     traceability: {provenance: program.provenance, schema: "linuxcnc-next-nc/source-map/1", lineNumbers: "one-based", vertexNumbers: "one-based within each decoded path", coordinates: machine === "mill" ? "XYZ Cartesian, program units" : "XYZ, program units, X radius", gcodeSHA256, operationRanges},
-    execution: {completeness, serialization, planSchema: plan.schema, transitions, continuations: transitions.filter(t => t.mode === "continue").length,
+    execution: {completeness, policy, serialization, planSchema: plan.schema, transitions, continuations: transitions.filter(t => t.mode === "continue").length,
       links: transitions.filter(t => t.mode === "link").length, unchangedAxisWordsOmitted, coordinatesRounded: false}}, sourceMap};
   } catch (error) { validation.fail(error); throw error; }
 }
