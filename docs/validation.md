@@ -28,10 +28,25 @@ equal emitted S across RPM/CSS modes, independent T/H/WCS, and same-tool retract
 Targeted negative geometry tests retain rejection of negative/tilted normals,
 helices, changed coordinate orientation and cutter-contact compensation.
 
-Native LinuxCNC and Windows/Linux CI evidence for this version is pending below;
-local Node checks do not establish native interpretation or physical acceptance.
-Installed M6 remaps, feedback, actual offsets, clearance and physical execution
-remain untested; general EXPRESS/AP238 conformance remains unchecked.
+All **nine jobs passed** in [CI run 36501739274](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36501739274)
+at implementation commit `b7847bf61f2c90a2f680e2f1a92268b467df11f5`: six
+Windows/Linux Node 20/22/24 jobs, two independent-parser jobs and standalone
+LinuxCNC. Linux passed all 94 Node groups; Windows passed 93 with one POSIX-only
+skip. Both Python helper tests and example reproducibility passed in each Node
+job. Both parser jobs passed all 56 cases and retained identical compiled-parser
+SHA-256 `e241a05a73726a6d97f2c87f00f07d3c24e2b920036ccecbf3fefe644d4db06f`.
+
+Downloaded native artifacts contain **96 programs and 96 traces: 32 valid
+scenarios, 24 independent references and 40 deliberate corruptions**. This
+adds 12 process-state scenarios and 12 corresponding hand-authored references.
+Complete ordered canonical comparisons passed. Interpreter package:
+`linuxcnc-uspace 2.9.0~pre1+git20230208.f1270d6ed7-1+deb12u2`.
+The four-decimal canonical printer and 0.00011 comparison allowance are
+unchanged; separate Node checks retain exact output-number comparisons.
+
+These are offline results. Installed M6 remaps, feedback, actual offsets,
+clearance and physical execution remain untested; general EXPRESS/AP238
+conformance remains unchecked.
 
 # v0.10.0 validation update
 
