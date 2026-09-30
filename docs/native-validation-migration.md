@@ -1,8 +1,14 @@
-# Native validation migration checkpoint
+# Native validation migration
 
-This is a disposition of implemented validation groups, not yet the final
-check-by-check Stage 2 acceptance inventory. The complete inventory, optimization
-and benchmarks still prevent native admission.
+The [check-by-check inventory](native-validation-inventory.md) records 259 legacy
+assertion/error sites, 61 entity arities, 187 attribute constraints and seven
+complex-component combinations. Each site has an explicit disposition, complete
+legacy expression and Rust implementation/test references. All 32 legacy modules
+have an explicit scope disposition. The JSON evidence pins source and reference
+hashes; the development verifier detects stale, missing or changed evidence.
+This does not claim exhaustive branch coverage or physical-machine qualification.
+Optimization budgets/reductions, measured rate diagnostics and benchmarks remain
+required Stage 2 work before the later native execution/admission stages.
 The original JavaScript runtime is retained unchanged as a development oracle.
 
 | Existing checks | Current Rust disposition | Evidence |
@@ -17,7 +23,7 @@ The original JavaScript runtime is retained unchanged as a development oracle.
 | Error source identity and ordered geometry/property uses | Ported with UTF-8 byte columns and additional sequence-link records | Profile tests; errors contain section/path context; no source reference participates in semantic fingerprint |
 | Persistent diagnostic archives and correction guidance | Ported to Rust with separate schema, exact observed identities, bounded source excerpts, actual CLI-stage states and JSON/TXT reports | `tests-rust/diagnostics.rs`, all-command CLI/archive-failure tests; [directory and lifecycle](native-diagnostics.md) |
 | Original command contracts, ordered completeness and independent policy audit | Ported to the unoptimized plan and independently decoded native bundle | `command_audit.rs`, serialized-command corruption, exhaustive per-command deletion/replacement/use-tag mutations, geometry/feed/gate mutations |
-| Full semantic command/source-map parity with optimization disabled | Four preserved complete fixtures pass ordered geometry/event/waypoint/feed comparison; full per-check disposition remains open | `tests-rust/compiled.rs`; every coordinate compares exactly, with separately bounded CSS conversion roundoff |
+| Full semantic command/source-map parity with optimization disabled | Four preserved complete fixtures pass ordered geometry/event/waypoint/feed comparison; every legacy validation site has an explicit disposition | `tests-rust/compiled.rs` and the check-by-check inventory; every coordinate compares exactly, with separately bounded CSS conversion roundoff |
 | Output-command expansion bounds and source lookup | Ported before immutable plan construction; repeated metadata stored in spans | Limit boundary tests, source/provenance lookup for every fixture command |
 | Immutable plan publication, artifact/cache identity, selection generations and failure handling | Offline implementation and failure tests pass; task/arm integration remains Stage 3 | `bundle.rs`, `publication.rs`, process-exit/partial-write/source-mutation/corruption/stale-worker tests; no restored selection on owner restart |
 | Exact reductions, error budgets, measured rate warnings and large-job benchmarks | Missing | Geometry is not reduced and no speed claim is made |
@@ -52,6 +58,20 @@ The original JavaScript runtime is retained unchanged as a development oracle.
 - Native baseline termination is exact path. Source CAM tolerance grants no
   implicit fit/blend budget. Reviewed partial-axis setup moves remain unresolved
   task intents until live binding; their unknown starting axes are never guessed.
+- G-code's decimal magnitude/exponent-expansion and 240-character line limits
+  are replaced by bounded typed binary64 records. Finite positive process values
+  must remain finite and positive after dimensional conversion; geometry metrics
+  must remain finite. Tests cover values outside text-format limits, exact binary
+  reload and converted feed overflow/underflow. These representation tests do
+  not establish acceptable physical travel, speeds or feeds. Source-profile
+  version-specific geometry limits remain in force.
+- Source labels remain opaque metadata. A label resembling an active LinuxCNC
+  comment or G-code cannot create a native command; a dedicated bundle test
+  compares the complete command sequence after such a label change.
+- The native parser accepts inter-token whitespace rather than a fixed newline
+  spelling of the Part 21 envelope. Required headers/data/end tokens and exact
+  input hashes remain checked. Native source/setup reads use the configured input
+  budget; tool-table and target-file reads retain their separate 1 MiB bounds.
 
 ## Captured failure corpus
 
@@ -107,3 +127,18 @@ outcomes. Correctly attributed source/setup/table/manifest excerpts are bounded
 and checked against the original read hash. Successful checks preserve the latest
 error. Concurrent native writers, busy indexes, input collisions and failed
 archiving are tested; a reporting failure never changes the preparation outcome.
+
+The source inventory also exposed a POSIX FIFO gap in the native read path.
+`fileio.rs` now checks a regular descriptor opened nonblocking on Unix, bounds
+actual bytes and verifies size/modification metadata around each read.
+Publication additionally refuses symlinks and independently rereads/rechecks
+snapshots. A timeout-bounded Unix CLI regression test rejects FIFOs in source,
+setup and artifact roles without a writer. Existing crash/corruption/storage
+tests exercise the shared reader as part of publication.
+
+The inventory verifier runs on Linux and Windows in the conformance CI lane.
+It is a development tool using a separately pinned parser; the native runtime
+remains Rust-only. All 61 legacy entity arities and 187 attributes are also
+mutated individually in the Rust corpus test: extra/malformed attributes must
+fail at the mutated source record. This supplements the 143 observed legacy
+negative cases rather than treating that captured set as exhaustive.

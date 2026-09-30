@@ -7,8 +7,8 @@ use serde_json::{json, Value};
 use std::{
     collections::BTreeMap,
     ffi::OsString,
-    fs::{self, File, OpenOptions},
-    io::{Read, Write},
+    fs::{self, OpenOptions},
+    io::Write,
     path::{Path, PathBuf},
     sync::atomic::{AtomicU64, Ordering},
     time::{Duration, Instant, SystemTime, UNIX_EPOCH},
@@ -300,28 +300,7 @@ impl Trace {
     }
 }
 fn bounded_read(path: &Path, limit: usize) -> Result<Vec<u8>> {
-    let read_error = |e: std::io::Error| {
-        Diagnostic::new("read", "IO", e.to_string()).with("file", path.display().to_string())
-    };
-    let file = File::open(path).map_err(read_error)?;
-    if !file.metadata().map_err(read_error)?.is_file() {
-        return Err(
-            Diagnostic::new("read", "INPUT_TYPE", "Expected a regular file")
-                .with("file", path.display().to_string()),
-        );
-    }
-    let mut bytes = Vec::new();
-    file.take((limit as u64).saturating_add(1))
-        .read_to_end(&mut bytes)
-        .map_err(read_error)?;
-    if bytes.len() > limit {
-        return Err(
-            Diagnostic::new("read", "INPUT_SIZE", "Input exceeds byte limit")
-                .with("file", path.display().to_string())
-                .with("limitBytes", limit),
-        );
-    }
-    Ok(bytes)
+    crate::fileio::read_bytes(path, limit, true)
 }
 fn io_error(action: &str, e: std::io::Error) -> Diagnostic {
     Diagnostic::new("diagnostic-archive", "IO", e.to_string()).with("action", action)
@@ -667,7 +646,7 @@ pub fn save(dir: &Path, trace: &Trace, outcome: &Value, error: Option<&Diagnosti
         }
         #[cfg(unix)]
         {
-            File::open(&dir)
+            fs::File::open(&dir)
                 .and_then(|f| f.sync_all())
                 .map_err(|e| io_error("sync diagnostic directory", e))?;
         }

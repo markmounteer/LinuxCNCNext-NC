@@ -9,7 +9,7 @@ use crate::{
 use serde::Serialize;
 use std::{
     fs::{self, File, OpenOptions},
-    io::{Read, Write},
+    io::Write,
     path::{Path, PathBuf},
     sync::{
         atomic::{AtomicU64, Ordering},
@@ -163,21 +163,10 @@ fn sync_directory(path: &Path) -> Result<()> {
 }
 fn read_bytes(path: &Path, limit: usize) -> Result<Vec<u8>> {
     ordinary(path)?;
-    let mut bytes = Vec::new();
-    File::open(path)
-        .and_then(|f| {
-            f.take((limit as u64).saturating_add(1))
-                .read_to_end(&mut bytes)
-        })
-        .map_err(|e| {
-            io_error("read bounded artifact/input", e).with("file", path.display().to_string())
-        })?;
-    if bytes.len() > limit {
-        return Err(
-            fail("INPUT_SIZE", "File exceeds byte limit").with("file", path.display().to_string())
-        );
-    }
-    Ok(bytes)
+    crate::fileio::read_bytes(path, limit, false).map_err(|mut e| {
+        e.stage = "native-publication".into();
+        e
+    })
 }
 fn snapshot(paths: &Paths, limits: &Limits) -> Result<Snapshot> {
     fn stable(path: &Path, limit: usize) -> Result<String> {

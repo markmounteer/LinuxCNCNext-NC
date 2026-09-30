@@ -104,6 +104,7 @@ version = "0.1.0"
 name = "nextnc-native"
 version = "0.1.0"
 dependencies = [
+ "libc",
  "motion-command",
  "ryu-js",
  "serde",

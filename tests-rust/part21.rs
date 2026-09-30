@@ -17,6 +17,9 @@ fn reads_complex_entities_unicode_and_exact_input_identity(
     let w = parse(&crlf, &Limits::default())?;
     assert_ne!(d.input_sha256, w.input_sha256);
     assert_eq!(d.records[&1].parts, w.records[&1].parts);
+    let spaced = parse(&text.replace('\n', " \t "), &Limits::default())?;
+    assert_eq!(d.records[&1].parts, spaced.records[&1].parts);
+    assert_ne!(d.input_sha256, spaced.input_sha256);
     Ok(())
 }
 #[test]
@@ -109,5 +112,73 @@ fn legacy_corpus_shape_counts_and_source_hashes_match_pinned_reader(
             );
         }
     }
+    Ok(())
+}
+
+#[test]
+fn every_legacy_entity_arity_and_attribute_rejects_an_invalid_value(
+) -> Result<(), Box<dyn std::error::Error>> {
+    use nextnc_native::part21::Value;
+    use std::collections::BTreeSet;
+    let mut entities = BTreeSet::new();
+    let mut attributes = BTreeSet::new();
+    for machine in ["mill", "lathe"] {
+        for units in ["mm", "inch"] {
+            let text = std::fs::read_to_string(format!(
+                "tests-rust/fixtures/legacy/{machine}-{units}.stpnc"
+            ))?;
+            let mut doc = parse(&text, &Limits::default())?;
+            shape::validate(&doc)?;
+            let ids: Vec<_> = doc.records.keys().copied().collect();
+            for id in ids {
+                let parts = doc.records[&id].parts.clone();
+                for (component, part) in parts.iter().enumerate() {
+                    if entities.insert(part.name.clone()) {
+                        doc.records.get_mut(&id).ok_or("record")?.parts[component]
+                            .args
+                            .push(Value::Symbol(".NOT_A_PROFILE_VALUE.".into()));
+                        let error = shape::validate(&doc)
+                            .err()
+                            .ok_or("accepted extra attribute")?;
+                        assert_eq!(error.code, "ARITY", "{}", part.name);
+                        assert_eq!(error.source.as_ref().and_then(|s| s.record), Some(id));
+                        doc.records.get_mut(&id).ok_or("record")?.parts[component].args =
+                            part.args.clone();
+                    }
+                    for (index, value) in part.args.iter().enumerate() {
+                        if !attributes.insert((part.name.clone(), index)) {
+                            continue;
+                        }
+                        doc.records.get_mut(&id).ok_or("record")?.parts[component].args[index] =
+                            Value::Symbol(".NOT_A_PROFILE_VALUE.".into());
+                        let error = shape::validate(&doc)
+                            .err()
+                            .ok_or("accepted invalid attribute")?;
+                        assert_eq!(
+                            error.code,
+                            "ATTRIBUTE",
+                            "{} parameter {}",
+                            part.name,
+                            index + 1
+                        );
+                        assert_eq!(error.source.as_ref().and_then(|s| s.record), Some(id));
+                        doc.records.get_mut(&id).ok_or("record")?.parts[component].args[index] =
+                            value.clone();
+                    }
+                }
+            }
+            shape::validate(&doc)?;
+        }
+    }
+    assert_eq!(
+        entities.len(),
+        61,
+        "Complete reviewed legacy grammar arities"
+    );
+    assert_eq!(
+        attributes.len(),
+        187,
+        "Complete reviewed legacy grammar attributes"
+    );
     Ok(())
 }

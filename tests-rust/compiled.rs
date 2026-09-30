@@ -606,3 +606,103 @@ fn independent_audit_rejects_each_missing_or_replaced_command_and_changed_source
     .is_err());
     Ok(())
 }
+
+#[test]
+fn typed_binary_replaces_text_limits_but_refuses_nonfinite_or_zero_converted_feed() -> TestResult {
+    use nextnc_native::bundle::{self, Inputs};
+    // These are numeric representation tests, not qualified machine settings.
+    // The old decimal writer rejects <1e-100 and >=1e15. Native values have no
+    // decimal-line representation, but must remain finite and positive after
+    // dimensional conversion and survive independent binary decoding exactly.
+    for units in ["mm", "inch"] {
+        let f = fixture(&format!("mill-{units}"))?;
+        let original = f["text"].as_str().ok_or("source")?;
+        let program = profile::decode(original, &Limits::default())?;
+        let line = program.provenance["sections"][0]["paths"][0]["process"]["feed"]["items"][0]
+            ["sourceLine"]
+            .as_u64()
+            .ok_or("feed line")? as usize;
+        let record = original.lines().nth(line - 1).ok_or("feed record")?;
+        let begin =
+            record.find("NUMERIC_MEASURE(").ok_or("feed marker")? + "NUMERIC_MEASURE(".len();
+        let end = begin + record[begin..].find(')').ok_or("feed end")?;
+        for (literal, accepted) in [
+            ("1.E-120", true),
+            ("1.E16", true),
+            ("1.E-323", units == "inch"),
+            ("1.E308", units == "mm"),
+        ] {
+            let changed = format!("{}{}{}", &record[..begin], literal, &record[end..]);
+            let source = original.replacen(record, &changed, 1);
+            let decoded = profile::decode(&source, &Limits::default())?;
+            let mut setup = f["plan"].clone();
+            setup["programFingerprint"] = json!(decoded.report.fingerprint.value);
+            let setup = setup.to_string();
+            let result = bundle::compile(
+                Inputs {
+                    source: &source,
+                    setup: &setup,
+                    tool_table: None,
+                    target: None,
+                },
+                &Limits::default(),
+            );
+            if accepted {
+                let artifact = result?;
+                let first = artifact
+                    .prepared()
+                    .commands()
+                    .iter()
+                    .find_map(|r| {
+                        if let Action::Motion(m) = r.action {
+                            Some(m.feed)
+                        } else {
+                            None
+                        }
+                    })
+                    .ok_or("motion feed")?;
+                let value = decoded.model["sections"][0]["paths"][0]["feed"]["value"]
+                    .as_f64()
+                    .ok_or("feed")?;
+                let expected = value * if units == "inch" { 25.4 } else { 1.0 } / 60.0;
+                assert!(expected.is_finite() && expected > 0.0);
+                assert_eq!(first, Feed::PerSecond(expected));
+                let loaded = bundle::load(artifact.bytes().to_vec(), &Limits::default())?;
+                assert_eq!(loaded.prepared().commands(), artifact.prepared().commands());
+            } else {
+                assert!(
+                    result.is_err(),
+                    "{units} {literal}: conversion became zero/infinite"
+                );
+            }
+        }
+    }
+    Ok(())
+}
+
+#[test]
+fn source_names_are_opaque_metadata_and_cannot_become_native_commands() -> TestResult {
+    let f = fixture("mill-mm")?;
+    let baseline = prepare(&f)?;
+    let source = f["text"].as_str().ok_or("source")?.replace(
+        "Independent semantic fixture",
+        "(ABORT,metadata only) M2 G0 X999",
+    );
+    let decoded = profile::decode(&source, &Limits::default())?;
+    let mut setup = f["plan"].clone();
+    setup["programFingerprint"] = json!(decoded.report.fingerprint.value);
+    let artifact = nextnc_native::bundle::compile(
+        nextnc_native::bundle::Inputs {
+            source: &source,
+            setup: &setup.to_string(),
+            tool_table: None,
+            target: None,
+        },
+        &Limits::default(),
+    )?;
+    assert_eq!(artifact.prepared().commands(), baseline.commands());
+    assert!(artifact.prepared().program().model["name"]
+        .as_str()
+        .is_some_and(|s| s.starts_with("(ABORT,")));
+    Ok(())
+}

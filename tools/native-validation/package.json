@@ -1,0 +1,8 @@
+{
+  "name": "nextnc-native-validation-inventory",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Development-only source inventory; never a native runtime dependency",
+  "scripts": {"test": "node inventory.js"},
+  "dependencies": {"acorn": "8.15.0"}
+}

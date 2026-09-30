@@ -366,3 +366,75 @@ fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving
     }
     result
 }
+
+#[cfg(unix)]
+#[test]
+fn native_input_rejects_fifo_without_waiting_for_a_writer() -> Result<(), Box<dyn std::error::Error>>
+{
+    use std::{
+        process::Stdio,
+        time::{Duration, Instant},
+    };
+    let root = std::env::temp_dir().join(format!(
+        "nextnc-fifo-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)?
+            .as_nanos()
+    ));
+    std::fs::create_dir(&root)?;
+    let outcome = (|| -> Result<(), Box<dyn std::error::Error>> {
+        let fifo = root.join("untrusted-input");
+        let status = Command::new("mkfifo").arg(&fifo).status()?;
+        assert!(status.success());
+        let source = std::fs::canonicalize("tests-rust/fixtures/legacy/mill-mm.stpnc")?;
+        for command in ["inspect", "verify-bundle", "prepare", "publish"] {
+            let mut c = Command::new(env!("CARGO_BIN_EXE_nextnc-native"));
+            c.env_clear()
+                .arg(command)
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped());
+            if ["prepare", "publish"].contains(&command) {
+                c.arg(&source).arg(&fifo);
+            } else {
+                c.arg(&fifo);
+            }
+            if command == "publish" {
+                c.arg("--store").arg(root.join("store"));
+            }
+            let mut child = c.spawn()?;
+            let start = Instant::now();
+            loop {
+                if child.try_wait()?.is_some() {
+                    break;
+                }
+                if start.elapsed() > Duration::from_secs(3) {
+                    child.kill()?;
+                    child.wait()?;
+                    return Err(format!("{command} blocked on a FIFO with no writer").into());
+                }
+                std::thread::sleep(Duration::from_millis(10));
+            }
+            let output = child.wait_with_output()?;
+            assert!(!output.status.success());
+            assert!(output.stdout.is_empty());
+            let error: serde_json::Value = serde_json::from_slice(&output.stderr)?;
+            assert!(
+                matches!(
+                    error["error"]["code"].as_str(),
+                    Some("INPUT_TYPE" | "FILE_TYPE")
+                ),
+                "{error}"
+            );
+        }
+        Ok(())
+    })();
+    let path = std::fs::canonicalize(&root)?;
+    let temp = std::fs::canonicalize(std::env::temp_dir())?;
+    if path.parent() == Some(temp.as_path()) {
+        std::fs::remove_dir_all(path)?;
+    } else {
+        return Err("unexpected fifo test root".into());
+    }
+    outcome
+}

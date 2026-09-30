@@ -45,6 +45,10 @@ jobs:
       - name: Install isolated pinned compiler (no lifecycle scripts)
         run: npm --prefix tools/step-conformance ci --ignore-scripts --no-audit --no-fund
       - run: npm run test:conformance
+      - name: Install development-only validation inventory parser
+        run: npm --prefix tools/native-validation ci --ignore-scripts --no-audit --no-fund
+      - name: Verify every reviewed legacy validation site and grammar field
+        run: npm --prefix tools/native-validation test
       - name: Preserve parser comparison and synthetic inputs
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

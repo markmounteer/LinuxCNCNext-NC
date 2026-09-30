@@ -61,7 +61,6 @@ Synthetic transition coordinates are not physical clearances.
 
 ## Required work still open
 
-- Persistent diagnostic archives and the complete check-by-check migration inventory.
 - Explicit fit/blend budgets, exact reductions and measured rate diagnostics.
 - Complete check-by-check migration disposition, full negative corpus, native
   geometry/event equivalence and cold/warm/memory/large-job benchmarks.
