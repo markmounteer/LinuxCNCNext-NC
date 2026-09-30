@@ -4,6 +4,27 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
+The companion controller's latest queued-recovery build is
+`c7536114b37818ba596efc9692f41bcefa8cd5f5`, with this compiler unchanged at
+`ebcae527ac61099cc3ad55d8544f2323036e594f`. It passes **36 simulator sessions**:
+queued and single-cut state/abort cases, later plane/feed/direction transitions,
+lifecycle/shaper regressions, ten same-table native/RS274 coordinate pipelines
+and two loading/G-code regressions. The failed baseline restored a future queued
+G1/F480 instead of the stopped F120 arc. The Rust shim now retains the final
+resolved native tag at rest, and task reconciliation restores the executed
+motion mode, plane and feed directly before cleanup. No generated G-code is used.
+
+The Linux shim suite passes 284 tests with 4 ignored and Clippy. A planner test
+crosses a move boundary while braking without intermediate task observations;
+the full-stack later-cut tests instead abort inside the selected later arc.
+The controller evidence retains 647 successful-run and 38 baseline raw files,
+16,807 servo samples, 228 source-input hashes and semantic corruption challenges.
+See the controller's `2026-09-30-queued-recovery` evidence and
+[PR #1365](https://github.com/markmounteer/linuxcnc/pull/1365).
+This does not complete Stage 3: zero-valued active H, multiple-job/task-restart
+receipt identity, receipt loss, stationary records, full-stack braking crossings
+and the remaining coordinate/procedure/termination/entry/fault matrix stay open.
+
 The current implementation is the safe Rust
 [`nextnc-task` library](../../../crates/nextnc-task/README.md). It has 27 tests:
 one semantic-group test, seven binding tests over a 26-fixture geometry matrix,
@@ -55,11 +76,11 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 | --- | --- | --- |
 | Rust task owner and checked native ABI | Preparation, lifecycle/dispatch/procedure-rebind ABI and typed lowering; real recipient dispatch | Full fault injection and wider procedure outcomes missing |
 | Pinned task executable | Native-bound task executes initial mill/lathe jobs in isolated simulation | Full execution acceptance matrix pending |
-| State capture/reconciliation and `on_abort` ordering | Typed canonical/interpreter updates, normal/abort handoff and deferred cleanup implemented | Full offset/unit/modal matrix and abort-race tests missing |
+| State capture/reconciliation and `on_abort` ordering | Typed updates, cached modes, executing tags, queued-state recovery and ten observed cleanup cases | Zero-valued active H, restart/receipt-loss identity, full offset/unit/modal and abort-race matrix remain open |
 | One start gate, drain/result/rebind | Central gate, actual drains and tool-result suffix rebind; changed H2 and invalid/replaced suffix tests | Full NML/HALUI/pendant and start/hold freshness coverage missing |
 | Semantic stepping and no arbitrary restart | Versioned groups, actual hold-to-step proposal/confirmation and drain | Full held/read-ahead/corner behavior matrix pending |
 | Shaper mode and delayed completion | Bounded lane comparison fixes CW-to-Z fault; 15 execution/preflight/guard cases and two loading regressions pass, with cutting-arc tail hold/abort | Wider unit/state/fault combinations remain part of full qualification |
-| Same-table G7/G8/native coordinate matrix | Synthetic geometry matrix plus real task capture with nonzero WCS/G92/H2 and lathe G7 | Independent executed RS274/native comparison and full state matrix missing |
+| Same-table G7/G8/native coordinate matrix | Ten real native/unchanged-RS274 MDI pipelines across four mm/inch/rotation/T1-H2/G7/G8 cases | Complete coordinate and abort-state matrix missing; these sequential MDI references do not compare throughput |
 | Termination conditions and ordered state deltas | Rust lowering retains ordered events and emits termination deltas with drain barriers | Actual pending-boundary behavior remains untested |
 | Receipts, backpressure, identity, connection loss | Model plus actual queue/guarded-mailbox traces; undersized expansion refuses before selection | Full backpressure/retry/fault injection and disconnect stop tests missing |
 | Lines, planes, full circles, helixes and events | Initial native synthetic jobs through real task/motmod/shim with a source/setup oracle | Full state/event/job corpus remains pending |
