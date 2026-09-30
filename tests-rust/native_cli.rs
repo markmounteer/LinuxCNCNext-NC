@@ -30,17 +30,17 @@ fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json(
             std::fs::read(&plan)?,
             std::fs::read(&table)?,
         ];
-        let run = || {
+        let run = |mode: &str| {
             Command::new(env!("CARGO_BIN_EXE_nextnc-native"))
                 .env_clear()
-                .arg("preflight")
+                .arg(mode)
                 .arg(&input)
                 .arg(&plan)
                 .arg("--tool-table")
                 .arg(&table)
                 .output()
         };
-        let success = run()?;
+        let success = run("preflight")?;
         assert!(
             success.status.success(),
             "{}",
@@ -50,6 +50,19 @@ fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json(
         assert_eq!(report["executable"], false);
         assert_eq!(report["toolTable"]["status"], "passed");
         assert_eq!(report["targetCapabilities"]["status"], "not_checked");
+        let prepared = run("prepare")?;
+        assert!(
+            prepared.status.success(),
+            "{}",
+            String::from_utf8_lossy(&prepared.stderr)
+        );
+        let prepared: serde_json::Value = serde_json::from_slice(&prepared.stdout)?;
+        assert_eq!(prepared["status"], "native-commands-audited");
+        assert_eq!(prepared["executable"], false);
+        assert_eq!(prepared["audit"]["status"], "passed");
+        assert!(prepared["audit"]["commands"]
+            .as_u64()
+            .is_some_and(|n| n > 0));
         assert_eq!(
             before,
             [
@@ -59,11 +72,14 @@ fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json(
             ]
         );
         std::fs::write(&table, "T9 P9\n")?;
-        let failure = run()?;
+        let failure = run("preflight")?;
         assert!(!failure.status.success());
         assert!(failure.stdout.is_empty());
         let error: serde_json::Value = serde_json::from_slice(&failure.stderr)?;
         assert_eq!(error["error"]["code"], "TOOL_TABLE_MISSING");
+        let failure = run("prepare")?;
+        assert!(!failure.status.success());
+        assert!(failure.stdout.is_empty());
         assert_eq!(
             std::fs::read_dir(&root)?.count(),
             3,

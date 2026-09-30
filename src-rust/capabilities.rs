@@ -91,6 +91,35 @@ impl Manifest {
     }
 }
 pub fn check(text: Option<&str>, program: &Program, limits: &Limits) -> Result<Value> {
+    check_required(
+        text,
+        program,
+        limits,
+        &profile::requirements(&program.model)?,
+        "Offline source requirements against the supplied manifest only",
+    )
+}
+/// Preparation adds reviewed waypoints and synchronization policy to source
+/// requirements. A source-only capability pass must never qualify the result.
+pub fn check_prepared(
+    text: Option<&str>,
+    prepared: &crate::compiled::PreparedPlan,
+    limits: &Limits,
+) -> Result<Value> {
+    let mut required = profile::requirements(&prepared.program().model)?;
+    required.extend(prepared.audit().required_capabilities.iter().cloned());
+    required.sort();
+    required.dedup();
+    check_required(text, prepared.program(), limits, &required,
+        "Offline complete prepared-plan requirements including compiler policy; no live negotiation")
+}
+fn check_required(
+    text: Option<&str>,
+    program: &Program,
+    limits: &Limits,
+    required: &[String],
+    scope: &str,
+) -> Result<Value> {
     let Some(text) = text else {
         return Ok(
             json!({"status":"not_checked","reason":"No target capability manifest supplied","liveNegotiation":"not_checked"}),
@@ -100,7 +129,6 @@ pub fn check(text: Option<&str>, program: &Program, limits: &Limits) -> Result<V
     if manifest.machine != program.report.machine {
         return Err(fail("Target machine differs from source profile"));
     }
-    let required = profile::requirements(&program.model)?;
     let unsupported: Vec<_> = required
         .iter()
         .filter(|name| !manifest.capabilities.contains(name))
@@ -109,6 +137,6 @@ pub fn check(text: Option<&str>, program: &Program, limits: &Limits) -> Result<V
         return Err(Diagnostic::new("target-capabilities","UNSUPPORTED_CAPABILITIES","Complete job requires capabilities absent from the selected target manifest; no command stream was published").with("unsupported",json!(unsupported)).with("required",json!(required)));
     }
     Ok(
-        json!({"status":"passed","scope":"Offline source requirements against the supplied manifest only","manifestSHA256":format!("{:x}",Sha256::digest(text.as_bytes())),"evidenceSHA256":manifest.evidence_sha256,"required":required,"liveNegotiation":"not_checked","executionAuthorized":false}),
+        json!({"status":"passed","scope":scope,"manifestSHA256":format!("{:x}",Sha256::digest(text.as_bytes())),"evidenceSHA256":manifest.evidence_sha256,"required":required,"liveNegotiation":"not_checked","executionAuthorized":false}),
     )
 }

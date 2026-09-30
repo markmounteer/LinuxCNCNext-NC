@@ -1,8 +1,8 @@
 # Native validation migration checkpoint
 
 This is a disposition of implemented validation groups, not yet the final
-check-by-check Stage 2 acceptance inventory. Command generation, independent
-audits, publication and optimization remain missing and prevent native admission.
+check-by-check Stage 2 acceptance inventory. Artifact serialization/publication,
+diagnostic archives and optimization remain missing and prevent native admission.
 The original JavaScript runtime is retained unchanged as a development oracle.
 
 | Existing checks | Current Rust disposition | Evidence |
@@ -15,8 +15,9 @@ The original JavaScript runtime is retained unchanged as a development oracle.
 | Reviewed plan schemas 1–4, program binding, units, machine, T/H/WCS mapping, exact continuation, links, ordered single-axis approaches/retracts/end | Ported | `tests-rust/plan.rs`; 54 captured legacy failures with same error codes |
 | File tool-table size, syntax, T/P/Q spelling/ranges, duplicates and mapped record presence | Ported | `tests-rust/plan.rs`; 15 captured failures with same error codes |
 | Error source identity and ordered geometry/property uses | Ported with UTF-8 byte columns and additional sequence-link records | Profile tests; errors contain section/path context; no source reference participates in semantic fingerprint |
-| Original command contracts, ordered completeness, independent policy audit, serialized-output audit | Missing from native command path | Must be implemented before a prepared native plan can be accepted |
-| Full semantic command/source-map parity with optimization disabled | Missing | Four legacy fixtures retain full original command/source maps and independent reference G-code for the upcoming comparison |
+| Original command contracts, ordered completeness and independent policy audit | Ported to the unoptimized prepared plan; serialized-bundle audit still missing | `command_audit.rs`, exhaustive per-command deletion/replacement/use-tag mutations, geometry/feed/gate mutations |
+| Full semantic command/source-map parity with optimization disabled | Four preserved complete fixtures pass ordered geometry/event/waypoint/feed comparison; full per-check disposition remains open | `tests-rust/compiled.rs`; every coordinate compares exactly, with separately bounded CSS conversion roundoff |
+| Output-command expansion bounds and source lookup | Ported before immutable plan construction; repeated metadata stored in spans | Limit boundary tests, source/provenance lookup for every fixture command |
 | Immutable plan publication, artifact/cache identity, selection generations and failure handling | Missing | No native command bundle/cache/selection is published by this checkpoint |
 | Exact reductions, error budgets, measured rate warnings and large-job benchmarks | Missing | Geometry is not reduced and no speed claim is made |
 | GUI/filter/report visualization | Outside the native compiler request | Existing JavaScript functionality remains available; no native GUI integration claimed |
@@ -41,6 +42,14 @@ The original JavaScript runtime is retained unchanged as a development oracle.
   tool-table snapshot and optional offline capability manifest. It explicitly
   reports the missing command audits, live binding and physical checks. It must
   not be mistaken for the older translator's complete G-code preflight.
+- Native `prepare` additionally qualifies the complete unoptimized in-memory
+  command plan. Typed feeds/planes replace G-code formatting modes, atomic shared
+  spindle events replace mode/start text pairs, and the at-speed gate is explicit
+  before the first nonrapid motion after a spindle event. Stage 3 must qualify
+  task timing, live state and handshake behavior. No prepared bundle is published.
+- Native baseline termination is exact path. Source CAM tolerance grants no
+  implicit fit/blend budget. Reviewed partial-axis setup moves remain unresolved
+  task intents until live binding; their unknown starting axes are never guessed.
 
 ## Captured failure corpus
 
@@ -54,7 +63,7 @@ non-string or over-1-MiB source captures and unexpected programmer exceptions;
 therefore this corpus is not evidence that every possible legacy rejection has
 been enumerated. Explicit Rust resource tests cover the parser limits separately.
 
-Checkpoint validation: 23 compiler tests and 23 shared-contract tests passed (with 130 native profiles, four
+Prior checkpoint validation: 23 compiler tests and 23 shared-contract tests passed (with 130 native profiles, four
 legacy models, 143 negative cases and additional mutation loops inside them);
 Clippy with warnings denied passed. The Fusion suite passed 84/84 and generated
 CPS verification passed. The retained translator suite passed 104 tests, with
@@ -66,3 +75,14 @@ dependency pointed into the private controller repository. The newly authored
 machine-independent contract is now the canonical public workspace crate, and
 the controller imports a pinned revision through a facade. Public builds need
 no controller credentials. This changes ownership, not motion type semantics.
+
+The subsequent command-compiler checkpoint adds an unoptimized immutable plan,
+output expansion limits, bounded provenance lookup and a separate command audit.
+Its four complete legacy comparisons cover mill/lathe, mm/inch, continuation,
+links, tool/offset/WCS changes, CSS/feed-per-revolution, reversal, coolant, dwell,
+arcs and shutdown. All 130 native cases prepare; an additional fixture explicitly
+retains duplicate and backtracking vertices. Mutation loops delete/replace each
+command and alter its source-use tag; motion feed/gate/termination/intent/endpoint
+mutations are rejected. A source-only capability manifest is rejected when it
+lacks compiler-added at-speed/linear requirements. The standalone `prepare` CLI
+runs with no PATH/Node and emits no success output on a late validation failure.

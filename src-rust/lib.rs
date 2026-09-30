@@ -1,5 +1,7 @@
 //! Non-real-time preparation only. No controller, HAL, socket or motion API.
 pub mod capabilities;
+pub mod command_audit;
+pub mod compiled;
 pub mod diagnostic;
 pub mod geometry;
 pub mod json;
