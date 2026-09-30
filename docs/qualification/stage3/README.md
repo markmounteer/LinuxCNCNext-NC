@@ -4,7 +4,27 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The companion controller's latest execution-identity/mixed-sequence checkpoint
+The companion controller's task-local start-authority checkpoint is
+`101c2f6e3a9a3aa320c4b6bb5fc519b68244fe76`. **12 simulator sessions pass** after
+reproducing unintended motion from a receipt-named G-code file on both machines
+following task replacement. Ordinary AUTO now requires successful selection in
+the current task process; native AUTO retains this Rust library's owner gate.
+Twelve RUN/STEP/RESUME probes refuse starts before fresh loading or after failed
+ordinary replacement. Fresh ordinary runs/reruns, native/mixed jobs, hold/resume,
+semantic stepping, queued aborts and loading regressions pass. The controller's
+`2026-09-30-start-authority` evidence retains 281 passing-run, 41 baseline and 37
+harness-error raw files. Compiler code is unchanged.
+
+The preceding `2026-09-30-restart` checkpoint at controller
+`8d8092344b9ad2732a6f7f8239129937b5aa7f8d` passed eight sessions, including
+consecutive jobs and graceful drained task replacement with motion alive and
+explicit private fixture I/O reconnection. It repaired owned I/O cleanup and
+zeroed startup limit caches. Its earlier absent-file start probe was insufficient;
+the collision checkpoint above provides the stronger refusal evidence.
+Neither checkpoint qualifies task crash/connection-loss stopping, restart during
+motion, lost/corrupt receipts, or every close/reset/entry/transfer route.
+
+The earlier execution-identity/mixed-sequence checkpoint
 is `27e457fd8551ded316e1aa7cde3a7269997e8366`. **25 simulator sessions pass**:
 two mixed sequences containing six native jobs and four ordinary RS274 AUTO
 programs, six state regressions, 15 zero-tool pipelines and two loading checks.
@@ -16,9 +36,9 @@ servo changes are needed. Exact evidence is the controller's
 failures, and 28 files from a corrected harness mistake. Source/geometry/state
 audits and three semantic corruption challenges pass.
 
-This qualifies mixed sessions and namespace separation, not an in-place task
-restart. Direct native-to-native sequences, no-executed-motion aborts and lost or
-unmatched receipts remain open. The existing fallback to pre-motion modes on an
+That checkpoint qualifies mixed sessions and namespace separation; the later
+checkpoints above add consecutive jobs and drained task replacement.
+No-executed-motion aborts and lost or unmatched receipts remain open. The existing fallback to pre-motion modes on an
 unmatched receipt is still unproven under receipt loss; a new namespace does not
 resolve that recovery policy. Compiler code remains unchanged at
 `ebcae527ac61099cc3ad55d8544f2323036e594f`.
