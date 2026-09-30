@@ -1,0 +1,88 @@
+{
+  "schema": "nextnc-task/abi-ci/1",
+  "scope": "Preparation ABI and compiler checks only; native execution remains unqualified",
+  "run": 36748931127,
+  "revision": "47e8cb338202187fcbe159fe8f8ef824c1ffdcf8",
+  "event": "pull_request",
+  "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "linuxcnc",
+      "databaseId": 110002207908,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002207908"
+    },
+    {
+      "name": "native-rust (windows-latest)",
+      "databaseId": 110002208506,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208506"
+    },
+    {
+      "name": "node (windows-latest, 20)",
+      "databaseId": 110002208523,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208523"
+    },
+    {
+      "name": "node (ubuntu-latest, 24)",
+      "databaseId": 110002208542,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208542"
+    },
+    {
+      "name": "native-rust (ubuntu-latest)",
+      "databaseId": 110002208570,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208570"
+    },
+    {
+      "name": "conformance (windows-latest)",
+      "databaseId": 110002208578,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208578"
+    },
+    {
+      "name": "node (windows-latest, 24)",
+      "databaseId": 110002208601,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208601"
+    },
+    {
+      "name": "node (ubuntu-latest, 20)",
+      "databaseId": 110002208663,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208663"
+    },
+    {
+      "name": "node (ubuntu-latest, 22)",
+      "databaseId": 110002208682,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208682"
+    },
+    {
+      "name": "node (windows-latest, 22)",
+      "databaseId": 110002208690,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208690"
+    },
+    {
+      "name": "conformance (ubuntu-latest)",
+      "databaseId": 110002208745,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127/job/110002208745"
+    }
+  ]
+}

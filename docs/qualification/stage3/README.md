@@ -18,6 +18,15 @@ Code checkpoint `812f781fb1cef71dc1114dad5dfef7d06985891f` passed
 Windows full Rust suite passed 109 tests; formatting, Clippy, inventory checks
 and an ARM64 compile check also passed locally. ARM64 execution is untested.
 
+The subsequent ABI/lowering code checkpoint
+`47e8cb338202187fcbe159fe8f8ef824c1ffdcf8` passed
+[all 11 hosted jobs](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36748931127)
+and 116 local Windows Rust tests, formatting, Clippy and inventory verification.
+The companion pinned-header container passed 52 representation cases (26 source
+fixtures in mm/inch external units) with full traces. This is cross-language
+preparation/NML evidence, not LinuxCNC task execution. [abi-ci.json](abi-ci.json)
+preserves this run separately from the earlier component checkpoint.
+
 | Stage 3 requirement | Current evidence | Remaining acceptance gate |
 | --- | --- | --- |
 | Rust task owner and checked native ABI | Owner model, checked preparation/read ABI and typed lowering implemented | Lifecycle ABI and actual task binding missing |
