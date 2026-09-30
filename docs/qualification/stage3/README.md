@@ -4,7 +4,26 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The companion controller's latest zero-tool/state-publication build is
+The companion controller's latest execution-identity/mixed-sequence checkpoint
+is `27e457fd8551ded316e1aa7cde3a7269997e8366`. **25 simulator sessions pass**:
+two mixed sequences containing six native jobs and four ordinary RS274 AUTO
+programs, six state regressions, 15 zero-tool pipelines and two loading checks.
+Native compatibility tags add a fresh execution discriminator to the selection
+counter; independent task processes no longer publish identical recovery names.
+The C++ bridge creates it before Rust execution ownership starts; no Rust ABI or
+servo changes are needed. Exact evidence is the controller's
+`2026-09-30-sequences` checkpoint, with 542 raw files, the two baseline namespace
+failures, and 28 files from a corrected harness mistake. Source/geometry/state
+audits and three semantic corruption challenges pass.
+
+This qualifies mixed sessions and namespace separation, not an in-place task
+restart. Direct native-to-native sequences, no-executed-motion aborts and lost or
+unmatched receipts remain open. The existing fallback to pre-motion modes on an
+unmatched receipt is still unproven under receipt loss; a new namespace does not
+resolve that recovery policy. Compiler code remains unchanged at
+`ebcae527ac61099cc3ad55d8544f2323036e594f`.
+
+The preceding zero-tool/state-publication build is
 `af2eb0d723997d73f85d09010cbaafa7e13d5466`, with this compiler unchanged at
 `ebcae527ac61099cc3ad55d8544f2323036e594f`. **41 simulator sessions pass**:
 15 zero-tool native/RS274/G7/G8 pipelines, 14 execution/shaper/freshness
