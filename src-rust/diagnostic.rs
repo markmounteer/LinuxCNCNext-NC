@@ -15,7 +15,9 @@ pub struct Diagnostic {
     pub code: String,
     pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub source: Option<Location>,
+    pub source: Option<Box<Location>>,
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    pub context: std::collections::BTreeMap<String, serde_json::Value>,
 }
 impl Diagnostic {
     pub fn new(stage: &str, code: &str, message: impl Into<String>) -> Self {
@@ -24,10 +26,15 @@ impl Diagnostic {
             code: code.into(),
             message: message.into(),
             source: None,
+            context: std::collections::BTreeMap::new(),
         }
     }
     pub fn at(mut self, source: Location) -> Self {
-        self.source = Some(source);
+        self.source = Some(Box::new(source));
+        self
+    }
+    pub fn with(mut self, key: &str, value: impl Into<serde_json::Value>) -> Self {
+        self.context.insert(key.into(), value.into());
         self
     }
 }

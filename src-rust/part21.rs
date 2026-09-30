@@ -14,6 +14,8 @@ pub struct Limits {
     pub nesting: usize,
     pub aggregate_items: usize,
     pub string_bytes: usize,
+    pub expanded_items: usize,
+    pub output_commands: usize,
 }
 impl Default for Limits {
     fn default() -> Self {
@@ -25,6 +27,8 @@ impl Default for Limits {
             nesting: 64,
             aggregate_items: 1_000_000,
             string_bytes: 1024 * 1024,
+            expanded_items: 1_000_000,
+            output_commands: 2_000_000,
         }
     }
 }
@@ -39,6 +43,8 @@ impl Limits {
                 self.values,
                 self.aggregate_items,
                 self.string_bytes,
+                self.expanded_items,
+                self.output_commands,
             ]
             .contains(&0)
         {

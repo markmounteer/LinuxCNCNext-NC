@@ -1,31 +1,73 @@
 use nextnc_native::{
+    capabilities,
     part21::{parse, Limits},
-    shape, Diagnostic,
+    plan, profile, shape, tool_table, Diagnostic,
 };
 use std::{io::Read, path::Path};
-fn run() -> nextnc_native::Result<()> {
-    let args: Vec<_> = std::env::args().collect();
-    if args.len() != 3 || args[1] != "check-syntax" {
-        return Err(Diagnostic::new("cli","USAGE","Usage: nextnc-native check-syntax input.stpnc (syntax/shape only; not executable qualification)"));
-    }
-    let limits = Limits::default();
+fn read(path: &str, limit: usize) -> nextnc_native::Result<String> {
     let mut bytes = Vec::new();
-    std::fs::File::open(Path::new(&args[2]))
-        .and_then(|f| {
-            f.take(limits.input_bytes as u64 + 1)
-                .read_to_end(&mut bytes)
-        })
-        .map_err(|e| Diagnostic::new("read", "IO", e.to_string()))?;
-    if bytes.len() > limits.input_bytes {
+    std::fs::File::open(Path::new(path))
+        .and_then(|f| f.take(limit as u64 + 1).read_to_end(&mut bytes))
+        .map_err(|e| Diagnostic::new("read", "IO", e.to_string()).with("file", path))?;
+    if bytes.len() > limit {
         return Err(Diagnostic::new(
             "read",
             "INPUT_SIZE",
             "Input exceeds byte limit",
         ));
     }
-    let text =
-        std::str::from_utf8(&bytes).map_err(|e| Diagnostic::new("read", "UTF8", e.to_string()))?;
-    let doc = parse(text, &limits)?;
+    String::from_utf8(bytes)
+        .map_err(|e| Diagnostic::new("read", "UTF8", e.to_string()).with("file", path))
+}
+fn run() -> nextnc_native::Result<()> {
+    let args: Vec<_> = std::env::args().collect();
+    let valid = match args.get(1).map(String::as_str) {
+        Some("check-syntax" | "inspect") => args.len() == 3,
+        Some("preflight") => args.len() >= 4 && (args.len() - 4) % 2 == 0,
+        _ => false,
+    };
+    if !valid {
+        return Err(Diagnostic::new("cli","USAGE","Usage: nextnc-native {check-syntax|inspect} input.stpnc; nextnc-native preflight input.stpnc plan.json [--tool-table tool.tbl] [--target capabilities.json]. Preparation only; no execution."));
+    }
+    let limits = Limits::default();
+    let text = read(&args[2], limits.input_bytes)?;
+    let doc = parse(&text, &limits)?;
+    if args[1] == "inspect" {
+        let program = profile::decode_document(&doc, &limits)?;
+        println!(
+            "{}",
+            serde_json::json!({"status":"source-profile-checked","executable":false,"program":program})
+        );
+        return Ok(());
+    }
+    if args[1] == "preflight" {
+        let program = profile::decode_document(&doc, &limits)?;
+        let plan = plan::parse(&read(&args[3], limits.input_bytes)?, &program, &limits)?;
+        let mut table = None;
+        let mut target = None;
+        for pair in args[4..].chunks_exact(2) {
+            let slot = match pair[0].as_str() {
+                "--tool-table" => &mut table,
+                "--target" => &mut target,
+                _ => return Err(Diagnostic::new("cli", "USAGE", "Unknown preflight option")),
+            };
+            if slot.is_some() {
+                return Err(Diagnostic::new(
+                    "cli",
+                    "USAGE",
+                    "Duplicate preflight option",
+                ));
+            }
+            *slot = Some(read(&pair[1], 1024 * 1024)?);
+        }
+        let table_report = tool_table::check(table.as_deref(), &program, &plan)?;
+        let target_report = capabilities::check(target.as_deref(), &program, &limits)?;
+        println!(
+            "{}",
+            serde_json::json!({"status":"source-and-setup-plan-checked","executable":false,"program":program,"plan":plan,"toolTable":table_report,"targetCapabilities":target_report,"notChecked":["native command completeness and policy audit","runtime capabilities and live coordinate binding","physical clearance and machine readiness"]})
+        );
+        return Ok(());
+    }
     let report = shape::validate(&doc)?;
     println!(
         "{}",

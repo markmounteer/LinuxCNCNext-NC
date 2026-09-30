@@ -12,19 +12,25 @@ Current commands:
 cargo test --locked
 cargo clippy --locked --all-targets -- -D warnings
 cargo run --locked -- check-syntax examples/synthetic.stpnc
+cargo run --locked -- inspect input.stpnc
+cargo run --locked -- preflight input.stpnc plan.json --tool-table tool.tbl --target capabilities.json
 ```
 
 `check-syntax` validates the bounded Part 21 envelope, syntax, references and
 accepted entity/attribute shapes. Its report explicitly says `executable:false`.
-It does not claim full semantic validation, a reviewed execution plan, machine
-readiness or native execution. Those gates are still being implemented.
+`inspect` additionally decodes and validates the entire supported source profile.
+`preflight` also validates the reviewed setup plan and optionally a tool-table
+snapshot and offline target manifest. Both report `executable:false`; neither
+publishes native commands or claims command-audit or live-machine qualification.
 
-Implemented library foundations include dimensional unit resolution with graph
-cycle/depth checks, closed executable properties/relationships and ordered-use
-coverage, independent analytic geometry checks using the shared revision-2
-contract, and duplicate-key-rejecting bounded JSON. The semantic fingerprint
-serializer matches the legacy ECMAScript number spelling, including negative zero
-and exponent thresholds; tests match the exact four captured legacy model hashes.
+Implemented modules include full revision-1/revision-2 source decoding,
+dimensional units, closed executable graphs and ordered source uses, independent
+analytic geometry, strict bounded JSON, setup-plan schemas 1–4, tool-table file
+checks and offline capability manifests. Exact ordered models and fingerprints
+match four legacy fixtures and all 130 captured native profiles. Decimal parsing
+and fingerprint formatting retain ECMAScript round trips; derived native radius
+does not participate in job identity. See the [capability matrix](native-capability-matrix.md)
+and [validation migration checkpoint](native-validation-migration.md).
 
 The profile-shape grammar is generated development data from the pinned legacy
 validator, embedded in the binary. Node is used only to capture migration fixtures
@@ -36,10 +42,9 @@ Synthetic transition coordinates are not physical clearances.
 
 ## Required work still open
 
-- Full revision-1/revision-2 semantic decoding and ordered source maps, including
-  actual Autodesk-engine output comparisons with the Rust decoder.
-- Execution-plan and tool-table checks, process-state compilation and independent
-  completeness/policy audits. Keep optimization disabled for the first parity gate.
+- Native process-state compilation and independent completeness/policy audits,
+  including ordered geometry/event/source-map equivalence with the original
+  translator. Keep optimization disabled for the first parity gate.
 - Immutable bounded prepared plans, explicit fit/blend budgets, exact reductions,
   full provenance and measured rate diagnostics.
 - Staged bundles, content identities, selection generations, cache rules and

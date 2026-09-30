@@ -34,6 +34,14 @@ fn problem(message: &str) -> Diagnostic {
     Diagnostic::new("geometry", "GEOMETRY", message)
 }
 pub fn validate(geometry: Geometry) -> Result<Metrics> {
+    validate_with_floor(geometry, 1e-7)
+}
+// The source profile specifies its numeric consistency floor in source units.
+// Callers convert it to millimetres; this is never an extra fit/blend allowance.
+pub(crate) fn validate_with_floor(geometry: Geometry, numeric_floor_mm: f64) -> Result<Metrics> {
+    if !numeric_floor_mm.is_finite() || numeric_floor_mm <= 0.0 {
+        return Err(problem("Invalid numeric consistency floor"));
+    }
     let (start, end) = match geometry {
         Geometry::Line { start, end } | Geometry::Circular { start, end, .. } => {
             (coordinates(start), coordinates(end))
@@ -82,7 +90,7 @@ pub fn validate(geometry: Geometry) -> Result<Metrics> {
             if !radius.is_finite() || radius <= 0.0 {
                 return Err(problem("Invalid circle radius"));
             }
-            let allowance = 1e-7_f64.max(radius * 1e-6);
+            let allowance = numeric_floor_mm.max(radius * 1e-6);
             if (radius - other).abs() > allowance {
                 return Err(problem("Circular endpoint radii disagree"));
             }
@@ -92,6 +100,13 @@ pub fn validate(geometry: Geometry) -> Result<Metrics> {
                 1.0
             };
             let angle = a[1].atan2(a[0]);
+            let relative = (a[0] * b[1] - a[1] * b[0]).atan2(a[0] * b[0] + a[1] * b[1]);
+            let residual = relative - direction * sweep;
+            if residual.sin().atan2(residual.cos()).abs() * radius > allowance {
+                return Err(problem(
+                    "Circular sweep differs from supplied endpoint angle",
+                ));
+            }
             let finish = angle + direction * sweep;
             let discrepancy = (center[u] + radius * finish.cos() - end[u])
                 .hypot(center[v] + radius * finish.sin() - end[v]);

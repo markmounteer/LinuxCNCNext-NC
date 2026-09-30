@@ -16,7 +16,7 @@ path = "src-rust/main.rs"
 motion-command = { git = "https://github.com/markmounteer/linuxcnc.git", rev = "2c43deb48261661a243682f7bc7723ffc12a819c" }
 ryu-js = "1"
 serde = { version = "1", features = ["derive"] }
-serde_json = { version = "1", features = ["preserve_order"] }
+serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }
 sha2 = "0.10"
 
 [lints.rust]
@@ -45,3 +45,15 @@ path = "tests-rust/json.rs"
 [[test]]
 name = "graph"
 path = "tests-rust/graph.rs"
+
+[[test]]
+name = "profile"
+path = "tests-rust/profile.rs"
+
+[[test]]
+name = "plan"
+path = "tests-rust/plan.rs"
+
+[[test]]
+name = "native_cli"
+path = "tests-rust/native_cli.rs"
