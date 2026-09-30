@@ -565,7 +565,7 @@ impl Owner {
     /// boundary. Rebinding retains the job/prefix but invalidates old receipts.
     pub fn rebind(&mut self, previous: Binding, next: Binding, evidence: Drain) -> Result<()> {
         self.check_binding(previous)?;
-        if self.phase != Phase::Running || self.offer.is_some() {
+        if !matches!(self.phase, Phase::Running | Phase::Held) || self.offer.is_some() {
             return Err(Error::State);
         }
         if !evidence.complete()
@@ -583,6 +583,23 @@ impl Owner {
         }
         self.binding = Some(next);
         self.last_offer = None;
+        Ok(())
+    }
+    /// Worker-audited suffix lowering may add new drain points. The prepared
+    /// source and semantic groups are immutable; adoption is an Arc swap on the
+    /// task thread, with no large allocation or whole-job scan here.
+    pub fn rebound_layout(&mut self, layout: Arc<Layout>) -> Result<()> {
+        if !matches!(self.phase, Phase::Running | Phase::Held)
+            || self.prefixes.completed != self.prefixes.accepted
+            || self.prefixes.admitted != self.prefixes.accepted
+            || self
+                .layout
+                .as_ref()
+                .is_none_or(|old| old.commands() != layout.commands())
+        {
+            return Err(Error::NotDrained);
+        }
+        self.layout = Some(layout);
         Ok(())
     }
     pub fn reconciled(&mut self, evidence: Drain, state_agrees: bool) -> Result<()> {

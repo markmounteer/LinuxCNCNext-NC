@@ -124,6 +124,22 @@ pub struct Status {
     pub proposed_step_end: u64,
 }
 
+/// A receipted tool call still needs its physical result and a worker-validated
+/// suffix. While this token exists next() cannot release later commands.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct Procedure {
+    pub abi: u32,
+    pub bytes: u32,
+    pub selection: u64,
+    pub serial: u64,
+    pub candidate: u64,
+    pub completed: u64,
+    pub state_epoch: u64,
+    pub tool: u32,
+    pub reserved: u32,
+}
+
 struct Runtime {
     thread: ThreadId,
     owner: Owner,
@@ -134,6 +150,7 @@ struct Runtime {
     clock: u64,
     stop_tick: u64,
     proposed: Option<usize>,
+    procedure: Option<Procedure>,
 }
 #[derive(Default)]
 struct Owners {
@@ -239,6 +256,7 @@ impl Runtime {
         }
         self.issued = None;
         self.proposed = None;
+        self.procedure = None;
         if fault {
             self.owner.fault();
         } else if disconnected {
@@ -253,10 +271,12 @@ impl Runtime {
             bytes: std::mem::size_of::<Dispatch>() as u32,
             ..Dispatch::default()
         };
-        if !matches!(
-            self.owner.phase(),
-            Phase::Running | Phase::StepDrain | Phase::Draining
-        ) {
+        if self.procedure.is_some()
+            || !matches!(
+                self.owner.phase(),
+                Phase::Running | Phase::StepDrain | Phase::Draining
+            )
+        {
             return Ok(out);
         }
         let candidate = &self.candidate.as_ref().ok_or("no native candidate")?.1;
@@ -394,6 +414,7 @@ pub unsafe extern "C" fn nextnc_owner_create(capacity: u32, output: *mut u64) ->
                 clock: 0,
                 stop_tick: 0,
                 proposed: None,
+                procedure: None,
             },
         ));
         // SAFETY: output still satisfies its synchronous lifetime contract.
@@ -436,6 +457,7 @@ pub unsafe extern "C" fn nextnc_owner_begin(handle: u64, output: *mut u64) -> i3
             r.candidate = None;
             r.issued = None;
             r.proposed = None;
+            r.procedure = None;
             Ok(generation.selection)
         })?;
         // SAFETY: output remains valid during this call.
@@ -454,6 +476,9 @@ pub extern "C" fn nextnc_owner_attach(handle: u64, selection: u64, candidate: u6
             .cloned()
             .ok_or("stale candidate handle")?;
         with(handle, |r| {
+            if c.rebind.is_some() {
+                return Err("a procedure suffix cannot become a new initial selection".into());
+            }
             if c.maximum_pieces > r.capacity {
                 return Err("native command expansion exceeds dispatch capacity".into());
             }
@@ -620,7 +645,161 @@ pub extern "C" fn nextnc_owner_result(
             }
             r.owner
                 .admitted(ticket.binding, receipt.admitted)
-                .map_err(|e| e.to_string())
+                .map_err(|e| e.to_string())?;
+            let (id, c) = r.candidate.as_ref().ok_or("no native candidate")?;
+            if let nextnc_native::compiled::Action::Event(motion_command::Command::ChangeTool {
+                tool,
+            }) = c.artifact.prepared().commands()[ticket.command].action
+            {
+                r.procedure = Some(Procedure {
+                    abi: wire::ABI,
+                    bytes: std::mem::size_of::<Procedure>() as u32,
+                    selection,
+                    serial,
+                    candidate: *id,
+                    completed: (ticket.command + 1) as u64,
+                    state_epoch: ticket.binding.state_epoch,
+                    tool,
+                    reserved: 0,
+                });
+            }
+            Ok(())
+        })
+    })
+}
+
+/// # Safety
+/// Output must provide exactly the stated, disjoint writable struct extent.
+#[no_mangle]
+pub unsafe extern "C" fn nextnc_owner_procedure(
+    handle: u64,
+    output: *mut Procedure,
+    size: u64,
+) -> i32 {
+    boundary(|| {
+        if size != std::mem::size_of::<Procedure>() as u64 {
+            return Err("invalid procedure output size".into());
+        }
+        address(output)?;
+        // SAFETY: caller guarantees the checked output extent.
+        unsafe {
+            output.write(Procedure::default());
+        }
+        let result = with(handle, |r| {
+            Ok(r.procedure.unwrap_or(Procedure {
+                abi: wire::ABI,
+                bytes: std::mem::size_of::<Procedure>() as u32,
+                ..Procedure::default()
+            }))
+        })?;
+        // SAFETY: output remains writable throughout this call.
+        unsafe {
+            output.write(result);
+        }
+        Ok(())
+    })
+}
+
+/// Adopt a worker-prepared suffix after independently observing its physical
+/// tool result and rechecking live state. All prior receipts lose authority.
+/// # Safety
+/// Fresh points to an immutable fingerprint with the common eight-byte header.
+#[no_mangle]
+pub unsafe extern "C" fn nextnc_owner_rebind(
+    handle: u64,
+    selection: u64,
+    serial: u64,
+    candidate: u64,
+    fresh: *const Fingerprint,
+    actual_tool: u32,
+    flags: u32,
+    tick: u64,
+) -> i32 {
+    boundary(|| {
+        address(fresh)?;
+        // SAFETY: caller supplies at least the common header.
+        if unsafe { fresh.cast::<[u32; 2]>().read() }
+            != [wire::ABI, std::mem::size_of::<Fingerprint>() as u32]
+        {
+            return Err("unsupported rebind fingerprint ABI/size".into());
+        }
+        // SAFETY: caller supplies the full immutable versioned body.
+        let fresh = unsafe { fresh.read() };
+        let c = registry()
+            .candidates
+            .get(&candidate)
+            .cloned()
+            .ok_or("stale rebind candidate")?;
+        with(handle, |r| {
+            r.tick(tick)?;
+            let p = r.procedure.ok_or("no pending procedure result")?;
+            let previous = r.binding()?;
+            let prefix = r.owner.prefixes();
+            if p.selection != selection
+                || p.serial != serial
+                || p.candidate != r.candidate.as_ref().ok_or("no selection")?.0
+                || p.state_epoch != previous.state_epoch
+                || actual_tool != p.tool
+            {
+                return Err("stale procedure identity or unexpected physical tool".into());
+            }
+            if c.rebind != Some((p.candidate, p.completed as usize))
+                || c.fingerprint != fresh
+                || c.maximum_pieces > r.capacity
+                || c.artifact.sha256()
+                    != r.candidate
+                        .as_ref()
+                        .ok_or("no selection")?
+                        .1
+                        .artifact
+                        .sha256()
+            {
+                return Err("procedure suffix or live binding changed".into());
+            }
+            if prefix.completed as u64 != p.completed
+                || prefix.accepted != prefix.completed
+                || prefix.admitted != prefix.completed
+                || r.issued.is_some()
+                || !matches!(r.owner.phase(), Phase::Running | Phase::Held)
+            {
+                return Err("procedure has not drained at its exact result boundary".into());
+            }
+            let observed = r
+                .ledger
+                .as_ref()
+                .is_some_and(|l| l.observed_after_dispatch(tick));
+            let evidence = drain(flags, observed)?;
+            let next = Binding {
+                state_epoch: previous
+                    .state_epoch
+                    .checked_add(1)
+                    .ok_or("state epoch exhausted")?,
+                state_sha256: fresh.configuration,
+                ..previous
+            };
+            // On an unexpected partial adoption failure close authority. The
+            // registry retains both candidates for worker-thread destruction.
+            let apply = (|| -> Result<()> {
+                r.owner
+                    .rebind(previous, next, evidence)
+                    .map_err(|e| e.to_string())?;
+                r.ledger
+                    .as_mut()
+                    .ok_or("no ledger")?
+                    .rebind(previous, next)
+                    .map_err(|e| e.to_string())?;
+                r.owner
+                    .rebound_layout(Arc::clone(&c.layout))
+                    .map_err(|e| e.to_string())?;
+                Ok(())
+            })();
+            if let Err(e) = apply {
+                r.stop(true, false, tick);
+                return Err(e);
+            }
+            r.candidate = Some((candidate, c));
+            r.procedure = None;
+            Ok(())
         })
     })
 }

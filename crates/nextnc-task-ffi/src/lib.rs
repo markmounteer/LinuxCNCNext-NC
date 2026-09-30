@@ -21,12 +21,59 @@ use std::{
 
 const MAX_CANDIDATES: usize = 2;
 struct Candidate {
-    artifact: bundle::Artifact,
-    _bound: binding::BoundPlan,
+    artifact: Arc<bundle::Artifact>,
+    bound: binding::BoundPlan,
     lowered: lowering::Plan,
     layout: Arc<nextnc_task::steps::Layout>,
     fingerprint: runtime::Fingerprint,
     maximum_pieces: usize,
+    rebind: Option<(u64, usize)>,
+}
+
+fn candidate(
+    artifact: Arc<bundle::Artifact>,
+    bound: binding::BoundPlan,
+    dynamics: lowering::Dynamics,
+    fingerprint: runtime::Fingerprint,
+    rebind: Option<(u64, usize)>,
+) -> Result<u64> {
+    let lowered = lowering::lower(&bound, dynamics).map_err(|e| e.to_string())?;
+    let layout = nextnc_task::steps::Layout::from_lowered(artifact.prepared(), &bound, &lowered)?;
+    for piece in lowered.pieces() {
+        wire::encode(
+            piece,
+            lowered.commands()[piece.command].len(),
+            lowered
+                .drains_before()
+                .binary_search(&piece.command)
+                .is_ok(),
+        )?;
+    }
+    let maximum_pieces = lowered
+        .commands()
+        .iter()
+        .map(|r| r.len())
+        .max()
+        .unwrap_or(0);
+    let mut r = registry();
+    let handle = r
+        .next
+        .checked_add(1)
+        .ok_or("native handle space exhausted")?;
+    r.next = handle;
+    r.candidates.insert(
+        handle,
+        Arc::new(Candidate {
+            artifact,
+            bound,
+            lowered,
+            layout: Arc::new(layout),
+            fingerprint,
+            maximum_pieces,
+            rebind,
+        }),
+    );
+    Ok(handle)
 }
 #[derive(Default)]
 struct Registry {
@@ -144,48 +191,95 @@ pub unsafe extern "C" fn nextnc_task_prepare(
         let (snapshot, dynamics) = snapshot.decode(&tools)?;
         let artifact = bundle::load(bytes, &limits).map_err(|e| e.to_string())?;
         let bound = binding::bind(artifact.prepared(), &snapshot).map_err(|e| e.to_string())?;
-        let lowered = lowering::lower(&bound, dynamics).map_err(|e| e.to_string())?;
-        let layout =
-            nextnc_task::steps::Layout::from_lowered(artifact.prepared(), &bound, &lowered)?;
-        // Exercise the complete wire conversion before exposing any candidate.
-        for piece in lowered.pieces() {
-            wire::encode(
-                piece,
-                lowered.commands()[piece.command].len(),
-                lowered
-                    .drains_before()
-                    .binary_search(&piece.command)
-                    .is_ok(),
-            )?;
-        }
-        let maximum_pieces = lowered
-            .commands()
-            .iter()
-            .map(|r| r.len())
-            .max()
-            .unwrap_or(0);
-        let handle = {
-            let mut r = registry();
-            let handle = r
-                .next
-                .checked_add(1)
-                .ok_or("native handle space exhausted")?;
-            r.next = handle;
-            r.candidates.insert(
-                handle,
-                Arc::new(Candidate {
-                    artifact,
-                    _bound: bound,
-                    lowered,
-                    layout: Arc::new(layout),
-                    fingerprint,
-                    maximum_pieces,
-                }),
-            );
-            handle
-        };
+        let handle = candidate(Arc::new(artifact), bound, dynamics, fingerprint, None)?;
         drop(reservation);
         // SAFETY: output remains valid for this synchronous call; inputs have been copied.
+        unsafe {
+            output.write(handle);
+        }
+        Ok(())
+    })
+}
+
+/// Worker-only suffix preparation; never grants execution authority. The bytes
+/// must be re-read from the selected bundle so replacement cannot silently bind
+/// a stale selection. Completed commands are retained, not executed again.
+/// # Safety
+/// Input extents are immutable and valid as for nextnc_task_prepare; output is
+/// a disjoint, aligned writable u64 and is zeroed on failure.
+#[no_mangle]
+pub unsafe extern "C" fn nextnc_task_rebind(
+    previous: u64,
+    completed: u64,
+    bytes: *const u8,
+    length: u64,
+    snapshot: *const wire::Snapshot,
+    tools: *const wire::Tool,
+    count: u64,
+    output: *mut u64,
+) -> i32 {
+    boundary(|| {
+        address(output)?;
+        // SAFETY: caller supplies a disjoint writable u64.
+        unsafe {
+            output.write(0);
+        }
+        let parent = registry()
+            .candidates
+            .get(&previous)
+            .cloned()
+            .ok_or("stale rebind parent")?;
+        let completed = usize::try_from(completed).map_err(|_| "rebind prefix overflow")?;
+        let length = usize::try_from(length).map_err(|_| "bundle size overflow")?;
+        if length == 0 || length > Limits::default().bundle_bytes || count > wire::MAX_TOOLS as u64
+        {
+            return Err("rebind inputs exceed ABI bounds".into());
+        }
+        address(bytes)?;
+        address(snapshot)?;
+        if count > 0 {
+            address(tools)?;
+        }
+        // SAFETY: common header extent is the caller's minimum contract.
+        if unsafe { snapshot.cast::<[u32; 2]>().read() }
+            != [wire::ABI, std::mem::size_of::<wire::Snapshot>() as u32]
+        {
+            return Err("unsupported rebind snapshot ABI/size".into());
+        }
+        let reservation = Reservation::new()?;
+        // SAFETY: immutable extents are bounded above and remain valid here.
+        let (s, t, data) = unsafe {
+            (
+                snapshot.read(),
+                if count == 0 {
+                    Vec::new()
+                } else {
+                    std::slice::from_raw_parts(tools, count as usize).to_vec()
+                },
+                std::slice::from_raw_parts(bytes, length),
+            )
+        };
+        if data != parent.artifact.bytes() {
+            return Err("selected bundle changed before procedure rebind".into());
+        }
+        let fingerprint = runtime::fingerprint(&s, &t)?;
+        let (snapshot, dynamics) = s.decode(&t)?;
+        let bound = binding::rebind(
+            parent.artifact.prepared(),
+            &parent.bound,
+            &snapshot,
+            completed,
+        )
+        .map_err(|e| e.to_string())?;
+        let handle = candidate(
+            Arc::clone(&parent.artifact),
+            bound,
+            dynamics,
+            fingerprint,
+            Some((previous, completed)),
+        )?;
+        drop(reservation);
+        // SAFETY: output lifetime spans the synchronous call.
         unsafe {
             output.write(handle);
         }

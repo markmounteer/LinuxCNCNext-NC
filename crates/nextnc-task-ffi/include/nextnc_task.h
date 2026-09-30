@@ -37,6 +37,10 @@ typedef struct {
 } nextnc_message;
 uint32_t nextnc_task_abi(void);
 int32_t nextnc_task_prepare(const uint8_t *, uint64_t, const nextnc_snapshot *, const nextnc_tool *, uint64_t, uint64_t *);
+/* Worker-only rebind. Re-read the selected bundle; bytes must still match.
+ * Previous candidate stays attached until owner_rebind adopts the result. */
+int32_t nextnc_task_rebind(uint64_t previous, uint64_t completed, const uint8_t *, uint64_t,
+    const nextnc_snapshot *, const nextnc_tool *, uint64_t, uint64_t *);
 int32_t nextnc_task_commands(uint64_t, uint64_t *);
 int32_t nextnc_task_piece(uint64_t, uint64_t, uint32_t, nextnc_message *, uint64_t);
 int32_t nextnc_task_release(uint64_t);
@@ -61,6 +65,16 @@ typedef struct {
     uint64_t selection, candidate, accepted, admitted, completed;
     uint64_t queued_pieces, accepted_pieces, pending_pieces, proposed_step_end;
 } nextnc_owner_status_value;
+typedef struct {
+    uint32_t abi, bytes;
+    uint64_t selection, serial, candidate, completed, state_epoch;
+    uint32_t tool, reserved;
+} nextnc_procedure;
+/* Serial zero means no pending procedure. A nonzero result blocks all suffix
+ * dispatch until the real tool result, physical drain and fresh binding agree. */
+int32_t nextnc_owner_procedure(uint64_t, nextnc_procedure *, uint64_t);
+int32_t nextnc_owner_rebind(uint64_t owner, uint64_t selection, uint64_t serial, uint64_t candidate,
+    const nextnc_fingerprint *, uint32_t actual_tool, uint32_t drain_flags, uint64_t tick);
 enum nextnc_owner_phase {
     NEXTNC_EMPTY=0, NEXTNC_LOADING=1, NEXTNC_SELECTED=2, NEXTNC_ARMED=3,
     NEXTNC_RUNNING=4, NEXTNC_HOLDING=5, NEXTNC_HELD=6, NEXTNC_STEP_DRAIN=7,

@@ -294,6 +294,48 @@ impl Snapshot {
 }
 
 pub fn bind(plan: &PreparedPlan, snapshot: &Snapshot) -> Result<BoundPlan> {
+    bind_from(plan, snapshot, &[])
+}
+
+/// Rebind only unexecuted commands from a freshly observed procedure result.
+/// Executed records keep their original identity and geometry. This function
+/// validates geometry, not permission to resume: the owner must prove the drain
+/// and that `completed` is its actual procedure boundary before adopting it.
+pub fn rebind(
+    plan: &PreparedPlan,
+    previous: &BoundPlan,
+    snapshot: &Snapshot,
+    completed: usize,
+) -> Result<BoundPlan> {
+    require(
+        completed > 0
+            && completed < plan.commands().len()
+            && previous.records.len() == plan.commands().len()
+            && previous
+                .records
+                .iter()
+                .zip(plan.commands())
+                .enumerate()
+                .all(|(i, (r, source))| r.command == i && r.source == *source),
+        "invalid rebind source or prefix",
+    )?;
+    require(
+        matches!(
+            plan.commands()[completed - 1].action,
+            Action::Event(Command::ChangeTool { .. })
+        ),
+        "rebind requires a completed tool procedure",
+    )?;
+    let mut result = bind_from(plan, snapshot, &previous.records[..completed])?;
+    result.initial = previous.initial;
+    Ok(result)
+}
+
+fn bind_from(
+    plan: &PreparedPlan,
+    snapshot: &Snapshot,
+    prefix: &[BoundRecord],
+) -> Result<BoundPlan> {
     snapshot.validate(plan)?;
     let mut position = snapshot.commanded_pose_mm;
     let mut transform = Transform {
@@ -307,8 +349,15 @@ pub fn bind(plan: &PreparedPlan, snapshot: &Snapshot) -> Result<BoundPlan> {
         1e-7
     };
     let mut records = Vec::with_capacity(plan.commands().len());
+    records.extend_from_slice(prefix);
     let mut shaper_lane = None;
-    for (command, source) in plan.commands().iter().copied().enumerate() {
+    for (command, source) in plan
+        .commands()
+        .iter()
+        .copied()
+        .enumerate()
+        .skip(prefix.len())
+    {
         let action=(|| -> Result<BoundAction> {
             match source.action {
                 Action::Motion(m)=>{

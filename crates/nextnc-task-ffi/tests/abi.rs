@@ -127,6 +127,48 @@ fn start(owner: u64, f: &Fingerprint, mode: u32, flags: u32, restart: u64) -> i3
     // SAFETY: f remains a valid immutable fingerprint for the entire call.
     unsafe { nextnc_owner_start(owner, f, 1, flags, mode, restart) }
 }
+fn procedure(owner: u64) -> Procedure {
+    let mut p = Procedure::default();
+    // SAFETY: p has the exact declared writable extent.
+    assert_eq!(
+        // SAFETY: p remains aligned and valid for the stated byte count.
+        unsafe { nextnc_owner_procedure(owner, &mut p, std::mem::size_of::<Procedure>() as u64) },
+        0
+    );
+    p
+}
+fn rebound(p: Procedure, data: &[u8], s: &Snapshot, t: &[Tool], out: &mut u64) -> i32 {
+    // SAFETY: all input/output extents are live, disjoint and correctly sized.
+    unsafe {
+        nextnc_task_rebind(
+            p.candidate,
+            p.completed,
+            data.as_ptr(),
+            data.len() as u64,
+            s,
+            t.as_ptr(),
+            t.len() as u64,
+            out,
+        )
+    }
+}
+fn adopt(owner: u64, p: Procedure, candidate: u64, f: &Fingerprint, tool: u32, tick: u64) -> i32 {
+    // SAFETY: f is immutable and valid for the complete synchronous call.
+    unsafe { nextnc_owner_rebind(owner, p.selection, p.serial, candidate, f, tool, 63, tick) }
+}
+fn observe(s: &mut Snapshot, m: Message) {
+    match m.kind {
+        1..=3 => s.pose = m.end,
+        11 => s.temporary = [0.0; 9],
+        13 => {
+            s.work_offset = m.argument as u32;
+            s.work[(m.argument - 1) as usize] = m.end;
+            s.rotation[(m.argument - 1) as usize] = m.value;
+        }
+        14 => s.tool_offset = m.end,
+        _ => (),
+    }
+}
 
 #[test]
 fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestResult {
@@ -141,13 +183,84 @@ fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestRe
     let mut pieces = 0;
     let mut commands = 0;
     let mut circles = 0;
+    let mut live = snapshot();
+    let mut table = tools();
+    let mut rebinds = 0;
     while state(owner).phase != 9 {
         assert!(tick < 500, "owner stopped making progress");
         let d = next(owner);
         if d.serial == 0 {
+            let p = procedure(owner);
+            let mut replacement = 0;
+            if p.serial != 0 {
+                assert_eq!(next(owner).serial, 0); // no suffix escapes the procedure
+                let mut changed_bytes = a.bytes().to_vec();
+                changed_bytes[0] ^= 1;
+                assert_eq!(
+                    rebound(p, &changed_bytes, &live, &table, &mut replacement),
+                    -1
+                );
+                assert_eq!(replacement, 0);
+                let mut outside = table;
+                outside[1].offset[2] = 1e6;
+                assert_eq!(rebound(p, a.bytes(), &live, &outside, &mut replacement), -1);
+                assert_eq!(replacement, 0); // complete suffix limit check, not just T validity
+                table[1].offset[2] = 0.3; // physical T1 and independent H2 stay distinct
+                assert_eq!(rebound(p, a.bytes(), &live, &table, &mut replacement), 0);
+                assert_eq!(
+                    adopt(owner, p, replacement, &fresh(&live, &table), p.tool, tick),
+                    -1
+                ); // undrained
+            }
             // A new observation and all six actual completion domains are needed.
             assert_eq!(nextnc_owner_control(owner, 5, 0, 47, tick), -1);
             assert_eq!(nextnc_owner_control(owner, 5, 0, 63, tick), 0);
+            if p.serial != 0 {
+                assert_eq!(
+                    adopt(owner, p, replacement, &fresh(&live, &table), 99, tick),
+                    -1
+                );
+                let mut changed = live;
+                changed.pose[2] += 0.01;
+                assert_eq!(
+                    adopt(
+                        owner,
+                        p,
+                        replacement,
+                        &fresh(&changed, &table),
+                        p.tool,
+                        tick
+                    ),
+                    -1
+                );
+                assert_eq!(
+                    adopt(
+                        owner,
+                        Procedure {
+                            serial: p.serial + 1,
+                            ..p
+                        },
+                        replacement,
+                        &fresh(&live, &table),
+                        p.tool,
+                        tick
+                    ),
+                    -1
+                );
+                assert_eq!(next(owner).serial, 0);
+                assert_eq!(
+                    adopt(owner, p, replacement, &fresh(&live, &table), p.tool, tick),
+                    0
+                );
+                assert_eq!(nextnc_owner_result(owner, selection, p.serial, 0, tick), -1); // old receipt loses authority
+                assert_eq!(
+                    adopt(owner, p, replacement, &fresh(&live, &table), p.tool, tick),
+                    -1
+                );
+                assert_eq!(nextnc_task_release(candidate), 0);
+                candidate = replacement;
+                rebinds += 1;
+            }
         } else {
             let retry = next(owner);
             assert_eq!(retry.message, d.message);
@@ -168,12 +281,15 @@ fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestRe
             }
             if d.message.kind == 2 {
                 circles += 1;
+                assert!((d.message.end[2] - 5.8).abs() < 1e-8); // Z5 + 0.5 mm source rise + new H2
             }
+            observe(&mut live, d.message);
         }
         tick += 1;
     }
     assert_eq!(commands as usize, a.prepared().commands().len());
     assert_eq!(circles, 1);
+    assert_eq!(rebinds, 1);
     let s = state(owner);
     assert_eq!(s.completed, commands);
     assert_eq!(s.accepted_pieces, pieces);
@@ -184,6 +300,78 @@ fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestRe
     assert_eq!(state(owner).allows_mdi, 1);
     assert_eq!(nextnc_owner_destroy(owner), 0);
     assert_eq!(nextnc_task_release(candidate), 0);
+    Ok(())
+}
+
+#[test]
+fn held_procedure_adoption_and_late_worker_abort_keep_the_same_prefix() -> TestResult {
+    let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
+    for abort_worker in [false, true] {
+        let a = artifact()?;
+        let mut candidate = 0;
+        let mut live = snapshot();
+        let t = tools();
+        assert_eq!(prepare(&a, &live, &t, &mut candidate), 0);
+        let (owner, selection) = owner_selection(candidate);
+        assert_eq!(start(owner, &fresh(&live, &t), 0, 127, 0), 0);
+        let mut tick = 1;
+        let p = loop {
+            assert!(tick < 500);
+            let p = procedure(owner);
+            if p.serial != 0 {
+                break p;
+            }
+            let d = next(owner);
+            if d.serial == 0 {
+                assert_eq!(nextnc_owner_control(owner, 5, 0, 63, tick), 0);
+            } else {
+                assert_eq!(nextnc_owner_issue(owner, selection, d.serial, tick), 0);
+                assert_eq!(nextnc_owner_result(owner, selection, d.serial, 0, tick), 0);
+                observe(&mut live, d.message);
+            }
+            tick += 1;
+        };
+        assert_eq!(nextnc_owner_control(owner, 5, 0, 63, tick), 0);
+        let mut replacement = 0;
+        assert_eq!(rebound(p, a.bytes(), &live, &t, &mut replacement), 0);
+        assert_eq!(nextnc_owner_control(owner, 1, 0, 0, tick), 0);
+        assert_eq!(nextnc_owner_control(owner, 2, 1, 0, tick + 1), 0);
+        tick += 2;
+        if abort_worker {
+            assert_eq!(nextnc_owner_control(owner, 6, 0, 0, tick), 0);
+            assert_eq!(
+                adopt(owner, p, replacement, &fresh(&live, &t), p.tool, tick),
+                -1
+            );
+            assert_eq!(next(owner).serial, 0);
+        } else {
+            assert_eq!(
+                adopt(owner, p, replacement, &fresh(&live, &t), p.tool, tick),
+                0
+            );
+            assert_eq!(state(owner).phase, 6);
+            assert_eq!(state(owner).completed, p.completed);
+            assert_eq!(next(owner).serial, 0); // adoption does not release the hold
+            assert_eq!(nextnc_owner_control(owner, 4, 0, 0, tick), 0);
+            let end = state(owner).proposed_step_end;
+            assert_eq!(nextnc_owner_control(owner, 3, end, 127, tick), 0);
+            let d = next(owner);
+            assert_eq!(d.message.command, p.completed); // neither skip nor replay
+            assert!(d.serial > p.serial);
+            assert_eq!(nextnc_owner_result(owner, selection, p.serial, 0, tick), -1);
+            assert_eq!(nextnc_owner_control(owner, 6, 0, 0, tick), 0);
+        }
+        assert_eq!(nextnc_owner_control(owner, 9, 1, 63, tick + 1), 0);
+        let mut newer = 0;
+        // SAFETY: newer is a disjoint writable u64.
+        assert_eq!(unsafe { nextnc_owner_begin(owner, &mut newer) }, 0);
+        // Worker suffixes cannot be attached as new jobs with an old prefix.
+        assert_eq!(nextnc_owner_attach(owner, newer, replacement), -1);
+        assert_eq!(nextnc_owner_failed(owner, newer), 0);
+        assert_eq!(nextnc_owner_destroy(owner), 0);
+        assert_eq!(nextnc_task_release(candidate), 0);
+        assert_eq!(nextnc_task_release(replacement), 0);
+    }
     Ok(())
 }
 

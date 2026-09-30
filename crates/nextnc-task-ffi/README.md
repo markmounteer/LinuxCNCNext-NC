@@ -76,8 +76,20 @@ drain domains and a heartbeat after the last issue. MDI stays blocked until stat
 reconciliation is explicitly acknowledged. Abort/fault/disconnect revoke first,
 even if their heartbeat is stale. These controls do not themselves move or stop
 hardware: the host must perform the corresponding checked LinuxCNC operations.
-Procedure rebind transport and full host execution/reconciliation qualification
-remain unfinished Stage 3 work. The companion task now runs initial native
+After a tool command is receipted, `nextnc_owner_procedure` identifies the required
+physical result. No suffix is offered until the task proves the exact prefix has
+drained, checks the actual tool, and adopts `nextnc_task_rebind` worker output.
+The worker re-reads the selected bundle, preserves the executed prefix and binds
+every remaining command against a fresh snapshot. It rechecks travel, geometry,
+shaper compatibility, independent T/H offsets and dynamics. The task rechecks the
+full live fingerprint before adoption; changed state or stale worker identity is
+refused. Adoption advances the state epoch and invalidates old receipts while
+retaining command indexes and ledger serials. It never releases an existing hold.
+A suffix candidate cannot become a new initial selection. Candidate retirement
+still belongs on the worker after the owner detaches it.
+
+Full host execution/reconciliation qualification remains unfinished Stage 3
+work. The companion task now runs native
 geometry/control simulations through actual recipients. Mode reset expands into
 separately receipted termination and feed-mode changes before its task-state
 update. Candidate attachment checks the maximum expansion against dispatch
