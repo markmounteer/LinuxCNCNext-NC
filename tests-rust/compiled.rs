@@ -388,6 +388,14 @@ fn all_native_engine_and_synthetic_profiles_prepare_without_losing_analytic_geom
             file.display()
         );
         assert_eq!(artifact.prepared().spans(), p.spans());
+        let demand = nextnc_native::rate::describe(artifact.prepared(), None)?;
+        let counts = demand.counts();
+        assert_eq!(counts.prepared_commands, p.commands().len());
+        assert_eq!(counts.motion_commands, p.audit().motions);
+        assert_eq!(
+            counts.prepared_commands,
+            counts.motion_commands + counts.state_commands + counts.reviewed_waypoints
+        );
         let circular_source: usize = source.model["sections"]
             .as_array()
             .ok_or("sections")?
@@ -418,6 +426,10 @@ fn all_native_engine_and_synthetic_profiles_prepare_without_losing_analytic_geom
             }
         }
         assert_eq!(circular, circular_source);
+        assert_eq!(
+            counts.planar_circular_commands + counts.helical_commands,
+            circular_source
+        );
         count += 1;
     }
     assert_eq!(count, 130);

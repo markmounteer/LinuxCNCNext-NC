@@ -3,7 +3,7 @@ use nextnc_native::{
     diagnostics::{self, Trace},
     error_budget,
     part21::{parse, Limits},
-    plan, profile, publication, shape, tool_table, Diagnostic, Result,
+    plan, profile, publication, rate, shape, tool_table, Diagnostic, Result,
 };
 use serde_json::{json, Value};
 use std::path::Path;
@@ -15,10 +15,14 @@ fn run(args: &[String], trace: &mut Trace) -> Result<Value> {
         // Protect named input paths before argument validation can fail. A
         // malformed option must not allow latest.json to overwrite its input.
         let command = args.get(1).map(String::as_str).unwrap_or("");
-        if ["check-syntax", "inspect", "preflight", "prepare", "publish", "verify-bundle"].contains(&command) {
+        if ["check-syntax", "inspect", "preflight", "prepare", "publish", "verify-bundle", "analyze-rate"].contains(&command) {
             if let Some(input) = args.get(2) {
-                t.note_input(if command == "verify-bundle" { "artifact" } else { "source" }, Path::new(input), if command == "verify-bundle" { limits.bundle_bytes } else { limits.input_bytes })?;
+                let artifact = matches!(command, "verify-bundle" | "analyze-rate");
+                t.note_input(if artifact { "artifact" } else { "source" }, Path::new(input), if artifact { limits.bundle_bytes } else { limits.input_bytes })?;
             }
+        }
+        if command == "analyze-rate" {
+            if let Some(input) = args.get(3) { t.note_input("admission-reference", Path::new(input), rate::REFERENCE_LIMIT)?; }
         }
         if ["preflight", "prepare", "publish"].contains(&command) {
             if let Some(input) = args.get(3) { t.note_input("setup", Path::new(input), limits.input_bytes)?; }
@@ -29,12 +33,13 @@ fn run(args: &[String], trace: &mut Trace) -> Result<Value> {
         }
         let valid = match args.get(1).map(String::as_str) {
             Some("check-syntax" | "inspect" | "verify-bundle") => args.len() == 3,
+            Some("analyze-rate") => args.len() == 4,
             Some("preflight" | "prepare") => args.len() >= 4 && (args.len() - 4).is_multiple_of(2),
             Some("publish") => args.len() >= 6 && (args.len() - 4).is_multiple_of(2),
             _ => false,
         };
         if !valid {
-            return Err(Diagnostic::new("cli","USAGE","Usage: nextnc-native {check-syntax|inspect} input.stpnc; nextnc-native {preflight|prepare|publish} input.stpnc plan.json [--tool-table tool.tbl] [--target capabilities.json] [--store directory (required for publish)]; nextnc-native verify-bundle artifact.nncb. Preparation only; no execution."));
+            return Err(Diagnostic::new("cli","USAGE","Usage: nextnc-native {check-syntax|inspect} input.stpnc; nextnc-native {preflight|prepare|publish} input.stpnc plan.json [--tool-table tool.tbl] [--target capabilities.json] [--store directory (required for publish)]; nextnc-native verify-bundle artifact.nncb; nextnc-native analyze-rate artifact.nncb admission-simulation.json. Preparation only; no execution."));
         }
         let paths = option_paths(args.get(4..).unwrap_or_default(), args[1] == "publish")?;
         if args[1] == "publish" && paths.store.is_none() {
@@ -42,11 +47,29 @@ fn run(args: &[String], trace: &mut Trace) -> Result<Value> {
         }
         Ok(paths)
     })?;
-    if args[1] == "verify-bundle" {
+    if matches!(args[1].as_str(), "verify-bundle" | "analyze-rate") {
         let bytes = trace.stage("artifact-read", |t| {
             t.read_bytes("artifact", Path::new(&args[2]), limits.bundle_bytes)
         })?;
         let artifact = trace.stage("bundle-validation", |_| bundle::load(bytes, &limits))?;
+        if args[1] == "analyze-rate" {
+            let text = trace.stage("reference-read", |t| {
+                t.read_text(
+                    "admission-reference",
+                    Path::new(&args[3]),
+                    rate::REFERENCE_LIMIT,
+                )
+            })?;
+            let reference =
+                trace.stage("reference-validation", |_| rate::Reference::parse(&text))?;
+            let demand = trace.stage("command-demand", |_| {
+                rate::describe(artifact.prepared(), Some(&reference))
+            })?;
+            return Ok(
+                json!({"status":"native-command-demand-analyzed","executable":false,"artifactSHA256":artifact.sha256(),
+                "identity":artifact.identity(),"commandDemand":demand,"liveBinding":"not_checked"}),
+            );
+        }
         let budget = trace.stage("error-budget", |_| {
             error_budget::describe(artifact.prepared())
         })?;

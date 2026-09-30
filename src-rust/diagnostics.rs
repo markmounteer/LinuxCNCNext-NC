@@ -81,6 +81,14 @@ impl Trace {
                 "bundle-validation",
                 "error-budget",
             ],
+            "analyze-rate" => &[
+                "arguments",
+                "artifact-read",
+                "bundle-validation",
+                "reference-read",
+                "reference-validation",
+                "command-demand",
+            ],
             _ => &["arguments"],
         };
         Self {
@@ -189,7 +197,7 @@ impl Trace {
             "source"
         };
         let Some(input) = self.inputs.iter().find(|i| i.role == role && i.observed) else {
-            return json!({"status":"unavailable","reason":if self.command=="verify-bundle"{"Source location may refer to embedded bundle input; no outer-file excerpt is inferred"}else{"No exact observed input identity for this error stage"}});
+            return json!({"status":"unavailable","reason":if matches!(self.command.as_str(),"verify-bundle"|"analyze-rate"){"Source location may refer to embedded bundle input; no outer-file excerpt is inferred"}else{"No exact observed input identity for this error stage"}});
         };
         let line = error
             .source
@@ -210,7 +218,7 @@ impl Trace {
                 // JSON line numbers describe a complete JSON input only when
                 // the caller identified that input; embedded property JSON is
                 // located by the outer STEP record instead.
-                if matches!(role, "setup" | "target") {
+                if matches!(role, "setup" | "target" | "admission-reference") {
                     error
                         .context
                         .get("jsonLine")
@@ -352,7 +360,9 @@ fn directory_from(env: BTreeMap<OsString, OsString>, windows: bool) -> Result<Pa
     Ok(root.join("LinuxCNCNext-NC").join("diagnostics"))
 }
 pub fn correction(error: &Diagnostic) -> &'static str {
-    if error.code == "UNSUPPORTED_CAPABILITIES" {
+    if error.stage == "rate-reference" {
+        "Use a complete passing Stage 0 admission report with its original source, binary and trace identities. Preserve failed measurements separately; do not edit rates or completion flags to bypass evidence validation."
+    } else if error.code == "UNSUPPORTED_CAPABILITIES" {
         "Use a target with qualified support for every listed capability, or regenerate the affected CAM operation. Do not replace synchronized feed with a nominal-RPM conversion."
     } else if error.code.starts_with("TOOL_TABLE") || error.stage == "tool-table" {
         "Check the named T/H records in the selected LinuxCNC tool-table snapshot and the reviewed plan mapping. File validation does not verify a physically fitted tool."

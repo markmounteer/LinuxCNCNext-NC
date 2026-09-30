@@ -53,6 +53,12 @@ deleted.
   The structured report and readable report each have a 16 MiB serialization
   limit. Controls and bidirectional formatting characters are escaped in TXT.
 
+`analyze-rate` records the independently checked artifact and admission-reference
+identities, demand/expansion counts, observed workloads, assumptions and warnings.
+Reference validation has separate stages. Malformed measurement JSON receives an
+excerpt from that observed file; it is never attributed to embedded STEP source
+or the binary bundle. No measured rate is cached as execution permission.
+
 The JSON schema is `linuxcnc-next-nc/native-diagnostic/1`, distinct from the
 retained JavaScript report schema. Byte columns also differ from legacy UTF-16
 string columns. Consumers should check the schema before interpreting locations.

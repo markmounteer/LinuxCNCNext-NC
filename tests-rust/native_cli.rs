@@ -1,6 +1,118 @@
 use nextnc_native::{json, part21::Limits};
 use std::{path::PathBuf, process::Command};
 #[test]
+fn standalone_rate_analysis_binds_artifact_and_reference_and_archives_failures(
+) -> Result<(), Box<dyn std::error::Error>> {
+    use nextnc_native::bundle;
+    let root = std::env::temp_dir().join(format!(
+        "nextnc-rate-cli-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)?
+            .as_nanos()
+    ));
+    std::fs::create_dir(&root)?;
+    let outcome = (|| -> Result<(), Box<dyn std::error::Error>> {
+        let fixture = "tests-rust/fixtures/benchmark/mill-mm-polyline-8";
+        let source = std::fs::read_to_string(format!("{fixture}.stpnc"))?;
+        let setup = std::fs::read_to_string(format!("{fixture}.plan.json"))?;
+        let artifact = bundle::compile(
+            bundle::Inputs {
+                source: &source,
+                setup: &setup,
+                tool_table: None,
+                target: None,
+            },
+            &Limits::default(),
+        )?;
+        let artifact_path = root.join("job.nncb");
+        let reference_path = root.join("reference.json");
+        let diagnostics = root.join("diagnostics");
+        std::fs::write(&artifact_path, artifact.bytes())?;
+        let reference = include_str!("fixtures/admission/reference.json");
+        std::fs::write(&reference_path, reference)?;
+        let run = || {
+            Command::new(env!("CARGO_BIN_EXE_nextnc-native"))
+                .env_clear()
+                .env("NEXTNC_DIAGNOSTICS", &diagnostics)
+                .arg("analyze-rate")
+                .arg(&artifact_path)
+                .arg(&reference_path)
+                .output()
+        };
+        let result = run()?;
+        assert!(
+            result.status.success(),
+            "{}",
+            String::from_utf8_lossy(&result.stderr)
+        );
+        let report: serde_json::Value = serde_json::from_slice(&result.stdout)?;
+        assert_eq!(report["status"], "native-command-demand-analyzed");
+        assert_eq!(report["executable"], false);
+        assert_eq!(report["artifactSHA256"], artifact.sha256());
+        assert_eq!(
+            report["commandDemand"]["reference"]["input_sha256"],
+            bundle::digest(reference.as_bytes())
+        );
+        assert_eq!(
+            report["commandDemand"]["counts"]["source_geometry_paths"],
+            1
+        );
+        assert_eq!(report["commandDemand"]["counts"]["motion_commands"], 8);
+        assert!(report["commandDemand"]["native_capacity_commands_per_second"].is_null());
+        assert_eq!(report["diagnostics"]["status"], "saved");
+        let archived: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(diagnostics.join("latest.json"))?)?;
+        assert_eq!(archived["result"]["commandDemand"], report["commandDemand"]);
+        assert!(archived["validationStages"]
+            .as_array()
+            .ok_or("stages")?
+            .iter()
+            .all(|s| s["status"] == "passed"));
+        // A new reference is an analysis input, never part of cached permission.
+        // Invalid JSON must identify that file, not interpret the byte as a STEP
+        // source location or an offset into the binary artifact.
+        std::fs::write(&reference_path, "{\n invalid measurement\n}")?;
+        let failed = run()?;
+        assert!(!failed.status.success() && failed.stdout.is_empty());
+        let failed: serde_json::Value = serde_json::from_slice(&failed.stderr)?;
+        assert_eq!(failed["error"]["stage"], "rate-reference");
+        let failure: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(diagnostics.join("latest-error.json"))?)?;
+        assert_eq!(failure["sourceExcerpt"]["status"], "verified");
+        assert_eq!(failure["sourceExcerpt"]["role"], "admission-reference");
+        assert_eq!(
+            failure["sourceExcerpt"]["sha256"],
+            bundle::digest(b"{\n invalid measurement\n}")
+        );
+        assert!(failure["validationStages"]
+            .as_array()
+            .ok_or("stages")?
+            .iter()
+            .any(|s| s["name"] == "command-demand" && s["status"] == "not_reached"));
+        assert_eq!(std::fs::read(&artifact_path)?, artifact.bytes());
+        // Incomplete qualification also refuses to publish a success report.
+        let mut invalid: serde_json::Value = serde_json::from_str(reference)?;
+        invalid["results"][0]["passed"] = serde_json::json!(false);
+        std::fs::write(&reference_path, invalid.to_string())?;
+        let failed = run()?;
+        assert!(!failed.status.success() && failed.stdout.is_empty());
+        let failed: serde_json::Value = serde_json::from_slice(&failed.stderr)?;
+        assert_eq!(
+            failed["error"]["context"]["referenceCase"],
+            "admission_mill_line_1"
+        );
+        Ok(())
+    })();
+    let canonical = std::fs::canonicalize(&root)?;
+    if canonical.parent() == Some(std::fs::canonicalize(std::env::temp_dir())?.as_path()) {
+        std::fs::remove_dir_all(canonical)?;
+    } else {
+        return Err("unexpected test root".into());
+    }
+    outcome
+}
+#[test]
 fn standalone_publication_and_bundle_verification_need_no_node_or_live_state(
 ) -> Result<(), Box<dyn std::error::Error>> {
     let root = std::env::temp_dir().join(format!(

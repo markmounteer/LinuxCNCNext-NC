@@ -19,6 +19,7 @@ cargo run --locked -- preflight input.stpnc plan.json --tool-table tool.tbl --ta
 cargo run --locked -- prepare input.stpnc plan.json --tool-table tool.tbl --target capabilities.json
 cargo run --locked -- publish input.stpnc plan.json --store job-store --tool-table tool.tbl --target capabilities.json
 cargo run --locked -- verify-bundle job-store/objects/CONTENT-SHA256.nncb
+cargo run --locked -- analyze-rate job-store/objects/CONTENT-SHA256.nncb admission-simulation.json
 ```
 
 `check-syntax` validates the bounded Part 21 envelope, syntax, references and
@@ -61,8 +62,12 @@ Synthetic transition coordinates are not physical clearances.
 
 ## Required work still open
 
-- Measured reference admission and predicted command-demand diagnostics.
 - Final Stage 2 acceptance review against the controller's authoritative plan.
+
+The [command-demand report](native-command-demand.md) now counts complete prepared
+motion/state actions and source expansion, predicts nominal feed/dwell density,
+and screens it against explicitly scoped reference observations. Unknown live or
+synchronized timing stays unknown; the report never claims native capacity.
 
 The migration inventory, ordered semantic equivalence, bounded negative corpus,
 exact-path budget accounting and matched large-job compiler benchmarks now have
