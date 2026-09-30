@@ -1,5 +1,6 @@
 "use strict";
 const {requireValue: need, correctionFor} = require("./errors");
+const {reviewGeometry} = require("./review-geometry"), {stockPreview} = require("./stock-preview"), {viewer} = require("./review-viewer");
 const escape = value => String(value ?? "Not recorded").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
 const json = value => value === undefined ? "Not recorded" : JSON.stringify(value, null, 2);
 const pre = value => `<pre>${escape(json(value))}</pre>`;
@@ -45,11 +46,41 @@ function validationView(coverage) {
       return [name, label(status), scope, Object.keys(evidence).length ? json(evidence) : "None recorded"];
     }));
 }
-function renderReport(record, {artifactIdentity} = {}) {
+function motionView(review) {
+  if (!review) return "<p>Motion metrics: Not recorded or source map unavailable.</p>";
+  const n = v => Number(v.toPrecision(9)), t = review.totals;
+  return table([["Known cutting distance", `${n(t.cuttingDistance)} ${review.units}`], ["Known rapid distance", `${n(t.rapidDistance)} ${review.units}`],
+    ["Motion blocks / distance unknown", `${t.motionBlocks} / ${t.unknownDistanceBlocks}`], ["Programmed dwell", `${n(t.dwellSeconds)} s`],
+    ["Ideal feed time for resolved cutting blocks", `${n(t.idealFeedSeconds)} s`], ["Cutting blocks without a time estimate", t.unknownFeedTimeBlocks],
+    ["Rapid / tool-change / spindle-delay time", "Not estimated; no total cycle-time claim"]]) +
+    grid(["Operation", `Cutting (${review.units})`, `Rapid (${review.units})`, "Distance unknown (blocks)", "Ideal feed (s)", "Feed time unknown (blocks)", "Dwell (s)"],
+      review.operations.map(op => [`${op.section}: ${op.operation}`, n(op.cuttingDistance), n(op.rapidDistance), op.unknownDistanceBlocks, n(op.idealFeedSeconds), op.unknownFeedTimeBlocks, n(op.dwellSeconds)])) +
+    review.limitations.map(l => `<p>${escape(l)}</p>`).join("");
+}
+function stockView(stock) {
+  if (!stock) return "<p>Not requested. Optional XYZ mill preview requires an explicit stock-and-tool setup file with --stock-setup. See docs/visual-review.md.</p>";
+  const n = v => Number(v.toPrecision(8)), line = v => `<button data-review-line="${v}">Line ${v}</button>`;
+  return `<p><strong>Approximate final stock surface — not a collision or clearance certificate.</strong> Pale blue is original height; orange/brown is deeper removal. This shows the final state after resolved cutting moves, independently of the selected toolpath line.</p><canvas id="stock-canvas" width="800" height="440" aria-label="Approximate final stock top surface"></canvas>` +
+    table([["Stock frame / units", `${stock.workOffset} / ${stock.units}`], ["Grid", `${stock.nx} × ${stock.ny}; cells ${n(stock.dx)} × ${n(stock.dy)} ${stock.units}`],
+      ["Initial / remaining volume", `${n(stock.initialVolume)} / ${n(stock.remainingVolume)} ${stock.units}³`], ["Approximate removed volume", `${n(stock.removedVolume)} ${stock.units}³`],
+      ["Sampled path points", stock.samples], ["Setup SHA-256 (parsed JSON)", stock.setupSHA256]]) +
+    `<h3>Sampled rapid intersections</h3><p>${stock.rapidIntersections.length ? stock.rapidIntersections.map(line).join(" ") : "None found by this sampled model. Excluded moves and unmodeled objects are not checked."}</p>` +
+    `<h3>Excluded moves</h3>${stock.unresolvedLines.length ? stock.unresolvedLines.map(v => `<p>${line(v.line)} ${escape(v.reason)}</p>`).join("") : "<p>None.</p>"}` +
+    stock.limitations.map(l => `<p>${escape(l)}</p>`).join("");
+}
+function renderReport(record, {artifactIdentity, stockSetup} = {}) {
   need(record && typeof record === "object" && !Array.isArray(record) && record.schema === "linuxcnc-next-nc/diagnostic/1", "REPORT_SCHEMA", "Expected a linuxcnc-next-nc/diagnostic/1 archive; unsupported schemas are not rendered.");
   const inspection = record.inspection || {}, trace = inspection.traceability || {}, execution = inspection.execution || {};
   const errors = record.error?.context?.issues;
   const ranges = Array.isArray(trace.operationRanges) ? trace.operationRanges : [], sourceMap = Array.isArray(record.sourceMap) ? record.sourceMap : [];
+  let review, unavailable = "No complete typed source map is available in this archive.";
+  if (sourceMap.length) {
+    try { review = reviewGeometry(inspection, sourceMap); }
+    catch (error) { if (error.code !== "REVIEW_GEOMETRY") throw error; unavailable = error.message; }
+  }
+  if (stockSetup) need(review, "STOCK_PREVIEW", "Stock preview requires a complete usable source map: " + unavailable);
+  const stock = stockSetup ? stockPreview(review, stockSetup) : null;
+  const visual = review ? viewer(review, stock) : {html: `<p>Toolpath viewer unavailable: ${escape(unavailable)}</p>`, csp: "", script: ""};
   const groups = new Map();
   for (const op of ranges) {
     const key = JSON.stringify([op.tool, op.mappedTool, op.mappedWorkOffset]);
@@ -63,6 +94,9 @@ function renderReport(record, {artifactIdentity} = {}) {
   }).join("");
   const sections = [
     ["Saved G-code identity", identityView(artifactIdentity)],
+    ["Toolpath review", visual.html],
+    ["Motion metrics", motionView(review || inspection.motionSummary)],
+    ["Optional stock preview", stockView(stock)],
     ["Identity and provenance", table([["Status", record.status], ["Recorded UTC", record.timeUTC], ["Translator", record.translator], ["Command", record.command], ["Machine", inspection.machine], ["Profile", inspection.profile], ["Units", inspection.units], ["Input", record.input], ["Input SHA-256", record.inputSHA256], ["Program fingerprint", inspection.programFingerprint?.value], ["Execution plan", record.plan], ["Plan SHA-256", record.planSHA256], ["Tool-table snapshot", record.toolTable], ["Tool-table SHA-256", record.toolTableSHA256], ["Output", record.output], ["Output SHA-256", record.outputSHA256], ["G-code SHA-256", trace.gcodeSHA256], ["Source records bound to input SHA-256", trace.provenance?.inputSHA256]])],
     ["Diagnostics", record.error ? `<p>${escape(correctionFor(record.error))}</p>` + pre(record.error) : "<p>No failure recorded in this archive.</p>"],
     ["Validation coverage", validationView(inspection.validationCoverage)],
@@ -79,6 +113,6 @@ function renderReport(record, {artifactIdentity} = {}) {
     ["Transitions and execution", pre(execution)],
     ["Source map", `<p>Line numbers refer to the candidate G-code hash above. Preflight computes candidate lines but writes no G-code. Machine retracts have no invented starting position.</p><details><summary>Expand complete line-to-operation map</summary>${pre(record.sourceMap)}</details>`]
   ];
-  return `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>Next-NC review report</title><style>body{font:16px system-ui,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;color:#172334;background:#f7f9fc}h1,h2{color:#123e66}section{background:white;padding:1rem;margin:1rem 0;border:1px solid #dce3eb;border-radius:8px}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #eee;padding:.45rem;overflow-wrap:anywhere}tbody th{width:25%}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px ui-monospace,monospace}article{border-left:3px solid #a34216;padding-left:1rem}summary{cursor:pointer}</style></head><body><h1>Next-NC review report</h1><p>Offline archive review. This report does not validate machine setup or authorize motion. Missing fields in older archives are shown as “Not recorded”.</p>${sections.map(([title, html]) => `<section><h2>${title}</h2>${html}</section>`).join("")}<details><summary>Complete source archive</summary>${pre(record)}</details></body></html>\n`;
+  return `<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; ${visual.csp} style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>Next-NC review report</title><style>body{font:16px system-ui,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;color:#172334;background:#f7f9fc}h1,h2{color:#123e66}section{background:white;padding:1rem;margin:1rem 0;border:1px solid #dce3eb;border-radius:8px}table{border-collapse:collapse;width:100%}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #eee;padding:.45rem;overflow-wrap:anywhere}tbody th{width:25%}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px ui-monospace,monospace}article{border-left:3px solid #a34216;padding-left:1rem}summary{cursor:pointer}canvas{width:100%;height:auto;border:1px solid #dce3eb}button,input,select{font:inherit;padding:.35rem;max-width:100%}button{cursor:pointer}.review-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.7rem;margin:.8rem 0}.review-controls label{display:flex;gap:.4rem;align-items:center}#review-line{width:6rem}#review-slider,#line-list{width:100%}#line-command{background:#eef2f8;padding:.7rem}#line-detail{max-height:24rem;overflow:auto}</style></head><body><h1>Next-NC review report</h1><p>Offline archive review. This report does not validate machine setup or authorize motion. Missing fields in older archives are shown as “Not recorded”.</p>${sections.map(([title, html]) => `<section><h2>${title}</h2>${html}</section>`).join("")}<details><summary>Complete source archive</summary>${pre(record)}</details>${visual.script}</body></html>\n`;
 }
 module.exports = {renderReport};

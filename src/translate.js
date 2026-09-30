@@ -11,6 +11,7 @@ const {auditExecution} = require("./execution-audit");
 const {auditPolicy} = require("./policy-audit");
 const {auditGcode} = require("./gcode-audit");
 const {processSummary} = require("./process-summary");
+const {motionSummary} = require("./review-geometry");
 const {jobRequirements} = require("./job-requirements");
 const {coverageTracker} = require("./validation-coverage");
 function translate(text, plan, options = {}) {
@@ -134,6 +135,7 @@ function translate(text, plan, options = {}) {
   return {gcode, report: {...program.report, translator: version, gcodeLines: lines.length, toolTable,
     validationCoverage: validation.coverage,
     processSummary: process,
+    motionSummary: motionSummary({...program.report, traceability: {gcodeSHA256}}, sourceMap),
     jobRequirements: jobRequirements(program, process, sourceMap, operationRanges, transitions, toolTable),
     traceability: {provenance: program.provenance, schema: "linuxcnc-next-nc/source-map/1", lineNumbers: "one-based", vertexNumbers: "one-based within each decoded path", coordinates: machine === "mill" ? "XYZ Cartesian, program units" : "XYZ, program units, X radius", gcodeSHA256, operationRanges},
     execution: {completeness, policy, serialization, planSchema: plan.schema, transitions, continuations: transitions.filter(t => t.mode === "continue").length,

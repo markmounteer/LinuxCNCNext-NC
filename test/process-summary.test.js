@@ -46,7 +46,7 @@ test("summary restores M6 coolant and preserves old archive uncertainty and esca
   const hostile = '</td><script>alert("x")</script>';
   archive.inspection.processSummary.operations[0].phases[0].quantities[0].source.value = hostile;
   const before = JSON.stringify(archive), html = renderReport(archive);
-  assert.doesNotMatch(html, /<script/i); assert.match(html, /&lt;script&gt;/); assert.equal(JSON.stringify(archive), before);
+  assert.equal((html.match(/<script>/g) || []).length, 1); assert.doesNotMatch(html, /<script>alert/); assert.match(html, /&lt;script&gt;/); assert.equal(JSON.stringify(archive), before);
   delete archive.inspection.processSummary;
   assert.match(renderReport(archive), /Process summary: Not recorded/);
 });

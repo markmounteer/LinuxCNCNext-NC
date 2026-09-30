@@ -63,7 +63,7 @@ Schema/fingerprint/unit/root-shape failures are fatal. With a valid root, indepe
 node bin/nextnc.js report /path/to/diagnostics/2026-...json --output new-review.html
 ```
 
-Use a **diagnostic archive**, not the bare JSON printed by preflight: archives have `linuxcnc-next-nc/diagnostic/1` and include file hashes. The renderer reads only that archive, never generates G-code, and rejects unknown schemas. It supports older archives with missing fields, shown as unavailable. Names and paths are escaped; no scripts or network assets are used. The candidate G-code hash is separately identified: preflight never writes those bytes to a G-code file. Report/doctor commands do not replace the job's `latest.json` or `latest-error.json`.
+Use a **diagnostic archive**, not the bare JSON printed by preflight: archives have `linuxcnc-next-nc/diagnostic/1` and include file hashes. The renderer never generates G-code and rejects unknown schemas. It supports older archives with missing fields, shown as unavailable. Names and paths are escaped; no network assets are used. In v0.12.0, a CSP-hashed bundled script supplies the offline toolpath viewer; optional `--stock-setup` supplies review geometry. The candidate G-code hash is separately identified: preflight never writes those bytes to a G-code file. Report/doctor commands do not replace the job's `latest.json` or `latest-error.json`. See [visual review](visual-review.md).
 
 Source-map operation ranges now include the exported tool identity, mapped T/H/WCS and initial spindle/coolant. Milling arcs also include `plane`. These are additive fields to source-map/1; existing lathe motion fields retain their meanings.
 

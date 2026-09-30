@@ -8,13 +8,14 @@ It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` p
 
 ## Quick start
 
-Version 0.11.0 explicitly restores stopped spindle, coolant off and zero RPM
-after each actual M6, before the reviewed approach. An independent command-state
-audit checks preparation, tool changes, operation entry, reversals and shutdown
-before G-code can be published. Both lathe and XYZ mill profiles are covered in
-mm/inch. These checks add no machining options or runtime dependencies.
-Existing profiles, reviewed plans, fingerprints and numerical toolpaths are
-preserved; G-code gains three reset lines after each M6 initialization.
+Version 0.12.0 adds an offline interactive toolpath reviewer for lathe and XYZ
+mill, motion-distance and ideal-feed-time summaries, and an optional approximate
+XYZ stock-removal preview. Select a G-code line to see its geometry, retained
+state and original STEP/plan source. Work offsets and machine coordinates stay
+separate; unknown moves are listed instead of drawn from an invented origin.
+Fusion remains the CAD/CAM source. Existing machining output is unchanged from
+0.11.0 except for the version comment. No new machining options or runtime
+dependencies are introduced. See [visual review and stock preview](docs/visual-review.md).
 See [policy verification](docs/policy-verification.md),
 [profile validation](docs/profile-validation.md), [output verification](docs/output-verification.md),
 [process summaries](docs/process-summary.md),
@@ -65,6 +66,10 @@ node bin/nextnc.js doctor
 node bin/nextnc.js report /path/to/timestamped-diagnostic.json --output /path/new-review.html
 # Optionally check a saved file against the report's candidate hash:
 node bin/nextnc.js report /path/to/timestamped-diagnostic.json --gcode /path/job.ngc --output /path/new-checked-review.html
+# Optional fixed-XYZ stock preview, with explicitly supplied stock/tool geometry:
+node bin/nextnc.js report /path/to/timestamped-diagnostic.json --stock-setup /path/stock.json --output /path/new-stock-review.html
+# Generate standalone synthetic mill/lathe HTML demonstrations:
+npm run example:review
 ```
 
 `doctor` and the LinuxCNC filter use the same resolver for `NEXTNC_PLAN`, `NEXTNC_TOOL_TABLE` and `NEXTNC_DIAGNOSTICS`. Doctor reports runtime, resolved paths, file readability and diagnostics-directory access without creating files. Run preflight with your program for job validation.

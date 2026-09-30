@@ -79,7 +79,7 @@ class LinuxCNCOutput {
     const stateChange = Object.fromEntries(changed.map(key => [key, {before: before[key], after: next[key]}]));
     const entry = {line: this.lines.length + 1, action: "state", ...source, ...detail,
       ...(detail.provenance ? {provenance: clone(detail.provenance)} : {}),
-      command: clone({frame: "modal", ...c}), stateChange,
+      gcode: line, command: clone({frame: "modal", ...c}), stateChange,
       ...(["rapid", "linear", "arc", "dwell"].includes(c.type) ? {modalState: Object.fromEntries(["units", "plane", "feedMode", "feedRate", "spindleMode", "spindleSpeed", "spindleMaximumRPM", "spindleDirection", "coolant", "tool", "toolOffset", "workOffset"].map(key => [key, next[key]]))} : {})};
     if (c.type === "initialize") { this.started = true; this.units = c.units; }
     this.state = next; this.lines.push(line); this.sourceMap.push(entry);

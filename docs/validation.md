@@ -1,3 +1,36 @@
+# v0.12.0 validation update
+
+Local Windows / Node 24.13.1: **104 Node groups passed, one POSIX-only filter
+group skipped**, plus both Python AXIS-helper tests. The isolated independent
+parser compiled its 31 pinned files and passed all 56 cases with zero unexpected
+outcomes. Existing golden checks retain fingerprints and exact G-code after
+the version comment; regenerating the checked-in examples changes only that
+comment from v0.11.0.
+
+Eleven new Node groups cover small and major arcs across angular wrap, both
+full-circle directions, the lathe XZ and mill XY/XZ/YZ planes, mm/inch scaling,
+zero-length vertices, partial-axis distances, unknown positions, separate work
+offsets, G94/G95 RPM time and unknown CSS time. Stock tests independently count
+plunge cells and compare a slot/circle union, retain rapid-contact warnings
+without removing stock, and reject missing geometry, mismatched bindings,
+unsupported shapes/frames and exceeded sample/cell budgets. CLI tests preserve
+the archive, stock setup and G-code, reject preview flags on translation, and
+leave no output on failed previews. CSP tests bind one trusted script and keep
+hostile archive content as escaped data.
+
+Browser verification used the locally served synthetic HTML in the Codex
+in-app browser. Lathe XZ and milling toolpaths, full-circle selection, clicking
+a segment, coordinate frames, operation/cut filters, zoom/fit, source/state
+details and stock exclusion-line navigation were checked. The stock surface
+was inspected visually after fixing offscreen-canvas redraw. Direct file://
+navigation could not be tested because the browser tool blocks that protocol;
+the HTML has no network dependencies and its CSP hash normalizes CRLF.
+
+The stock model is approximate and mill-only; it excludes unknown/G53 moves,
+holders, fixtures and unsupported cutter shapes. No FreeCAD binary, physical
+controller, machine motion, live tool table or machine acceptance was tested.
+See [the review contract and limits](visual-review.md).
+
 # v0.11.0 validation update
 
 Local Windows / Node 24.13.1: **93 Node groups passed, one POSIX-only filter
