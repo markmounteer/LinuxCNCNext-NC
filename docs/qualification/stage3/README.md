@@ -58,7 +58,7 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 | State capture/reconciliation and `on_abort` ordering | Typed canonical/interpreter updates, normal/abort handoff and deferred cleanup implemented | Full offset/unit/modal matrix and abort-race tests missing |
 | One start gate, drain/result/rebind | Central gate, actual drains and tool-result suffix rebind; changed H2 and invalid/replaced suffix tests | Full NML/HALUI/pendant and start/hold freshness coverage missing |
 | Semantic stepping and no arbitrary restart | Versioned groups, actual hold-to-step proposal/confirmation and drain | Full held/read-ahead/corner behavior matrix pending |
-| Shaper mode and delayed completion | Servo-cycle full-stack tests: 12/13 initial sessions pass; CW arc to Z retract exposes a false mixed-axis fault | Fix numerical lane classification, correct post-arc-abort test, rerun and expand qualification |
+| Shaper mode and delayed completion | Bounded lane comparison fixes CW-to-Z fault; 15 execution/preflight/guard cases and two loading regressions pass, with cutting-arc tail hold/abort | Wider unit/state/fault combinations remain part of full qualification |
 | Same-table G7/G8/native coordinate matrix | Synthetic geometry matrix plus real task capture with nonzero WCS/G92/H2 and lathe G7 | Independent executed RS274/native comparison and full state matrix missing |
 | Termination conditions and ordered state deltas | Rust lowering retains ordered events and emits termination deltas with drain barriers | Actual pending-boundary behavior remains untested |
 | Receipts, backpressure, identity, connection loss | Model plus actual queue/guarded-mailbox traces; undersized expansion refuses before selection | Full backpressure/retry/fault injection and disconnect stop tests missing |
@@ -84,9 +84,18 @@ The companion controller preserves both runs in
 `controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-shaper-transition-failure/`.
 This checkpoint is failed qualification, not a completed shaper gate.
 
-The immediate next step is to repair that transition while retaining genuine
-mixed-axis rejection, correct the abort test and rerun the matrix. Subsequent
-work is wider procedure/freshness coverage and the
+The subsequent controller repair at `32c200fad8be785eddfe9bdfb2e5d74efdbc10c3`
+passes 15/15 execution, preflight and downstream-guard cases plus 2/2 loading
+regressions. It admits only bounded numerical residue against the fixed arm
+pose; actual RS274 mixed lines/helices remain rejected by motmod. Cutting-arc
+hold/abort and retained G3 handoff pass. Full build `dc3670b0ecdb0f473f0fc7e05075c5f17afe12f4`
+produces identical runtime binaries to the differential test image. Only motmod
+changes from the previous runtime; Rust compiler/ABI code is unchanged.
+The separate `2026-09-30-shaper-boundary` evidence folder contains 305 raw files
+and its own verifier. Earlier failure evidence remains intact.
+
+The immediate next step is wider source/state freshness coverage around RUN,
+RESUME and tool procedures, followed by the
 remaining full-stack qualification matrix. It must keep the existing task and motmod guards. Appending an
 NML message is not a guarded-motion receipt; planner-done is not shaper-done.
 Source/operation identity must survive any one-to-many message expansion.
