@@ -40,17 +40,28 @@ Code checkpoint `4b8cf0bcae4f4f1c7e42d4df4f2769136e3d5eb4` passed
 [owner-ci.json](owner-ci.json) records the exact jobs. The simulator separately
 passed six release-profile ABI tests on Linux before its two real task sessions.
 
+Execution checkpoint `318b9782f10f2763aa3b092cc41d40d8ffa799a4` passed 121 local
+Windows Rust tests, formatting, Clippy, validation inventory and
+[all 11 hosted jobs](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36759414313).
+[execution-ci.json](execution-ci.json) preserves the exact run and job identities.
+The companion controller at `e6014632708d8fe0944fcd54a96fce33c85d7f88` passed 19
+native task/motmod/shim simulator sessions and two loading/G-code regressions,
+plus seven Linux release ABI tests. The 19 include all 13 millimetre geometry
+fixtures and hold/resume, held abort and confirmed stepping on both machines,
+with implicit-motion MDI handoff afterward. A source/setup oracle checks the
+ordered actual motion trace. Full Stage 3 qualification remains below.
+
 | Stage 3 requirement | Current evidence | Remaining acceptance gate |
 | --- | --- | --- |
 | Rust task owner and checked native ABI | Preparation, lifecycle/dispatch ABI and typed lowering; initial real recipient dispatch | Procedure result/rebind transport and full fault injection missing |
 | Pinned task executable | Native-bound task executes initial mill/lathe jobs in isolated simulation | Full execution acceptance matrix pending |
 | State capture/reconciliation and `on_abort` ordering | Typed canonical/interpreter updates, normal/abort handoff and deferred cleanup implemented | Full offset/unit/modal matrix and abort-race tests missing |
-| One start gate, drain/result/rebind | Models plus actual task loading gate, refused starts/mode changes and failed replacement checks | Execution-phase NML/HALUI/pendant, procedure and drain integration missing |
+| One start gate, drain/result/rebind | Central gate, real native dispatch/drains and loading refusal/replacement tests | Full NML/HALUI/pendant coverage and procedure result/rebind transport missing |
 | Semantic stepping and no arbitrary restart | Versioned groups, actual hold-to-step proposal/confirmation and drain | Full held/read-ahead/corner behavior matrix pending |
 | Shaper mode and delayed completion | Geometry refusal, lane-change drains, missing-tail model tests | Engaged-shaper full-stack runs missing |
 | Same-table G7/G8/native coordinate matrix | Synthetic geometry matrix plus real task capture with nonzero WCS/G92/H2 and lathe G7 | Independent executed RS274/native comparison and full state matrix missing |
 | Termination conditions and ordered state deltas | Rust lowering retains ordered events and emits termination deltas with drain barriers | Actual pending-boundary behavior remains untested |
-| Receipts, backpressure, identity, connection loss | Model accounts for expanded messages, actual-result categories, retry and unknown-result refusal | Real queue/guarded-mailbox traces and disconnect stop tests missing |
+| Receipts, backpressure, identity, connection loss | Model plus actual queue/guarded-mailbox traces; undersized expansion refuses before selection | Full backpressure/retry/fault injection and disconnect stop tests missing |
 | Lines, planes, full circles, helixes and events | Initial native synthetic jobs through real task/motmod/shim with a source/setup oracle | Full state/event/job corpus remains pending |
 
 The next implementation boundary is procedure result/rebind transport and the
