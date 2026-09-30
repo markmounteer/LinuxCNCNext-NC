@@ -2,6 +2,7 @@
 //! state: the host is responsible for evidence acquisition and physical actions.
 use crate::steps::Layout;
 use std::ops::Range;
+use std::sync::Arc;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Generation {
@@ -134,7 +135,7 @@ pub struct Owner {
     phase: Phase,
     artifact: Option<[u8; 32]>,
     binding: Option<Binding>,
-    layout: Option<Layout>,
+    layout: Option<Arc<Layout>>,
     prefixes: Prefixes,
     offer: Option<Offer>,
     last_offer: Option<Offer>,
@@ -233,6 +234,16 @@ impl Owner {
         generation: Generation,
         artifact: [u8; 32],
         layout: Layout,
+    ) -> Result<()> {
+        self.selected_shared(generation, artifact, Arc::new(layout))
+    }
+    /// Adopt a worker-built layout without copying a potentially large job on
+    /// the task thread. The worker/candidate retains its immutable allocation.
+    pub fn selected_shared(
+        &mut self,
+        generation: Generation,
+        artifact: [u8; 32],
+        layout: Arc<Layout>,
     ) -> Result<()> {
         self.check_generation(generation)?;
         if self.phase != Phase::Loading {

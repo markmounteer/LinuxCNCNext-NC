@@ -125,6 +125,18 @@ impl Ledger {
         }
     }
 
+    /// The next reserved message, before the host checks its task prerequisites.
+    /// Looking does not authorize issue; `begin_issue` must still succeed directly
+    /// before calling the recipient. An in-flight message cannot be looked up as
+    /// a new dispatch after its outcome became uncertain.
+    pub fn next_ticket(&self) -> Option<Ticket> {
+        if self.closed || self.in_flight.is_some() {
+            None
+        } else {
+            self.pending.front().map(|p| p.ticket)
+        }
+    }
+
     /// Atomic reservation: caller has already constructed and checked every
     /// message. Do not append half an expansion to the host queue on failure.
     /// No-op state changes still require an explicit task-owned application result.

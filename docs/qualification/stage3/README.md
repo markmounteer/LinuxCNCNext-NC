@@ -8,7 +8,7 @@ The current implementation is the safe Rust
 [`nextnc-task` library](../../../crates/nextnc-task/README.md). It has 26 tests:
 one semantic-group test, seven binding tests over a 26-fixture geometry matrix,
 eight lifecycle tests, six dispatch-receipt tests and four lowering tests. The
-[`nextnc-task-ffi` crate](../../../crates/nextnc-task-ffi/README.md) adds three ABI
+[`nextnc-task-ffi` crate](../../../crates/nextnc-task-ffi/README.md) adds six ABI
 tests. These are model/unit tests,
 not task integration or physical-machine qualification.
 
@@ -27,15 +27,24 @@ fixtures in mm/inch external units) with full traces. This is cross-language
 preparation/NML evidence, not LinuxCNC task execution. [abi-ci.json](abi-ci.json)
 preserves this run separately from the earlier component checkpoint.
 
+The latest lifecycle ABI joins immutable candidates to the owner and expanded
+message ledger, with thread confinement, live snapshot fingerprints, generation
+checks, hold/step controls and explicit issue/result/drain accounting. The local
+Windows workspace passes 119 Rust tests, formatting, Clippy and the validation
+inventory. The companion task-loading simulator passes XYZ mill and XZ lathe
+sessions using real task state: native selection, competing command refusal,
+worker release, invalid replacement refusal and ordinary G-code after cancellation.
+No native motion is issued by that checkpoint; full execution remains below.
+
 | Stage 3 requirement | Current evidence | Remaining acceptance gate |
 | --- | --- | --- |
-| Rust task owner and checked native ABI | Owner model, checked preparation/read ABI and typed lowering implemented | Lifecycle ABI and actual task binding missing |
-| Pinned task executable | Qualified reference image source available | Patched native task binary and identity missing |
+| Rust task owner and checked native ABI | Preparation, lifecycle/dispatch ABI and typed lowering implemented | Actual dispatch results and procedure rebind transport missing |
+| Pinned task executable | Native-bound task builds and loads jobs in isolated mill/lathe simulation | Native message issue and state handoff missing |
 | State capture/reconciliation and `on_abort` ordering | Model withholds MDI until explicit reconciliation | Actual canonical/interpreter restoration and abort-race tests missing |
-| One start gate, drain/result/rebind | Model tests generations, competing start, readiness and prefix barriers | NML/HALUI/pendant/mode-switch and tool procedure integration missing |
+| One start gate, drain/result/rebind | Models plus actual task loading gate, refused starts/mode changes and failed replacement checks | Execution-phase NML/HALUI/pendant, procedure and drain integration missing |
 | Semantic stepping and no arbitrary restart | Versioned groups and model tests | Actual held/read-ahead/corner behavior untested |
 | Shaper mode and delayed completion | Geometry refusal, lane-change drains, missing-tail model tests | Engaged-shaper full-stack runs missing |
-| Same-table G7/G8/native coordinate matrix | XYZ/XZ mm/inch synthetic binding with nonzero offsets and T1/H2 | Independent RS274 comparison and real state capture missing |
+| Same-table G7/G8/native coordinate matrix | Synthetic geometry matrix plus real task capture with nonzero WCS/G92/H2 and lathe G7 | Independent executed RS274/native comparison and full state matrix missing |
 | Termination conditions and ordered state deltas | Rust lowering retains ordered events and emits termination deltas with drain barriers | Actual pending-boundary behavior remains untested |
 | Receipts, backpressure, identity, connection loss | Model accounts for expanded messages, actual-result categories, retry and unknown-result refusal | Real queue/guarded-mailbox traces and disconnect stop tests missing |
 | Lines, planes, full circles, helixes and events | Source fixtures and continuous machine-path checks | Native full jobs through real shim missing |

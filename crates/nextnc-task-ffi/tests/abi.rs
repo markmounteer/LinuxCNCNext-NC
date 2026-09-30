@@ -3,6 +3,7 @@ use nextnc_native::{
     part21::Limits,
 };
 use nextnc_task_ffi::{
+    runtime::*,
     wire::{self, Message, Snapshot, Tool},
     *,
 };
@@ -71,6 +72,212 @@ fn prepare(a: &bundle::Artifact, s: &Snapshot, t: &[Tool], h: &mut u64) -> i32 {
             h,
         )
     }
+}
+
+fn fresh(s: &Snapshot, t: &[Tool]) -> Fingerprint {
+    let mut f = Fingerprint::default();
+    // SAFETY: every input and output is a live, disjoint, correctly sized object.
+    assert_eq!(
+        // SAFETY: all declared extents are backed by the live objects above.
+        unsafe {
+            nextnc_task_fingerprint(
+                s,
+                t.as_ptr(),
+                t.len() as u64,
+                &mut f,
+                std::mem::size_of::<Fingerprint>() as u64,
+            )
+        },
+        0
+    );
+    f
+}
+fn state(owner: u64) -> Status {
+    let mut s = Status::default();
+    // SAFETY: s supplies the exact declared writable extent.
+    assert_eq!(
+        // SAFETY: s is aligned and matches the declared byte size.
+        unsafe { nextnc_owner_status(owner, &mut s, std::mem::size_of::<Status>() as u64) },
+        0
+    );
+    s
+}
+fn next(owner: u64) -> Dispatch {
+    let mut d = Dispatch::default();
+    // SAFETY: d supplies the exact declared writable extent.
+    assert_eq!(
+        // SAFETY: d is aligned and matches the declared byte size.
+        unsafe { nextnc_owner_next(owner, &mut d, std::mem::size_of::<Dispatch>() as u64) },
+        0
+    );
+    d
+}
+fn owner_selection(candidate: u64) -> (u64, u64) {
+    let mut owner = 0;
+    let mut selection = 0;
+    // SAFETY: both outputs are aligned, writable u64 values.
+    unsafe {
+        assert_eq!(nextnc_owner_create(2, &mut owner), 0);
+        assert_eq!(nextnc_owner_begin(owner, &mut selection), 0);
+    }
+    assert_eq!(nextnc_owner_attach(owner, selection, candidate), 0);
+    (owner, selection)
+}
+fn start(owner: u64, f: &Fingerprint, mode: u32, flags: u32, restart: u64) -> i32 {
+    // SAFETY: f remains a valid immutable fingerprint for the entire call.
+    unsafe { nextnc_owner_start(owner, f, 1, flags, mode, restart) }
+}
+
+#[test]
+fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestResult {
+    let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
+    let a = artifact()?;
+    let mut candidate = 0;
+    assert_eq!(prepare(&a, &snapshot(), &tools(), &mut candidate), 0);
+    let (owner, selection) = owner_selection(candidate);
+    assert_eq!(nextnc_task_release(candidate), -1); // live owner pins the allocation
+    assert_eq!(start(owner, &fresh(&snapshot(), &tools()), 0, 127, 0), 0);
+    let mut tick = 1;
+    let mut pieces = 0;
+    let mut commands = 0;
+    let mut circles = 0;
+    while state(owner).phase != 9 {
+        assert!(tick < 500, "owner stopped making progress");
+        let d = next(owner);
+        if d.serial == 0 {
+            // A new observation and all six actual completion domains are needed.
+            assert_eq!(nextnc_owner_control(owner, 5, 0, 47, tick), -1);
+            assert_eq!(nextnc_owner_control(owner, 5, 0, 63, tick), 0);
+        } else {
+            let retry = next(owner);
+            assert_eq!(retry.message, d.message);
+            assert_eq!(retry.serial, d.serial);
+            assert_eq!(d.selection, selection);
+            assert_eq!(d.serial, pieces + 1);
+            assert_eq!(d.message.command, commands);
+            assert_eq!(state(owner).admitted, commands);
+            assert_eq!(nextnc_owner_issue(owner, selection, d.serial, tick), 0);
+            assert_eq!(nextnc_owner_issue(owner, selection, d.serial, tick), -1);
+            assert_eq!(nextnc_owner_result(owner, selection, d.serial, 0, tick), 0);
+            assert_eq!(nextnc_owner_result(owner, selection, d.serial, 0, tick), 0);
+            // Same-cycle status is too old even if every completion bit is true.
+            assert_eq!(nextnc_owner_control(owner, 5, 0, 63, tick), -1);
+            pieces += 1;
+            if d.message.flags & 8 != 0 {
+                commands += 1;
+            }
+            if d.message.kind == 2 {
+                circles += 1;
+            }
+        }
+        tick += 1;
+    }
+    assert_eq!(commands as usize, a.prepared().commands().len());
+    assert_eq!(circles, 1);
+    let s = state(owner);
+    assert_eq!(s.completed, commands);
+    assert_eq!(s.accepted_pieces, pieces);
+    assert_eq!(s.allows_mdi, 0);
+    assert_eq!(nextnc_owner_control(owner, 9, 0, 63, tick), -1);
+    assert_eq!(nextnc_owner_control(owner, 9, 1, 63, tick), 0);
+    assert_eq!(state(owner).phase, 10);
+    assert_eq!(state(owner).allows_mdi, 1);
+    assert_eq!(nextnc_owner_destroy(owner), 0);
+    assert_eq!(nextnc_task_release(candidate), 0);
+    Ok(())
+}
+
+#[test]
+fn live_fingerprint_stale_workers_and_competing_threads_cannot_start_old_work() -> TestResult {
+    let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
+    let a = artifact()?;
+    let mut candidate = 0;
+    let s = snapshot();
+    let t = tools();
+    assert_eq!(prepare(&a, &s, &t, &mut candidate), 0);
+    let (owner, selection) = owner_selection(candidate);
+    assert_eq!(start(owner, &fresh(&s, &t), 0, 127, 1), -1);
+    for flag in 0..7 {
+        assert_eq!(start(owner, &fresh(&s, &t), 0, 127 ^ (1 << flag), 0), -1);
+    }
+    for kind in 0..8 {
+        let mut changed = s;
+        let mut changed_tools = t;
+        match kind {
+            0 => changed.pose[0] = 0.1,
+            1 => changed.work[0][2] = 0.1,
+            2 => changed.tool_offset[2] = 0.1,
+            3 => changed.temporary[2] = 0.1,
+            4 => changed.velocity[0] *= 0.5,
+            5 => changed.shaping = 1,
+            6 => changed_tools[1].offset[2] = 0.1,
+            _ => changed.rotation[0] = 90.0,
+        }
+        assert_eq!(
+            start(owner, &fresh(&changed, &changed_tools), 0, 127, 0),
+            -1
+        );
+    }
+    assert_eq!(fresh(&s, &[t[1], t[0]]), fresh(&s, &t));
+    assert_eq!(
+        std::thread::spawn(move || nextnc_owner_attach(owner, selection, candidate))
+            .join()
+            .map_err(|_| "worker panicked")?,
+        -1
+    );
+    let mut newer = 0;
+    // SAFETY: newer is a valid u64 output.
+    assert_eq!(unsafe { nextnc_owner_begin(owner, &mut newer) }, 0);
+    assert!(newer > selection);
+    assert_eq!(nextnc_owner_attach(owner, selection, candidate), -1);
+    assert_eq!(nextnc_owner_failed(owner, selection), -1);
+    assert_eq!(state(owner).phase, 1);
+    assert_eq!(nextnc_owner_failed(owner, newer), 0);
+    assert_eq!(start(owner, &fresh(&s, &t), 0, 127, 0), -1);
+    assert_eq!(nextnc_owner_destroy(owner), 0);
+    assert_eq!(nextnc_task_release(candidate), 0);
+    Ok(())
+}
+
+#[test]
+fn hold_step_and_unknown_result_revoke_authority_without_resurrecting_motion() -> TestResult {
+    let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
+    let a = artifact()?;
+    let mut candidate = 0;
+    assert_eq!(prepare(&a, &snapshot(), &tools(), &mut candidate), 0);
+    let (owner, selection) = owner_selection(candidate);
+    assert_eq!(start(owner, &fresh(&snapshot(), &tools()), 0, 127, 0), 0);
+    let d = next(owner);
+    assert_ne!(d.serial, 0);
+    assert_eq!(nextnc_owner_control(owner, 1, 0, 0, 1), 0);
+    assert_eq!(next(owner).serial, 0);
+    assert_eq!(nextnc_owner_issue(owner, selection, d.serial, 1), -1);
+    assert_eq!(nextnc_owner_control(owner, 2, 0, 0, 2), -1);
+    assert_eq!(nextnc_owner_control(owner, 2, 1, 0, 2), 0);
+    assert_eq!(nextnc_owner_control(owner, 4, 0, 0, 2), 0);
+    let end = state(owner).proposed_step_end;
+    assert!(end >= state(owner).accepted && end > 0);
+    assert_eq!(nextnc_owner_control(owner, 3, end + 1, 127, 2), -1);
+    assert_eq!(nextnc_owner_control(owner, 3, end, 127, 2), 0);
+    let retry = next(owner);
+    assert_eq!(retry.serial, d.serial);
+    assert_eq!(retry.message, d.message);
+    assert_eq!(nextnc_owner_issue(owner, selection, retry.serial, 3), 0);
+    assert_eq!(
+        nextnc_owner_result(owner, selection, retry.serial, 2, 3),
+        -1
+    );
+    assert_eq!(state(owner).phase, 12);
+    assert_eq!(state(owner).allows_mdi, 0);
+    assert_eq!(next(owner).serial, 0);
+    assert_eq!(nextnc_owner_issue(owner, selection, retry.serial, 4), -1);
+    assert_eq!(nextnc_owner_control(owner, 3, 0, 127, 4), -1);
+    assert_eq!(nextnc_owner_control(owner, 9, 1, 63, 3), -1);
+    assert_eq!(nextnc_owner_control(owner, 9, 1, 63, 5), 0);
+    assert_eq!(state(owner).phase, 0);
+    assert_eq!(nextnc_owner_destroy(owner), 0);
+    assert_eq!(nextnc_task_release(candidate), 0);
+    Ok(())
 }
 
 #[test]

@@ -1,10 +1,11 @@
-# Checked native task preparation ABI
+# Checked native task ABI
 
 This is the small unsafe boundary around the safe Rust compiler, coordinate
 binder and task-message lowering. ABI revision 1 exposes immutable prepared
 candidates to C/C++. **A candidate handle is not permission to execute.** The
-native task lifecycle, live snapshot acquisition, state reconciliation and actual
-queue dispatch remain required integration work.
+task-owner API now joins this candidate to the safe lifecycle and dispatch
+ledger. Live snapshot acquisition, state reconciliation and actual queue dispatch
+still require the pinned LinuxCNC host integration.
 
 `include/nextnc_task.h` defines fixed-width, versioned structures. Inputs use
 canonical millimetres, radius X and explicitly dimensioned dynamics. Machine,
@@ -14,7 +15,9 @@ The complete bundle is independently audited, bound and lowered before a handle
 is returned. Heavy preparation must run off the task's cyclic control path.
 
 At most two candidates/preparations may be outstanding. Handles are monotonic
-process-local IDs and are never reused. Release revokes the handle; stale reads
+process-local IDs and are never reused. Release of an attached candidate refuses;
+detach first and release on the preparation worker, so a large job is not freed
+on the cyclic task thread. Release revokes the handle; stale reads
 fail. Read operations are immutable and do not issue, acknowledge or complete a
 motion. Aborting an executing job must be owned by the separate task lifecycle,
 not inferred from candidate release. Failed preparation clears its output handle;
@@ -51,3 +54,27 @@ actual pinned NML types. Its 52-case geometry/representation audit covers all
 LinuxCNC or prove native execution; the complete Stage 3 acceptance gate remains
 open. Rust tests also exercise invalid ABI/state data, bounded capacity and stale
 handles. No Node process is used by the library.
+
+The owner API is confined to its creating task thread, with one owner per process.
+Begin a selection before file work, attach only the matching completed worker
+generation, and start only after a fresh full snapshot fingerprint matches the
+candidate. The fingerprint covers all nine pose components, every work/tool/G92
+offset, controller dynamics and supported capabilities; it is independent of
+tool-table iteration order and C struct padding. The host must separately verify
+the selected source/policy identity and actual readiness.
+
+`nextnc_owner_next` atomically reserves a complete source-command expansion and
+returns a repeatable message reservation. The host checks its ordinary task
+prerequisites before `issue`; only then may it call the guarded recipient, once.
+`result` records that actual outcome. Unknown/refused delivery revokes admission.
+All issue/result errors require host stop handling; a repeated reservation or
+receipt never authorizes sending uncertain motion again.
+
+Hold stops new issue before the host pauses motion. Resume-to-step requires the
+effective semantic boundary returned by the owner. Completion requires all host
+drain domains and a heartbeat after the last issue. MDI stays blocked until state
+reconciliation is explicitly acknowledged. Abort/fault/disconnect revoke first,
+even if their heartbeat is stale. These controls do not themselves move or stop
+hardware: the host must perform the corresponding checked LinuxCNC operations.
+Procedure rebind transport and the complete host execution/reconciliation hooks
+remain unfinished Stage 3 work.

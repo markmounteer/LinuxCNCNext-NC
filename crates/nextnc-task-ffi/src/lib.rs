@@ -7,6 +7,7 @@
 //! pointer must be valid for the declared extent; inputs and outputs must not
 //! overlap, and the caller must not mutate input storage during a call.
 #![deny(unsafe_op_in_unsafe_fn)]
+pub mod runtime;
 pub mod wire;
 
 use nextnc_native::{bundle, part21::Limits};
@@ -15,21 +16,22 @@ use std::{
     cell::RefCell,
     collections::BTreeMap,
     panic::{catch_unwind, AssertUnwindSafe},
-    sync::{Mutex, OnceLock},
+    sync::{Arc, Mutex, OnceLock},
 };
 
 const MAX_CANDIDATES: usize = 2;
 struct Candidate {
-    _artifact: bundle::Artifact,
+    artifact: bundle::Artifact,
     _bound: binding::BoundPlan,
     lowered: lowering::Plan,
-    _layout: nextnc_task::steps::Layout,
+    layout: Arc<nextnc_task::steps::Layout>,
+    fingerprint: runtime::Fingerprint,
 }
 #[derive(Default)]
 struct Registry {
     next: u64,
     pending: usize,
-    candidates: BTreeMap<u64, Candidate>,
+    candidates: BTreeMap<u64, Arc<Candidate>>,
 }
 static REGISTRY: OnceLock<Mutex<Registry>> = OnceLock::new();
 thread_local! { static LAST_ERROR: RefCell<String> = const { RefCell::new(String::new()) }; }
@@ -137,6 +139,7 @@ pub unsafe extern "C" fn nextnc_task_prepare(
             };
             (s, t, std::slice::from_raw_parts(bytes, length).to_vec())
         };
+        let fingerprint = runtime::fingerprint(&snapshot, &tools)?;
         let (snapshot, dynamics) = snapshot.decode(&tools)?;
         let artifact = bundle::load(bytes, &limits).map_err(|e| e.to_string())?;
         let bound = binding::bind(artifact.prepared(), &snapshot).map_err(|e| e.to_string())?;
@@ -163,12 +166,13 @@ pub unsafe extern "C" fn nextnc_task_prepare(
             r.next = handle;
             r.candidates.insert(
                 handle,
-                Candidate {
-                    _artifact: artifact,
+                Arc::new(Candidate {
+                    artifact,
                     _bound: bound,
                     lowered,
-                    _layout: layout,
-                },
+                    layout: Arc::new(layout),
+                    fingerprint,
+                }),
             );
             handle
         };
@@ -249,10 +253,18 @@ pub unsafe extern "C" fn nextnc_task_piece(
 pub extern "C" fn nextnc_task_release(handle: u64) -> i32 {
     boundary(|| {
         // Remove under lock, drop the potentially large candidate after unlocking.
-        let candidate = registry()
-            .candidates
-            .remove(&handle)
-            .ok_or("stale candidate handle")?;
+        let candidate = {
+            let mut r = registry();
+            let c = r.candidates.get(&handle).ok_or("stale candidate handle")?;
+            if Arc::strong_count(c) != 1 {
+                return Err(
+                    "candidate is attached to task owner; detach before worker release".into(),
+                );
+            }
+            r.candidates
+                .remove(&handle)
+                .ok_or("stale candidate handle")?
+        };
         drop(candidate);
         Ok(())
     })

@@ -41,6 +41,77 @@ int32_t nextnc_task_commands(uint64_t, uint64_t *);
 int32_t nextnc_task_piece(uint64_t, uint64_t, uint32_t, nextnc_message *, uint64_t);
 int32_t nextnc_task_release(uint64_t);
 uint64_t nextnc_task_error(uint8_t *, uint64_t);
+
+/* Task lifecycle ABI. Preparation may run on a worker. Every owner call must
+ * run on the thread which created the owner; there is one owner per process.
+ * Fingerprints must be calculated from fresh host observations, not a bundle.
+ * Attached candidates cannot be released: detach, then release on the worker. */
+typedef struct {
+    uint32_t abi, bytes;
+    uint8_t configuration[32], initial[32];
+} nextnc_fingerprint;
+typedef struct {
+    uint32_t abi, bytes;
+    uint64_t selection, serial;
+    uint32_t recipient, reserved; /* task=1, I/O=2, guarded motion=3 */
+    nextnc_message message;
+} nextnc_dispatch;
+typedef struct {
+    uint32_t abi, bytes, phase, allows_mdi;
+    uint64_t selection, candidate, accepted, admitted, completed;
+    uint64_t queued_pieces, accepted_pieces, pending_pieces, proposed_step_end;
+} nextnc_owner_status_value;
+enum nextnc_owner_phase {
+    NEXTNC_EMPTY=0, NEXTNC_LOADING=1, NEXTNC_SELECTED=2, NEXTNC_ARMED=3,
+    NEXTNC_RUNNING=4, NEXTNC_HOLDING=5, NEXTNC_HELD=6, NEXTNC_STEP_DRAIN=7,
+    NEXTNC_DRAINING=8, NEXTNC_RECONCILING=9, NEXTNC_COMPLETE=10,
+    NEXTNC_ABORTING=11, NEXTNC_FAULTED=12
+};
+/* Fresh readiness bits, all seven required for initial start. Resume does not
+ * require QUIESCENT: motion may be feed-held before its destination. */
+#define NEXTNC_READY_AUTO 1u
+#define NEXTNC_READY_ENABLED 2u
+#define NEXTNC_READY_HOMED 4u
+#define NEXTNC_READY_FAULT_FREE 8u
+#define NEXTNC_READY_QUIESCENT 16u
+#define NEXTNC_READY_BINDING_CURRENT 32u
+#define NEXTNC_READY_DOWNSTREAM 64u
+/* Physical completion bits. The runtime additionally enforces an observation
+ * heartbeat strictly after the last dispatch or stop request. */
+#define NEXTNC_DRAIN_TASK 1u
+#define NEXTNC_DRAIN_IO 2u
+#define NEXTNC_DRAIN_MOTION 4u
+#define NEXTNC_DRAIN_IN_POSITION 8u
+#define NEXTNC_DRAIN_SHAPER 16u
+#define NEXTNC_DRAIN_FAULT_FREE 32u
+enum nextnc_owner_operation {
+    NEXTNC_HOLD=1,       /* argument=0, flags=0; close new issue before host hold */
+    NEXTNC_HELD_ACK=2,   /* argument=host hold acknowledged (0/1), flags=0 */
+    NEXTNC_RESUME=3,     /* argument=0 continuous or acknowledged step end; readiness flags */
+    NEXTNC_PROPOSE_STEP=4, /* argument=0, flags=0; read proposed_step_end in status */
+    NEXTNC_DRAINED=5,    /* argument=0; drain flags from actual host observations */
+    NEXTNC_ABORT=6,      /* revoke BEFORE host cleanup; even stale tick stops */
+    NEXTNC_FAULT=7,
+    NEXTNC_DISCONNECTED=8,
+    NEXTNC_RECONCILED=9  /* argument=state agrees (0/1); drain flags */
+};
+int32_t nextnc_task_fingerprint(const nextnc_snapshot *, const nextnc_tool *, uint64_t, nextnc_fingerprint *, uint64_t);
+int32_t nextnc_owner_create(uint32_t capacity, uint64_t *);
+int32_t nextnc_owner_destroy(uint64_t);
+int32_t nextnc_owner_begin(uint64_t owner, uint64_t *selection);
+int32_t nextnc_owner_attach(uint64_t owner, uint64_t selection, uint64_t candidate);
+int32_t nextnc_owner_failed(uint64_t owner, uint64_t selection);
+int32_t nextnc_owner_start(uint64_t owner, const nextnc_fingerprint *, uint64_t state_epoch, uint32_t readiness, uint32_t mode, uint64_t restart);
+/* next() reserves the whole source-command expansion. serial=0 means nothing
+ * offered. Repeated next() is inert; issue() authorizes exactly one recipient
+ * call and cannot be retried. result outcomes: 0 accepted, 1 rejected, 2 unknown.
+ * Accepted is NOT completed. Unknown/rejected closes admission; host MUST stop.
+ * Host must also stop on an issue/result ABI error or a contained panic. */
+int32_t nextnc_owner_next(uint64_t, nextnc_dispatch *, uint64_t);
+int32_t nextnc_owner_issue(uint64_t, uint64_t selection, uint64_t serial, uint64_t tick);
+int32_t nextnc_owner_result(uint64_t, uint64_t selection, uint64_t serial, uint32_t outcome, uint64_t tick);
+int32_t nextnc_owner_control(uint64_t, uint32_t operation, uint64_t argument, uint32_t flags, uint64_t tick);
+int32_t nextnc_owner_status(uint64_t, nextnc_owner_status_value *, uint64_t);
 #ifdef __cplusplus
 }
 #endif
