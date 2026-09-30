@@ -1,0 +1,152 @@
+{
+  "schema": "nextnc-native/migration-baseline/1",
+  "legacyCommit": "c136b14a756cdea91d2c749a8548546c44e7cc84",
+  "sources": [
+    {
+      "file": "src/artifact-identity.js",
+      "sha256": "9fcf299b6a58ee636849ef129d33c342a763d87d7c9c9dff789aa4aa27a7f2ee"
+    },
+    {
+      "file": "src/command-contract.js",
+      "sha256": "276855bf769dbb75ab6683f808152bf088c0e26ebcb2660394548ba58f8a9645"
+    },
+    {
+      "file": "src/configuration.js",
+      "sha256": "c8c609575db48b710d59521b1938c6166cbb69db16ae90f6c61901733b973736"
+    },
+    {
+      "file": "src/continuity.js",
+      "sha256": "36f54000347ebdd537459e5944c8511a13fb02f6a32be550dadb92845cd6da0d"
+    },
+    {
+      "file": "src/diagnostics.js",
+      "sha256": "273becfa6d18f1d0f6a3d6178e9ed7d6893f1a55f632796456b8e44c027955a7"
+    },
+    {
+      "file": "src/doctor.js",
+      "sha256": "2dee51382e83d0107f395b5f948a5edb097cb5a2e1d0bdb7eddabc5ec4530c04"
+    },
+    {
+      "file": "src/errors.js",
+      "sha256": "1e3c9097cbe857202c54736e0cf49125c326ce374682e8c69a3e37f3a4250799"
+    },
+    {
+      "file": "src/execution-audit.js",
+      "sha256": "1dd411a8a5ad2fa30069439c3357d1ad0de47745f492bfeace4e99f8ee50393d"
+    },
+    {
+      "file": "src/files.js",
+      "sha256": "5d6ff2aca4aea3f08f187beddbf98f27529cf6c6e75dff618a8cc151d7c66f96"
+    },
+    {
+      "file": "src/gcode-audit.js",
+      "sha256": "263fc2a7e9536ded0cc0418af487b2aeb774059fe9a747c6d9da912935904990"
+    },
+    {
+      "file": "src/internal-error.js",
+      "sha256": "d168f2b23a4a5e81c1fff120fc50a0e403f796aec1afb71bfbf8e281be97cdda"
+    },
+    {
+      "file": "src/job-requirements.js",
+      "sha256": "df0fdddb4c3d49ee4bbf8669c536bf1710f093ca8553506ef1bfe137d301cb21"
+    },
+    {
+      "file": "src/linuxcnc-output.js",
+      "sha256": "9d9f299bae1f2ac43d9c4552d864222b3a9fd21bdbf2825599c15090d5654154"
+    },
+    {
+      "file": "src/plan.js",
+      "sha256": "fe113920d9d78307676d2d2a0dbaa5c47ffd938c2d192f14d24eebf97b2ac12a"
+    },
+    {
+      "file": "src/policy-audit.js",
+      "sha256": "069a48b2e4e9e8dd376f0f39e86164fae19854f8bd9d7ec3a9ae02be40324ccb"
+    },
+    {
+      "file": "src/process-summary.js",
+      "sha256": "1e5a70b975c89dd85dcd22421adc83a926c481833e65ed61c1a28597b3da4352"
+    },
+    {
+      "file": "src/profile-contract.js",
+      "sha256": "568a85fcba408274d8452349c19039d0467860e7a28acc4265d44e67c6e6815a"
+    },
+    {
+      "file": "src/profile-shape.js",
+      "sha256": "4c350ed07a740ef5554cc94d8555c69f7dfa17a2161ceae0df150c35164e18f1"
+    },
+    {
+      "file": "src/profile.js",
+      "sha256": "ab650f2eb9b13fd8e65cbd08f08010edcb330852a055c50815efa6f84a1a3871"
+    },
+    {
+      "file": "src/report.js",
+      "sha256": "239c7ec6095c27a28e9403ad36db5d343661a7ec0d60c276cfe7a0be634a90a1"
+    },
+    {
+      "file": "src/review-client.js",
+      "sha256": "d9adbcbc4f6c24a692904826f87dac0b33c36daed55297d5fa8b62bc83934540"
+    },
+    {
+      "file": "src/review-geometry.js",
+      "sha256": "5089b48f1916e8cf0a87680ed5ce4d0c8f5be3fd3f1967799a68d28dc2e8e70c"
+    },
+    {
+      "file": "src/review-viewer.js",
+      "sha256": "d5282e6269a60f0516fc2984df71610332780055ff1b9c4e261bce93b59f3595"
+    },
+    {
+      "file": "src/stock-preview.js",
+      "sha256": "645ceef781734211e654a6a2f2c098091e2c2d4813ec7f076f451e535310b8dd"
+    },
+    {
+      "file": "src/tool-table.js",
+      "sha256": "eaf8c9bd6e71479c9534b638d808533b1e20c643874db5c4858a82361f8bb034"
+    },
+    {
+      "file": "src/translate.js",
+      "sha256": "07c4294c13c3f4f935ae979f1079198a909ba64d55180ba6879f513cbb9332a3"
+    },
+    {
+      "file": "src/validation-coverage.js",
+      "sha256": "4b6b42dfe4e4dd6d26bac772b1687242f4bd305bff5a776086fdedac13cacf47"
+    },
+    {
+      "file": "vendor/fusion360next-nc/inspect.js",
+      "sha256": "7ce122191453813ed4ddc6842bb9b5f7e123549a848d1f8204a4c4832cabf81a"
+    },
+    {
+      "file": "vendor/fusion360next-nc/next-nc.js",
+      "sha256": "c34dc616a02973d59a10c2c07219978291a2a6edb678aee62fb9e4a430af2d40"
+    },
+    {
+      "file": "vendor/fusion360next-nc/part21.js",
+      "sha256": "a8b5b278873523119b31b0be98bfdac556b8a54dbeab7346f49091eb069ad322"
+    },
+    {
+      "file": "vendor/fusion360next-nc/validation-error.js",
+      "sha256": "f7c738b0017b2b5605a6ae0d1ac723fe47d6311c9f3e74179fbb8be488f4c278"
+    }
+  ],
+  "cases": [
+    {
+      "name": "lathe-mm",
+      "inputSHA256": "fa468694cb831b8e83c6ffcf39fe599538b643ef12a6a10c46a7dc9417523a5f",
+      "fingerprint": "d7f073cddd69f11ec1fe8377e5a02a6c37415495bfcf0d8de5777bf11b7a788f"
+    },
+    {
+      "name": "lathe-inch",
+      "inputSHA256": "a22baabd94ef5397898dcd75d4eea9094ebd2b7f1639ce4eb005b120dd7f63bd",
+      "fingerprint": "5e00bdee9847d2b44c6f3c9a0e9e13d050dac2aa17f409722bce7fb4e29080c5"
+    },
+    {
+      "name": "mill-mm",
+      "inputSHA256": "1f9f3806083fc3faf6bf85b086a7f45af0be79fa1e2b4ca9e719e098b8cf6d19",
+      "fingerprint": "2f75c5ce0e31ba67648f776717f156039f9511f4b975fb4c6da903b92a02d676"
+    },
+    {
+      "name": "mill-inch",
+      "inputSHA256": "90edc5f25706b068d07a9a4cdc9c7bb16a6c31fdce1707fed76aa06f659ac579",
+      "fingerprint": "aeb23f4998855f8e9f46b99a23da381b302ea1d4de077336cd43ed597bb7e34b"
+    }
+  ]
+}
