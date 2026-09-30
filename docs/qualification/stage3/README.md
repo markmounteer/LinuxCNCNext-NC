@@ -1,14 +1,14 @@
 # Stage 3 progress — native task execution is not accepted
 
-Date: 2026-09-30. **IN PROGRESS. No native job has reached LinuxCNC through a
-qualified task adapter.** The completed Stage 0 simulator reference and
+Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
+LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
 The current implementation is the safe Rust
-[`nextnc-task` library](../../../crates/nextnc-task/README.md). It has 26 tests:
+[`nextnc-task` library](../../../crates/nextnc-task/README.md). It has 27 tests:
 one semantic-group test, seven binding tests over a 26-fixture geometry matrix,
-eight lifecycle tests, six dispatch-receipt tests and four lowering tests. The
-[`nextnc-task-ffi` crate](../../../crates/nextnc-task-ffi/README.md) adds six ABI
+eight lifecycle tests, six dispatch-receipt tests and five lowering tests. The
+[`nextnc-task-ffi` crate](../../../crates/nextnc-task-ffi/README.md) adds seven ABI
 tests. These are model/unit tests,
 not task integration or physical-machine qualification.
 
@@ -42,19 +42,19 @@ passed six release-profile ABI tests on Linux before its two real task sessions.
 
 | Stage 3 requirement | Current evidence | Remaining acceptance gate |
 | --- | --- | --- |
-| Rust task owner and checked native ABI | Preparation, lifecycle/dispatch ABI and typed lowering implemented | Actual dispatch results and procedure rebind transport missing |
-| Pinned task executable | Native-bound task builds and loads jobs in isolated mill/lathe simulation | Native message issue and state handoff missing |
-| State capture/reconciliation and `on_abort` ordering | Model withholds MDI until explicit reconciliation | Actual canonical/interpreter restoration and abort-race tests missing |
+| Rust task owner and checked native ABI | Preparation, lifecycle/dispatch ABI and typed lowering; initial real recipient dispatch | Procedure result/rebind transport and full fault injection missing |
+| Pinned task executable | Native-bound task executes initial mill/lathe jobs in isolated simulation | Full execution acceptance matrix pending |
+| State capture/reconciliation and `on_abort` ordering | Typed canonical/interpreter updates, normal/abort handoff and deferred cleanup implemented | Full offset/unit/modal matrix and abort-race tests missing |
 | One start gate, drain/result/rebind | Models plus actual task loading gate, refused starts/mode changes and failed replacement checks | Execution-phase NML/HALUI/pendant, procedure and drain integration missing |
-| Semantic stepping and no arbitrary restart | Versioned groups and model tests | Actual held/read-ahead/corner behavior untested |
+| Semantic stepping and no arbitrary restart | Versioned groups, actual hold-to-step proposal/confirmation and drain | Full held/read-ahead/corner behavior matrix pending |
 | Shaper mode and delayed completion | Geometry refusal, lane-change drains, missing-tail model tests | Engaged-shaper full-stack runs missing |
 | Same-table G7/G8/native coordinate matrix | Synthetic geometry matrix plus real task capture with nonzero WCS/G92/H2 and lathe G7 | Independent executed RS274/native comparison and full state matrix missing |
 | Termination conditions and ordered state deltas | Rust lowering retains ordered events and emits termination deltas with drain barriers | Actual pending-boundary behavior remains untested |
 | Receipts, backpressure, identity, connection loss | Model accounts for expanded messages, actual-result categories, retry and unknown-result refusal | Real queue/guarded-mailbox traces and disconnect stop tests missing |
-| Lines, planes, full circles, helixes and events | Source fixtures and continuous machine-path checks | Native full jobs through real shim missing |
+| Lines, planes, full circles, helixes and events | Initial native synthetic jobs through real task/motmod/shim with a source/setup oracle | Full state/event/job corpus remains pending |
 
-The next implementation boundary is connecting lifecycle dispatch and the typed
-messages to the pinned task. It must keep the existing task and motmod guards. Appending an
+The next implementation boundary is procedure result/rebind transport and the
+remaining full-stack qualification matrix. It must keep the existing task and motmod guards. Appending an
 NML message is not a guarded-motion receipt; planner-done is not shaper-done.
 Source/operation identity must survive any one-to-many message expansion.
 

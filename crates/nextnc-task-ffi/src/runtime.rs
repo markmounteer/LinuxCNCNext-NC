@@ -454,6 +454,9 @@ pub extern "C" fn nextnc_owner_attach(handle: u64, selection: u64, candidate: u6
             .cloned()
             .ok_or("stale candidate handle")?;
         with(handle, |r| {
+            if c.maximum_pieces > r.capacity {
+                return Err("native command expansion exceeds dispatch capacity".into());
+            }
             r.owner
                 .selected_shared(
                     Generation {

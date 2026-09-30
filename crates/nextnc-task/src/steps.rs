@@ -146,6 +146,14 @@ impl Layout {
             }
             for piece in pieces {
                 let matches = match (piece.payload, bound.records()[i].action) {
+                    (
+                        Payload::Termination(motion_command::Termination::ExactPath),
+                        BoundAction::State(Action::ResetModes),
+                    ) => true,
+                    (
+                        Payload::State(BoundAction::State(Action::RestoreFeedPerMinute)),
+                        BoundAction::State(Action::ResetModes),
+                    ) => true,
                     (Payload::Termination(t), BoundAction::Motion(m)) => t == m.termination,
                     (
                         Payload::Motion { motion, .. } | Payload::Stationary(motion),

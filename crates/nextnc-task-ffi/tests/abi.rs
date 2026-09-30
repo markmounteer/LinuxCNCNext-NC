@@ -117,7 +117,7 @@ fn owner_selection(candidate: u64) -> (u64, u64) {
     let mut selection = 0;
     // SAFETY: both outputs are aligned, writable u64 values.
     unsafe {
-        assert_eq!(nextnc_owner_create(2, &mut owner), 0);
+        assert_eq!(nextnc_owner_create(3, &mut owner), 0);
         assert_eq!(nextnc_owner_begin(owner, &mut selection), 0);
     }
     assert_eq!(nextnc_owner_attach(owner, selection, candidate), 0);
@@ -475,5 +475,27 @@ fn candidate_capacity_and_failed_replacement_do_not_reuse_or_corrupt_a_handle() 
     }
     assert_eq!(nextnc_task_release(second), 0);
     assert_eq!(nextnc_task_release(third), 0);
+    Ok(())
+}
+
+#[test]
+fn insufficient_piece_capacity_refuses_before_native_selection_or_motion() -> TestResult {
+    let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
+    let artifact = artifact()?;
+    let mut candidate = 0;
+    assert_eq!(prepare(&artifact, &snapshot(), &tools(), &mut candidate), 0);
+    let mut owner = 0;
+    let mut selection = 0;
+    // SAFETY: both outputs are aligned writable u64 values.
+    unsafe {
+        assert_eq!(nextnc_owner_create(2, &mut owner), 0);
+        assert_eq!(nextnc_owner_begin(owner, &mut selection), 0);
+    }
+    assert_eq!(nextnc_owner_attach(owner, selection, candidate), -1);
+    assert_eq!(state(owner).phase, 1);
+    assert_eq!(state(owner).accepted, 0);
+    assert_eq!(nextnc_owner_failed(owner, selection), 0);
+    assert_eq!(nextnc_owner_destroy(owner), 0);
+    assert_eq!(nextnc_task_release(candidate), 0);
     Ok(())
 }

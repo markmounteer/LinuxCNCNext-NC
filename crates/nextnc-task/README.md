@@ -3,8 +3,9 @@
 This safe Rust library implements the control and coordinate components of the
 planned LinuxCNC task integration. **It does not execute a job.** The companion
 `nextnc-task-ffi` crate provides checked preparation, owner control and dispatch
-accounting. The experimental pinned task now loads/binds jobs and gates competing
-commands; native message issue and state handoff remain unfinished. Native
+accounting. The experimental pinned task now loads/binds jobs, gates competing
+commands and issues native records through existing task recipients. Initial
+normal/abort state handoff is implemented and under simulator qualification. Native
 full-stack acceptance is pending. The compiler CLI reports `executable:false`.
 
 ## Implemented components
@@ -42,10 +43,9 @@ motion or shaper drain. The owning host must combine it with real status.
 
 ## Remaining integration gates
 
-1. Connect the checked lifecycle/dispatch ABI to real recipient results and
-   procedure rebinds. The companion pinned C++ adapter converts motion/termination fields
-   to NML types but does not enqueue them. Connect it to the owning task while
-   preserving original source identity and real return codes.
+1. Complete procedure result/rebind transport and its fresh-state checks. The
+   companion pinned C++ adapter now queues native records through the task and
+   records actual recipient returns. Full failure/retry qualification is pending.
 2. Complete live snapshot qualification and identity/freshness checks. The task
    captures state and a bounded worker binds the whole job. Recheck before start and after procedures;
    cached snapshots cannot authorize execution.

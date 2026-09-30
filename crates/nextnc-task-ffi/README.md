@@ -76,5 +76,9 @@ drain domains and a heartbeat after the last issue. MDI stays blocked until stat
 reconciliation is explicitly acknowledged. Abort/fault/disconnect revoke first,
 even if their heartbeat is stale. These controls do not themselves move or stop
 hardware: the host must perform the corresponding checked LinuxCNC operations.
-Procedure rebind transport and the complete host execution/reconciliation hooks
-remain unfinished Stage 3 work.
+Procedure rebind transport and full host execution/reconciliation qualification
+remain unfinished Stage 3 work. The companion task now runs initial native
+geometry/control simulations through actual recipients. Mode reset expands into
+separately receipted termination and feed-mode changes before its task-state
+update. Candidate attachment checks the maximum expansion against dispatch
+capacity, using a worker-computed bound; no whole-job scan runs at attachment.

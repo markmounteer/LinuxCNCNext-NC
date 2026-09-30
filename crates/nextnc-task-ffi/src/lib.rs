@@ -26,6 +26,7 @@ struct Candidate {
     lowered: lowering::Plan,
     layout: Arc<nextnc_task::steps::Layout>,
     fingerprint: runtime::Fingerprint,
+    maximum_pieces: usize,
 }
 #[derive(Default)]
 struct Registry {
@@ -157,6 +158,12 @@ pub unsafe extern "C" fn nextnc_task_prepare(
                     .is_ok(),
             )?;
         }
+        let maximum_pieces = lowered
+            .commands()
+            .iter()
+            .map(|r| r.len())
+            .max()
+            .unwrap_or(0);
         let handle = {
             let mut r = registry();
             let handle = r
@@ -172,6 +179,7 @@ pub unsafe extern "C" fn nextnc_task_prepare(
                     lowered,
                     layout: Arc::new(layout),
                     fingerprint,
+                    maximum_pieces,
                 }),
             );
             handle

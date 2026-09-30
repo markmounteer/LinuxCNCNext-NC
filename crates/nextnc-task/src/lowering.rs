@@ -2,6 +2,7 @@
 //! No interpreter text, planner queue writes or live execution permission.
 use crate::binding::{BoundAction, BoundPlan, Motion};
 use motion_command::{Feed, Rotation, Termination};
+use nextnc_native::compiled::Action;
 use std::{f64::consts::TAU, ops::Range};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -250,11 +251,36 @@ pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
                     payload,
                 });
             }
-            action => plan.pieces.push(Piece {
-                command: record.command,
-                ordinal: 0,
-                payload: Payload::State(action),
-            }),
+            action => {
+                // ResetModes has exact-path semantics. Account for that real
+                // controller change here, or a later motion matching the old
+                // cached blend mode would silently execute in exact path.
+                // Termination remains a separately receipted motion piece;
+                // the host must not synthesize additional mode changes.
+                if action == BoundAction::State(Action::ResetModes)
+                    && termination != Some(Termination::ExactPath)
+                {
+                    drain |= termination.is_some();
+                    plan.pieces.push(Piece {
+                        command: record.command,
+                        ordinal: 0,
+                        payload: Payload::Termination(Termination::ExactPath),
+                    });
+                    termination = Some(Termination::ExactPath);
+                }
+                if action == BoundAction::State(Action::ResetModes) {
+                    plan.pieces.push(Piece {
+                        command: record.command,
+                        ordinal: plan.pieces.len() - start,
+                        payload: Payload::State(BoundAction::State(Action::RestoreFeedPerMinute)),
+                    });
+                }
+                plan.pieces.push(Piece {
+                    command: record.command,
+                    ordinal: plan.pieces.len() - start,
+                    payload: Payload::State(action),
+                });
+            }
         }
         if drain {
             plan.drains_before.push(record.command);

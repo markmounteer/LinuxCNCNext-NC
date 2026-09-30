@@ -141,13 +141,46 @@ fn state_deltas_do_not_add_a_termination_command_per_vertex() -> TestResult {
             assert_eq!(piece.ordinal, ordinal);
         }
         if !matches!(b.records()[i].action, BoundAction::Motion(_)) {
-            assert_eq!(range.len(), 1);
+            let expected = if i == 0 {
+                3
+            } else if b.records()[i].action == BoundAction::State(compiled::Action::ResetModes) {
+                2
+            } else {
+                1
+            };
+            assert_eq!(range.len(), expected);
             assert_eq!(
-                p.pieces()[range.start].payload,
+                p.pieces()[range.end - 1].payload,
                 Payload::State(b.records()[i].action)
             );
         }
     }
+    Ok(())
+}
+
+#[test]
+fn reset_modes_establishes_exact_path_before_any_native_motion() -> TestResult {
+    use motion_command::Termination;
+    let bound = fixture("mill-mm-line")?;
+    let plan = lower(&bound, dynamics(false))?;
+    assert_eq!(
+        plan.pieces()[0].payload,
+        Payload::Termination(Termination::ExactPath)
+    );
+    assert_eq!(plan.pieces()[0].command, 0);
+    assert_eq!(
+        plan.pieces()[2].payload,
+        Payload::State(BoundAction::State(compiled::Action::ResetModes))
+    );
+    // The fixture stays in exact path, so neither its second reset nor any
+    // vertex needs another controller termination command.
+    assert_eq!(
+        plan.pieces()
+            .iter()
+            .filter(|p| matches!(p.payload, Payload::Termination(_)))
+            .count(),
+        1
+    );
     Ok(())
 }
 
