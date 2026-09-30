@@ -35,6 +35,10 @@ inventory. The companion task-loading simulator passes XYZ mill and XZ lathe
 sessions using real task state: native selection, competing command refusal,
 worker release, invalid replacement refusal and ordinary G-code after cancellation.
 No native motion is issued by that checkpoint; full execution remains below.
+Code checkpoint `4b8cf0bcae4f4f1c7e42d4df4f2769136e3d5eb4` passed
+[all 11 hosted jobs](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36753821315).
+[owner-ci.json](owner-ci.json) records the exact jobs. The simulator separately
+passed six release-profile ABI tests on Linux before its two real task sessions.
 
 | Stage 3 requirement | Current evidence | Remaining acceptance gate |
 | --- | --- | --- |
