@@ -61,9 +61,14 @@ Synthetic transition coordinates are not physical clearances.
 
 ## Required work still open
 
-- Explicit fit/blend budgets, exact reductions and measured rate diagnostics.
-- Complete check-by-check migration disposition, full negative corpus, native
-  geometry/event equivalence and cold/warm/memory/large-job benchmarks.
+- Measured reference admission and predicted command-demand diagnostics.
+- Final Stage 2 acceptance review against the controller's authoritative plan.
+
+The migration inventory, ordered semantic equivalence, bounded negative corpus,
+exact-path budget accounting and matched large-job compiler benchmarks now have
+saved evidence. [Exact reductions](native-exact-reductions.md) preserve the
+unoptimized motion baseline; geometric combining and positive fit/blend budgets
+are not enabled.
 
 No native task adapter, controller connection or execution capability is provided
 by this checkpoint. Compiler qualification must finish before stage 3 begins.
