@@ -1,0 +1,21 @@
+{
+  "name": "lathe-mm-polyline-8",
+  "source": "lathe-mm-polyline-8.stpnc",
+  "setup": "lathe-mm-polyline-8.plan.json",
+  "expected": {
+    "motions": 8,
+    "lines": 8,
+    "circular": 0,
+    "helices": 0,
+    "multiTurns": 0,
+    "dwells": 0,
+    "fingerprint": "9c95657ac541def1a20bb252bb1e2ca5e79516eea27b4da9aa4e03501021b7b7",
+    "machine": "lathe",
+    "units": "mm"
+  },
+  "sourceBytes": 7519,
+  "setupBytes": 629,
+  "sourceSHA256": "4a42b9c5320f4e04fb80c248dd9bc71eb8129601b1bd8188f20c37b522870f5d",
+  "setupSHA256": "2af7ba699cc6306141ed9f2ecc579c9fc0f54d60a33b9bd601a894e4aed4d648",
+  "entities": 134
+}

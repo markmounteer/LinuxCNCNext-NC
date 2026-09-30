@@ -1,0 +1,156 @@
+{
+  "schema": "nextnc-native/benchmark-inputs/1",
+  "producerCommit": "b31904b3d5ad9d56cc4cc16b8090e768b0e1958d",
+  "generatorSHA256": "48fac59537e228bf75e1637369b5e156571603ef9ef1722a87a076d372c3347b",
+  "producerFiles": [
+    {
+      "file": "src/next-nc.js",
+      "sha256": "55fed366ffa59fe69c2aeea9c9210309acc847587b2fbe5227fa7cb643b1b609"
+    },
+    {
+      "file": "lib/inspect.js",
+      "sha256": "c301676ecd0e5eafe26685010ca6497abef59eb5a9f2081ffd1c33df908d2fdc"
+    },
+    {
+      "file": "lib/native-profile.js",
+      "sha256": "0c7e527bb160bb26d5f1d3d92fff8745ea6114a46f892876d8519ae75958e718"
+    },
+    {
+      "file": "lib/part21.js",
+      "sha256": "a8b5b278873523119b31b0be98bfdac556b8a54dbeab7346f49091eb069ad322"
+    },
+    {
+      "file": "lib/validation-error.js",
+      "sha256": "f7c738b0017b2b5605a6ae0d1ac723fe47d6311c9f3e74179fbb8be488f4c278"
+    }
+  ],
+  "scope": "Deterministic synthetic compiler/resource fixtures; no physical setup or motion authorization",
+  "cases": [
+    {
+      "name": "mill-mm-arcs-8",
+      "source": "mill-mm-arcs-8.stpnc",
+      "setup": "mill-mm-arcs-8.plan.json",
+      "expected": {
+        "motions": 8,
+        "lines": 0,
+        "circular": 8,
+        "helices": 2,
+        "multiTurns": 2,
+        "dwells": 0,
+        "fingerprint": "41da950689e920465ad7fe416311d5dbc188c25832e26a45f495ccde7d1408b6",
+        "machine": "mill",
+        "units": "mm"
+      },
+      "sourceBytes": 14277,
+      "setupBytes": 767,
+      "sourceSHA256": "8a7ca7f9b5f864ecf59e6dfd1b367a1a363e317a4ed0bf64207966af9b90bf1a",
+      "setupSHA256": "6f83f683562791d9408ffd4e01dc8b1f88642722604b6247648736819ad44b7f",
+      "entities": 239
+    },
+    {
+      "name": "lathe-mm-arcs-8",
+      "source": "lathe-mm-arcs-8.stpnc",
+      "setup": "lathe-mm-arcs-8.plan.json",
+      "expected": {
+        "motions": 8,
+        "lines": 0,
+        "circular": 8,
+        "helices": 0,
+        "multiTurns": 0,
+        "dwells": 0,
+        "fingerprint": "412542941a9ecc842525a53f59a47489389326cddc29f3e18d8117ec44a27c6e",
+        "machine": "lathe",
+        "units": "mm"
+      },
+      "sourceBytes": 13313,
+      "setupBytes": 629,
+      "sourceSHA256": "b259aba6665bf99d9749470f44bb0ccc14176fe6c46d335b7db147fe209c8f46",
+      "setupSHA256": "2908dc0ab2864f143e6f024ebd6f0df2eadd79a9720ca368f3977fedb86275bc",
+      "entities": 230
+    },
+    {
+      "name": "mill-inch-arcs-8",
+      "source": "mill-inch-arcs-8.stpnc",
+      "setup": "mill-inch-arcs-8.plan.json",
+      "expected": {
+        "motions": 8,
+        "lines": 0,
+        "circular": 8,
+        "helices": 2,
+        "multiTurns": 2,
+        "dwells": 0,
+        "fingerprint": "378bebb0b86083b12dc2c2c714a483110587f2a41a73b7bfb8e02140aade3978",
+        "machine": "mill",
+        "units": "inch"
+      },
+      "sourceBytes": 14532,
+      "setupBytes": 773,
+      "sourceSHA256": "91e76544849610f7dc256bb98ee27d28d8e4e1f58d3f8b9a37bd3b58aaa1e9e2",
+      "setupSHA256": "f267e4d60f64d25b2fe679b218b961e671ff415f43bedd0612fffdef8138f57c",
+      "entities": 242
+    },
+    {
+      "name": "mill-mm-polyline-8",
+      "source": "mill-mm-polyline-8.stpnc",
+      "setup": "mill-mm-polyline-8.plan.json",
+      "expected": {
+        "motions": 8,
+        "lines": 8,
+        "circular": 0,
+        "helices": 0,
+        "multiTurns": 0,
+        "dwells": 0,
+        "fingerprint": "889bcacb7fabc0a9e8c47122ddf70fdceeb67e8ec7f0147ac55adb394c394201",
+        "machine": "mill",
+        "units": "mm"
+      },
+      "sourceBytes": 7385,
+      "setupBytes": 767,
+      "sourceSHA256": "ede0fab4cabd7a98f446b45f737dad65f83471c3b1af3545b4c5aa16cdd08521",
+      "setupSHA256": "4735acc6e86e2d617d80678a06e22caeb20281b9e1b28cbffa7dc39f21dd0f35",
+      "entities": 133
+    },
+    {
+      "name": "lathe-inch-arcs-8",
+      "source": "lathe-inch-arcs-8.stpnc",
+      "setup": "lathe-inch-arcs-8.plan.json",
+      "expected": {
+        "motions": 8,
+        "lines": 0,
+        "circular": 8,
+        "helices": 0,
+        "multiTurns": 0,
+        "dwells": 0,
+        "fingerprint": "53861f980e6364a3024b7bbfc2ad8ef7d3bba92bd77ba742fe8fcaa69e19620b",
+        "machine": "lathe",
+        "units": "inch"
+      },
+      "sourceBytes": 13553,
+      "setupBytes": 637,
+      "sourceSHA256": "bd9e8bb643bb80cf9547dab48bda6a4126d53302295145f631dc57c7da8474f8",
+      "setupSHA256": "5781212853bb6d377517b7d812c86d75b7e4c61a417dfbea541dfc5719b6d9ee",
+      "entities": 233
+    },
+    {
+      "name": "lathe-mm-polyline-8",
+      "source": "lathe-mm-polyline-8.stpnc",
+      "setup": "lathe-mm-polyline-8.plan.json",
+      "expected": {
+        "motions": 8,
+        "lines": 8,
+        "circular": 0,
+        "helices": 0,
+        "multiTurns": 0,
+        "dwells": 0,
+        "fingerprint": "9c95657ac541def1a20bb252bb1e2ca5e79516eea27b4da9aa4e03501021b7b7",
+        "machine": "lathe",
+        "units": "mm"
+      },
+      "sourceBytes": 7519,
+      "setupBytes": 629,
+      "sourceSHA256": "4a42b9c5320f4e04fb80c248dd9bc71eb8129601b1bd8188f20c37b522870f5d",
+      "setupSHA256": "2af7ba699cc6306141ed9f2ecc579c9fc0f54d60a33b9bd601a894e4aed4d648",
+      "entities": 134
+    }
+  ]
+}

@@ -12,6 +12,10 @@ path = "src-rust/lib.rs"
 name = "nextnc-native"
 path = "src-rust/main.rs"
 
+[[example]]
+name = "native_benchmark"
+path = "examples-rust/native_benchmark.rs"
+
 [dependencies]
 motion-command = { path = "crates/motion-command" }
 ryu-js = "1"

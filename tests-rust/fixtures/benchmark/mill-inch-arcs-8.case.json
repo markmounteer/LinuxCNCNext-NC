@@ -1,0 +1,21 @@
+{
+  "name": "mill-inch-arcs-8",
+  "source": "mill-inch-arcs-8.stpnc",
+  "setup": "mill-inch-arcs-8.plan.json",
+  "expected": {
+    "motions": 8,
+    "lines": 0,
+    "circular": 8,
+    "helices": 2,
+    "multiTurns": 2,
+    "dwells": 0,
+    "fingerprint": "378bebb0b86083b12dc2c2c714a483110587f2a41a73b7bfb8e02140aade3978",
+    "machine": "mill",
+    "units": "inch"
+  },
+  "sourceBytes": 14532,
+  "setupBytes": 773,
+  "sourceSHA256": "91e76544849610f7dc256bb98ee27d28d8e4e1f58d3f8b9a37bd3b58aaa1e9e2",
+  "setupSHA256": "f267e4d60f64d25b2fe679b218b961e671ff415f43bedd0612fffdef8138f57c",
+  "entities": 242
+}

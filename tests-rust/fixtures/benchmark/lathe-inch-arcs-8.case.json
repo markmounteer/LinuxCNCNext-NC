@@ -1,0 +1,21 @@
+{
+  "name": "lathe-inch-arcs-8",
+  "source": "lathe-inch-arcs-8.stpnc",
+  "setup": "lathe-inch-arcs-8.plan.json",
+  "expected": {
+    "motions": 8,
+    "lines": 0,
+    "circular": 8,
+    "helices": 0,
+    "multiTurns": 0,
+    "dwells": 0,
+    "fingerprint": "53861f980e6364a3024b7bbfc2ad8ef7d3bba92bd77ba742fe8fcaa69e19620b",
+    "machine": "lathe",
+    "units": "inch"
+  },
+  "sourceBytes": 13553,
+  "setupBytes": 637,
+  "sourceSHA256": "bd9e8bb643bb80cf9547dab48bda6a4126d53302295145f631dc57c7da8474f8",
+  "setupSHA256": "5781212853bb6d377517b7d812c86d75b7e4c61a417dfbea541dfc5719b6d9ee",
+  "entities": 233
+}
