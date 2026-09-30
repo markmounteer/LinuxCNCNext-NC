@@ -10,6 +10,12 @@ one semantic-group test, seven binding tests over a 26-fixture geometry matrix,
 eight lifecycle tests and six dispatch-receipt tests. These are model/unit tests,
 not task integration or physical-machine qualification.
 
+Code checkpoint `812f781fb1cef71dc1114dad5dfef7d06985891f` passed
+[all 11 hosted jobs](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36745525139).
+[ci.json](ci.json) preserves the exact run/job identities and conclusions. The
+Windows full Rust suite passed 109 tests; formatting, Clippy, inventory checks
+and an ARM64 compile check also passed locally. ARM64 execution is untested.
+
 | Stage 3 requirement | Current evidence | Remaining acceptance gate |
 | --- | --- | --- |
 | Rust task owner and checked native ABI | Owner state machine implemented | ABI and actual task binding missing |
