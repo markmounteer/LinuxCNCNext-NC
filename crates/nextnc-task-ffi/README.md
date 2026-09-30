@@ -63,6 +63,21 @@ offset, controller dynamics and supported capabilities; it is independent of
 tool-table iteration order and C struct padding. The host must separately verify
 the selected source/policy identity and actual readiness.
 
+Before RUN or confirmed STEP, the worker calls `nextnc_task_check_current` in
+mode 0: selected bundle bytes and the full initial snapshot must still match.
+Before held RESUME/confirmed STEP, mode 1 checks the same source and the bound
+environment (work/rotation tables, tool table, limits, dynamics, capabilities and
+shaper mode). Active WCS selection, G92, H and pose evolve through native events;
+the host checks their live canonical consistency rather than comparing them to
+the initial values. Mode 2 checks a tool confirmation's source and valid snapshot;
+its mandatory result/rebind barrier still validates changed tool geometry before
+further motion. A successful check returns a full observed fingerprint, never
+execution permission or a new candidate. Immediately before adoption, the task
+must match that fingerprint, selection, candidate and control request again.
+Stops and replacement requests cancel pending verification before polling worker
+output. The source check observes the bytes read by that worker; it is not a
+continuous filesystem watch after execution starts.
+
 `nextnc_owner_next` atomically reserves a complete source-command expansion and
 returns a repeatable message reservation. The host checks its ordinary task
 prerequisites before `issue`; only then may it call the guarded recipient, once.
