@@ -22,10 +22,17 @@ artifacts; they can be reproduced from the pinned public producer and generator.
 Local originals are in the ignored `artifacts/benchmark-inputs-34000` and
 `artifacts/benchmark-windows-20260930` directories of the development checkout.
 
-The baseline exposed high peak memory (up to about 2.21 GiB). Follow-up work
-removes full-model/full-JSON fingerprint temporaries and a duplicate provenance
-tree. Any performance claim for that change requires a separate matched run;
-passing semantic tests alone does not demonstrate a memory or latency reduction.
+The baseline exposed high peak memory (up to about 2.21 GiB). The matched
+[follow-up comparison](comparison.md) and [raw results](streamed.json) measure
+revision `9a518ab2f12b15319ad593c205ed199c8d267d97`, which removes full-model/
+full-JSON fingerprint temporaries and a duplicate provenance tree. Another
+90 processes and 540 timed calls completed against the identical input manifest.
+The verifier confirms identical complete ordered commands and source spans.
+For the two 34,000-arc jobs, median warm preparation takes about 27% less time
+and peak preparation RSS falls about 37% (to 1,334 and 1,376 MiB). Bundle compile
+and reload also use less memory; the comparison retains every case and phase.
+These are observed workstation results, not a guarantee on another host.
+The follow-up originals are in `artifacts/benchmark-windows-streamed-20260930`.
 
 The host is a general Windows workstation with uncontrolled OS caches and
 ordinary background activity. No CPU affinity, real-time deadline, Raspberry Pi
