@@ -70,7 +70,13 @@ bytes are rechecked during publication and whenever selection is queried.
    disarm a newer request. Cancellation works before and after commit.
 5. Querying a selection rechecks the exact inputs and stored artifact. Mutation,
    corruption, missing inputs or read failures invalidate the selection. Cached
-   candidates need an explicit fresh `begin` and `select_existing` operation.
+   candidates associated with project paths need an explicit fresh `begin` and
+   `select_existing` operation. To choose the immutable bundle itself as the job,
+   `begin_bundle` independently validates its embedded inputs, creates a fresh
+   generation and binds the exact bundle hash. Original project files and the
+   original compiler process need not exist; the old selection is never restored.
+   The returned candidate must still be committed by this owner. Corruption or
+   replacement of that chosen bundle invalidates selection.
 
 The disk journal is for inspection only. Its apparent status is never loaded as
 permission or as an active selection. A new owner always starts disarmed with a
@@ -89,6 +95,8 @@ owner's authority. This checkpoint does not define an external-worker protocol.
 Tests cover repeated deterministic publication/reuse, stale workers, cancellation,
 failed replacement, changed source/setup/tool tables, corrupted objects, invalid
 object paths, input/store overlap, unrelated directories and exclusive ownership.
+They also delete original project files and explicitly reselect a published job
+under a new owner, without restoring the prior generation or any run permission.
 Actual subprocess exits bypass destructors at six publication checkpoints;
 reopening releases the dead owner's lock, restores no selection, and allows a
 fresh explicit request. Partial stage/journal writes and storage failures are

@@ -49,10 +49,15 @@ pub struct Generation {
     pub request: u64,
 }
 #[derive(Clone, Debug)]
+enum InputSource {
+    Files(Paths),
+    Bundle(String),
+}
+#[derive(Clone, Debug)]
 pub struct Ticket {
     owner: Arc<()>,
     generation: Generation,
-    paths: Paths,
+    input: InputSource,
     identity: Identity,
 }
 impl Ticket {
@@ -299,16 +304,7 @@ impl Store {
     /// Disarm FIRST, even if the disk is full or the new source cannot be read.
     /// All workers return their ticket to this owner; they never select directly.
     pub fn begin(&mut self, paths: Paths) -> Result<(Ticket, Snapshot)> {
-        self.pending = None;
-        self.selected = None;
-        self.request = self
-            .request
-            .checked_add(1)
-            .ok_or_else(|| fail("GENERATION", "Selection generation exhausted"))?;
-        let generation = Generation {
-            session: self.session.clone(),
-            request: self.request,
-        };
+        let generation = self.next_generation()?;
         let cwd = std::env::current_dir().map_err(|e| io_error("resolve input paths", e))?;
         let absolute = |p: PathBuf| if p.is_absolute() { p } else { cwd.join(p) };
         let paths = Paths {
@@ -341,11 +337,39 @@ impl Store {
         let ticket = Ticket {
             owner: Arc::clone(&self.owner),
             generation,
-            paths,
+            input: InputSource::Files(paths),
             identity: Identity::of(captured.inputs()),
         };
         self.pending = Some(ticket.clone());
         Ok((ticket, captured))
+    }
+    fn next_generation(&mut self) -> Result<Generation> {
+        self.pending = None;
+        self.selected = None;
+        self.request = self
+            .request
+            .checked_add(1)
+            .ok_or_else(|| fail("GENERATION", "Selection generation exhausted"))?;
+        Ok(Generation {
+            session: self.session.clone(),
+            request: self.request,
+        })
+    }
+    /// Explicit selection of a published immutable job, independent of its old
+    /// project paths/compiler process. Embedded inputs are revalidated; live
+    /// tool data and controller state are still NOT bound or authorized here.
+    pub fn begin_bundle(&mut self, sha256: &str) -> Result<(Ticket, Artifact)> {
+        let generation = self.next_generation()?;
+        self.state("preparing", &generation, None, None)?;
+        let artifact = self.read_artifact(&self.object_path(sha256)?, sha256)?;
+        let ticket = Ticket {
+            owner: Arc::clone(&self.owner),
+            generation,
+            input: InputSource::Bundle(sha256.into()),
+            identity: artifact.identity().clone(),
+        };
+        self.pending = Some(ticket.clone());
+        Ok((ticket, artifact))
     }
     fn current(&self, ticket: &Ticket) -> bool {
         Arc::ptr_eq(&ticket.owner, &self.owner)
@@ -355,8 +379,14 @@ impl Store {
                 .is_some_and(|p| p.generation == ticket.generation && p.identity == ticket.identity)
     }
     fn check_snapshot(&self, ticket: &Ticket) -> Result<()> {
-        let now = snapshot(&ticket.paths, &self.limits)?;
-        if Identity::of(now.inputs()) != ticket.identity {
+        let identity = match &ticket.input {
+            InputSource::Files(paths) => Identity::of(snapshot(paths, &self.limits)?.inputs()),
+            InputSource::Bundle(sha) => self
+                .read_artifact(&self.object_path(sha)?, sha)?
+                .identity()
+                .clone(),
+        };
+        if identity != ticket.identity {
             return Err(fail(
                 "SOURCE_CHANGED",
                 "Source, setup or optional snapshot changed after preparation began",
@@ -423,6 +453,14 @@ impl Store {
                 "Worker result does not match this request's exact input/compiler/policy snapshot",
             ));
         }
+        if let InputSource::Bundle(expected) = &ticket.input {
+            if artifact.sha256() != expected {
+                return Err(fail(
+                    "IDENTITY",
+                    "Worker replaced the explicitly chosen immutable bundle",
+                ));
+            }
+        }
         self.check_snapshot(ticket)?;
         let stage = self.stage_path("bundle");
         let mut file = new_file(&stage)?;
@@ -446,6 +484,7 @@ impl Store {
                 "Staged bundle identity differs from request",
             ));
         }
+        drop(checked);
         self.check_snapshot(ticket)?;
         let object = self.object_path(artifact.sha256())?;
         self.checkpoint(Point::BeforeObjectRename)?;
@@ -847,6 +886,46 @@ mod tests {
             "INPUT_STORE_OVERLAP"
         );
         assert_eq!(fs::read(protected)?, source);
+        assert!(store.selected()?.is_none());
+        Ok(())
+    }
+    #[test]
+    fn published_job_is_reusable_without_old_project_files_but_never_auto_selected() -> TestResult {
+        let temp = Temp::new()?;
+        let paths = temp.paths()?;
+        let root = temp.0.join("store");
+        let (hash, old_generation) = {
+            let mut store = Store::open(&root, Limits::default())?;
+            let (ticket, a) = prepared(&mut store, paths.clone())?;
+            let selection = store.commit(&ticket, &a)?;
+            (selection.artifact_sha256, selection.generation)
+        };
+        fs::remove_file(&paths.source)?;
+        fs::remove_file(&paths.setup)?;
+        fs::remove_file(paths.tool_table.as_ref().ok_or("table")?)?;
+        let mut store = Store::open(&root, Limits::default())?;
+        assert!(store.selected()?.is_none());
+        let (ticket, a) = store.begin_bundle(&hash)?;
+        assert!(store.selected()?.is_none());
+        assert_ne!(ticket.generation.session, old_generation.session);
+        assert!(!a.prepared().audit().execution_authorized);
+        store.commit(&ticket, &a)?;
+        assert_eq!(
+            store.selected()?.ok_or("selection")?.0.artifact_sha256,
+            hash
+        );
+        let original = fs::read(store.object_path(&hash)?)?;
+        fs::write(
+            store.object_path(&hash)?,
+            b"corruption after explicit selection",
+        )?;
+        assert!(store.selected().is_err());
+        assert!(store.selected()?.is_none());
+        fs::write(store.object_path(&hash)?, original)?;
+        let (cancelled, a) = store.begin_bundle(&hash)?;
+        store.cancel(&cancelled)?;
+        assert!(store.commit(&cancelled, &a).is_err());
+        assert!(store.begin_bundle("../staging/partial").is_err());
         assert!(store.selected()?.is_none());
         Ok(())
     }
