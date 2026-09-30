@@ -58,7 +58,7 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 | State capture/reconciliation and `on_abort` ordering | Typed canonical/interpreter updates, normal/abort handoff and deferred cleanup implemented | Full offset/unit/modal matrix and abort-race tests missing |
 | One start gate, drain/result/rebind | Central gate, actual drains and tool-result suffix rebind; changed H2 and invalid/replaced suffix tests | Full NML/HALUI/pendant and start/hold freshness coverage missing |
 | Semantic stepping and no arbitrary restart | Versioned groups, actual hold-to-step proposal/confirmation and drain | Full held/read-ahead/corner behavior matrix pending |
-| Shaper mode and delayed completion | Geometry refusal, lane-change drains, missing-tail model tests | Engaged-shaper full-stack runs missing |
+| Shaper mode and delayed completion | Servo-cycle full-stack tests: 12/13 initial sessions pass; CW arc to Z retract exposes a false mixed-axis fault | Fix numerical lane classification, correct post-arc-abort test, rerun and expand qualification |
 | Same-table G7/G8/native coordinate matrix | Synthetic geometry matrix plus real task capture with nonzero WCS/G92/H2 and lathe G7 | Independent executed RS274/native comparison and full state matrix missing |
 | Termination conditions and ordered state deltas | Rust lowering retains ordered events and emits termination deltas with drain barriers | Actual pending-boundary behavior remains untested |
 | Receipts, backpressure, identity, connection loss | Model plus actual queue/guarded-mailbox traces; undersized expansion refuses before selection | Full backpressure/retry/fault injection and disconnect stop tests missing |
@@ -74,7 +74,19 @@ matrix reruns all earlier cases and adds changed H2, out-of-limit H2, replaced
 bundle and tool cancellation for both machines. These are still mm/G94 sessions
 with shaping disabled, and do not complete Stage 3.
 
-The next implementation boundary is wider procedure/freshness coverage and the
+The enabled-shaper follow-up used the same production binaries with a dedicated
+servo sampler. Twelve of thirteen sessions passed; the clockwise XY arc's Z
+retract caused a false mixed-axis fault. A 17-digit capture shows a rounding-scale
+XY change immediately before the exact-equality lane check selects shaping.
+Cutting-arc tail hold passes. Cutting-arc tail abort drains, but its follow-up
+test wrongly assumes linear MDI instead of the correctly retained G3 mode.
+The companion controller preserves both runs in
+`controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-shaper-transition-failure/`.
+This checkpoint is failed qualification, not a completed shaper gate.
+
+The immediate next step is to repair that transition while retaining genuine
+mixed-axis rejection, correct the abort test and rerun the matrix. Subsequent
+work is wider procedure/freshness coverage and the
 remaining full-stack qualification matrix. It must keep the existing task and motmod guards. Appending an
 NML message is not a guarded-motion receipt; planner-done is not shaper-done.
 Source/operation identity must survive any one-to-many message expansion.
