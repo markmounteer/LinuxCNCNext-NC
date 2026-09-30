@@ -54,6 +54,12 @@ typedef struct {
     uint32_t abi, bytes;
     uint8_t configuration[32], initial[32];
 } nextnc_fingerprint;
+/* Worker-only: mode 0 initial RUN/STEP, 1 held RESUME/confirmed STEP,
+ * 2 tool confirmation (mandatory suffix rebind still follows tool result).
+ * Re-read bytes from the selected file. No execution permission is granted. */
+int32_t nextnc_task_check_current(uint64_t candidate, uint32_t mode,
+    const uint8_t *, uint64_t, const nextnc_snapshot *, const nextnc_tool *, uint64_t,
+    nextnc_fingerprint *, uint64_t);
 typedef struct {
     uint32_t abi, bytes;
     uint64_t selection, serial;

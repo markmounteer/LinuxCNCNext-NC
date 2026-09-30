@@ -26,6 +26,7 @@ struct Candidate {
     lowered: lowering::Plan,
     layout: Arc<nextnc_task::steps::Layout>,
     fingerprint: runtime::Fingerprint,
+    environment: [u8; 32],
     maximum_pieces: usize,
     rebind: Option<(u64, usize)>,
 }
@@ -35,6 +36,7 @@ fn candidate(
     bound: binding::BoundPlan,
     dynamics: lowering::Dynamics,
     fingerprint: runtime::Fingerprint,
+    environment: [u8; 32],
     rebind: Option<(u64, usize)>,
 ) -> Result<u64> {
     let lowered = lowering::lower(&bound, dynamics).map_err(|e| e.to_string())?;
@@ -69,6 +71,7 @@ fn candidate(
             lowered,
             layout: Arc::new(layout),
             fingerprint,
+            environment,
             maximum_pieces,
             rebind,
         }),
@@ -188,10 +191,18 @@ pub unsafe extern "C" fn nextnc_task_prepare(
             (s, t, std::slice::from_raw_parts(bytes, length).to_vec())
         };
         let fingerprint = runtime::fingerprint(&snapshot, &tools)?;
+        let environment = runtime::environment(&snapshot, &tools)?;
         let (snapshot, dynamics) = snapshot.decode(&tools)?;
         let artifact = bundle::load(bytes, &limits).map_err(|e| e.to_string())?;
         let bound = binding::bind(artifact.prepared(), &snapshot).map_err(|e| e.to_string())?;
-        let handle = candidate(Arc::new(artifact), bound, dynamics, fingerprint, None)?;
+        let handle = candidate(
+            Arc::new(artifact),
+            bound,
+            dynamics,
+            fingerprint,
+            environment,
+            None,
+        )?;
         drop(reservation);
         // SAFETY: output remains valid for this synchronous call; inputs have been copied.
         unsafe {
@@ -263,6 +274,7 @@ pub unsafe extern "C" fn nextnc_task_rebind(
             return Err("selected bundle changed before procedure rebind".into());
         }
         let fingerprint = runtime::fingerprint(&s, &t)?;
+        let environment = runtime::environment(&s, &t)?;
         let (snapshot, dynamics) = s.decode(&t)?;
         let bound = binding::rebind(
             parent.artifact.prepared(),
@@ -276,12 +288,97 @@ pub unsafe extern "C" fn nextnc_task_rebind(
             bound,
             dynamics,
             fingerprint,
+            environment,
             Some((previous, completed)),
         )?;
         drop(reservation);
         // SAFETY: output lifetime spans the synchronous call.
         unsafe {
             output.write(handle);
+        }
+        Ok(())
+    })
+}
+
+/// Worker-only source and binding check before a start/resume. This creates no
+/// candidate or execution permission. The task must recheck the returned full
+/// fingerprint and its own request/selection token immediately before use.
+/// Modes: 0 initial start, 1 held resume, 2 tool confirmation. Tool confirmation
+/// checks source identity but permits table changes because its mandatory
+/// result/rebind barrier revalidates the whole suffix before further motion.
+/// # Safety
+/// Inputs are valid immutable nonoverlapping extents as in prepare. Output is
+/// a disjoint writable Fingerprint; its common header is zero on any refusal.
+#[no_mangle]
+pub unsafe extern "C" fn nextnc_task_check_current(
+    handle: u64,
+    mode: u32,
+    bytes: *const u8,
+    length: u64,
+    snapshot: *const wire::Snapshot,
+    tools: *const wire::Tool,
+    count: u64,
+    output: *mut runtime::Fingerprint,
+    output_size: u64,
+) -> i32 {
+    boundary(|| {
+        if output_size != std::mem::size_of::<runtime::Fingerprint>() as u64 {
+            return Err("invalid verification fingerprint size".into());
+        }
+        address(output)?;
+        // SAFETY: caller supplies a disjoint writable fingerprint.
+        unsafe {
+            output.write(runtime::Fingerprint::default());
+        }
+        let candidate = registry()
+            .candidates
+            .get(&handle)
+            .cloned()
+            .ok_or("stale verification candidate")?;
+        let length = usize::try_from(length).map_err(|_| "bundle size overflow")?;
+        if mode > 2
+            || length == 0
+            || length > Limits::default().bundle_bytes
+            || count > wire::MAX_TOOLS as u64
+        {
+            return Err("verification inputs exceed ABI bounds".into());
+        }
+        address(bytes)?;
+        address(snapshot)?;
+        if count > 0 {
+            address(tools)?;
+        }
+        // SAFETY: every version supplies at least its eight-byte common header.
+        if unsafe { snapshot.cast::<[u32; 2]>().read() }
+            != [wire::ABI, std::mem::size_of::<wire::Snapshot>() as u32]
+        {
+            return Err("unsupported verification snapshot ABI/size".into());
+        }
+        // SAFETY: checked immutable extents remain valid for this call.
+        let (s, t, data) = unsafe {
+            (
+                snapshot.read(),
+                if count == 0 {
+                    &[][..]
+                } else {
+                    std::slice::from_raw_parts(tools, count as usize)
+                },
+                std::slice::from_raw_parts(bytes, length),
+            )
+        };
+        if data != candidate.artifact.bytes() {
+            return Err("selected bundle changed before start/resume".into());
+        }
+        let fresh = runtime::fingerprint(&s, t)?;
+        if mode == 0 && fresh != candidate.fingerprint {
+            return Err("live pose/configuration changed before start".into());
+        }
+        if mode == 1 && runtime::environment(&s, t)? != candidate.environment {
+            return Err("live binding inputs changed before resume".into());
+        }
+        // SAFETY: output extent is still valid; no Rust-owned pointer escapes.
+        unsafe {
+            output.write(fresh);
         }
         Ok(())
     })

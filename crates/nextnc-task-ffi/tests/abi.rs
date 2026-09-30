@@ -10,6 +10,84 @@ use nextnc_task_ffi::{
 use std::sync::Mutex;
 static SERIAL: Mutex<()> = Mutex::new(());
 type TestResult = Result<(), Box<dyn std::error::Error>>;
+#[test]
+fn start_resume_verification_checks_source_and_environment_without_new_authority() -> TestResult {
+    let _lock = SERIAL.lock().unwrap_or_else(|p| p.into_inner());
+    let a = artifact()?;
+    let s = snapshot();
+    let t = tools();
+    let mut h = 0;
+    assert_eq!(prepare(&a, &s, &t, &mut h), 0);
+    let check = |mode, data: &[u8], live: &Snapshot, table: &[Tool], out: &mut Fingerprint| {
+        // SAFETY: all immutable input and disjoint output extents are backed by live Rust objects.
+        unsafe {
+            nextnc_task_check_current(
+                h,
+                mode,
+                data.as_ptr(),
+                data.len() as u64,
+                live,
+                table.as_ptr(),
+                table.len() as u64,
+                out,
+                std::mem::size_of::<Fingerprint>() as u64,
+            )
+        }
+    };
+    let mut out = Fingerprint::default();
+    assert_eq!(check(0, a.bytes(), &s, &t, &mut out), 0);
+    assert_eq!(out, fresh(&s, &t));
+    let mut moved = s;
+    moved.pose[0] = 5.0;
+    assert_ne!(check(0, a.bytes(), &moved, &t, &mut out), 0);
+    assert_eq!(out, Fingerprint::default());
+    assert_eq!(check(1, a.bytes(), &moved, &t, &mut out), 0);
+    // Receipted native events may select WCS and clear/activate G92/H. The
+    // trusted host checks these against its canonical state independently.
+    moved.work_offset = 2;
+    moved.temporary[0] = 1.0;
+    moved.tool_offset[2] = 0.3;
+    assert_eq!(check(1, a.bytes(), &moved, &t, &mut out), 0);
+    for variant in 0..8 {
+        let mut changed = moved;
+        match variant {
+            0 => changed.maximum[0] += 1.0,
+            1 => changed.velocity[0] += 1.0,
+            2 => changed.acceleration[0] += 1.0,
+            3 => changed.jerk[0] += 1.0,
+            4 => changed.maximum_rpm += 1.0,
+            5 => changed.capabilities = 7,
+            6 => changed.work[3][0] = 2.0,
+            _ => changed.rotation[3] = 2.0,
+        }
+        assert_ne!(check(1, a.bytes(), &changed, &t, &mut out), 0);
+        assert_eq!(out, Fingerprint::default());
+    }
+    let mut changed = t;
+    changed[1].offset[2] = 0.9;
+    assert_ne!(check(1, a.bytes(), &moved, &changed, &mut out), 0);
+    // Tool confirmation still has no motion authority; its actual result and
+    // mandatory suffix rebind validate changed table contents afterward.
+    assert_eq!(check(2, a.bytes(), &moved, &changed, &mut out), 0);
+    let mut replaced = a.bytes().to_vec();
+    replaced[0] ^= 1;
+    for mode in 0..3 {
+        assert_ne!(check(mode, &replaced, &s, &t, &mut out), 0);
+        assert_eq!(out, Fingerprint::default());
+    }
+    moved.temporary[1] = f64::NAN;
+    assert_ne!(check(1, a.bytes(), &moved, &t, &mut out), 0);
+    assert_ne!(check(3, a.bytes(), &s, &t, &mut out), 0);
+    assert_ne!(check(0, &[], &s, &t, &mut out), 0);
+    assert_eq!(check(1, a.bytes(), &s, &[t[1], t[0]], &mut out), 0);
+    let mut second = 0;
+    assert_eq!(prepare(&a, &s, &t, &mut second), 0);
+    assert_eq!(nextnc_task_release(second), 0);
+    assert_eq!(nextnc_task_release(h), 0);
+    assert_ne!(check(0, a.bytes(), &s, &t, &mut out), 0);
+    assert_eq!(out, Fingerprint::default());
+    Ok(())
+}
 fn snapshot() -> Snapshot {
     Snapshot {
         abi: wire::ABI,

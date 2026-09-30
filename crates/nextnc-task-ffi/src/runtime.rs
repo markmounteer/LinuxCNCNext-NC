@@ -93,6 +93,22 @@ pub(crate) fn fingerprint(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<Fi
     })
 }
 
+/// Binding inputs that native execution never changes. Active WCS selection,
+/// G92, active H and commanded pose legitimately evolve through receipted
+/// commands; the host must separately check their live canonical consistency.
+/// Stored work/rotation tables, tool table, limits, dynamics and capabilities
+/// remain immutable until a qualified procedure rebind creates a new candidate.
+pub(crate) fn environment(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<[u8; 32]> {
+    // Validate the original header/selection before normalizing dynamic state.
+    s.decode(tools)?;
+    let mut stable = *s;
+    stable.work_offset = 1;
+    stable.temporary = [0.0; 9];
+    stable.tool_offset = [0.0; 9];
+    stable.pose = [0.0; 9];
+    Ok(fingerprint(&stable, tools)?.configuration)
+}
+
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Dispatch {
