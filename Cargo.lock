@@ -99,7 +99,6 @@ checksum = "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98"
 [[package]]
 name = "motion-command"
 version = "0.1.0"
-source = "git+https://github.com/markmounteer/linuxcnc.git?rev=2c43deb48261661a243682f7bc7723ffc12a819c#2c43deb48261661a243682f7bc7723ffc12a819c"
 
 [[package]]
 name = "nextnc-native"

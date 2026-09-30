@@ -3,8 +3,10 @@
 Work in progress for stages 1 and 2 of the controller's native execution plan.
 The existing JavaScript translator is retained as a revision-1 migration oracle
 and G-code tool. The Rust executable has no Node subprocess/runtime dependency.
-It depends on the single `motion-command` crate at the exact Git revision in
-`Cargo.toml` and `Cargo.lock`; motion types are not copied into this repository.
+The single `motion-command` source is the `crates/motion-command` workspace crate.
+The controller imports that package by an exact public Git revision and forwards
+its types through its workspace facade. Public builds require no private
+controller credentials; there is no second set of motion definitions.
 
 Current commands:
 

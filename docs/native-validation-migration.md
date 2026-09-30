@@ -54,9 +54,15 @@ non-string or over-1-MiB source captures and unexpected programmer exceptions;
 therefore this corpus is not evidence that every possible legacy rejection has
 been enumerated. Explicit Rust resource tests cover the parser limits separately.
 
-Checkpoint validation: 23 Rust tests passed (with 130 native profiles, four
+Checkpoint validation: 23 compiler tests and 23 shared-contract tests passed (with 130 native profiles, four
 legacy models, 143 negative cases and additional mutation loops inside them);
 Clippy with warnings denied passed. The Fusion suite passed 84/84 and generated
 CPS verification passed. The retained translator suite passed 104 tests, with
 its real POSIX filter test skipped on Windows. That skip does not qualify the
 POSIX filter and is unrelated to native execution readiness.
+
+The first hosted native CI attempt failed before compiling because its contract
+dependency pointed into the private controller repository. The newly authored
+machine-independent contract is now the canonical public workspace crate, and
+the controller imports a pinned revision through a facade. Public builds need
+no controller credentials. This changes ownership, not motion type semantics.

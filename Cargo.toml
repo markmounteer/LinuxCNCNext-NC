@@ -13,7 +13,7 @@ name = "nextnc-native"
 path = "src-rust/main.rs"
 
 [dependencies]
-motion-command = { git = "https://github.com/markmounteer/linuxcnc.git", rev = "2c43deb48261661a243682f7bc7723ffc12a819c" }
+motion-command = { path = "crates/motion-command" }
 ryu-js = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }
@@ -25,6 +25,11 @@ unsafe_code = "forbid"
 [lints.clippy]
 unwrap_used = "deny"
 expect_used = "deny"
+
+[workspace]
+members = ["crates/motion-command"]
+default-members = [".", "crates/motion-command"]
+resolver = "2"
 
 [[test]]
 name = "part21"
