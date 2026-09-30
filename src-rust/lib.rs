@@ -1,4 +1,5 @@
 //! Non-real-time preparation only. No controller, HAL, socket or motion API.
+pub mod bundle;
 pub mod capabilities;
 pub mod command_audit;
 pub mod compiled;
@@ -9,6 +10,7 @@ pub mod part21;
 pub mod plan;
 pub mod profile;
 pub mod profile_graph;
+pub mod publication;
 pub mod shape;
 pub mod tool_table;
 pub mod units;

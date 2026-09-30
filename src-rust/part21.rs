@@ -16,6 +16,7 @@ pub struct Limits {
     pub string_bytes: usize,
     pub expanded_items: usize,
     pub output_commands: usize,
+    pub bundle_bytes: usize,
 }
 impl Default for Limits {
     fn default() -> Self {
@@ -29,6 +30,7 @@ impl Default for Limits {
             string_bytes: 1024 * 1024,
             expanded_items: 1_000_000,
             output_commands: 2_000_000,
+            bundle_bytes: 256 * 1024 * 1024,
         }
     }
 }
@@ -45,6 +47,7 @@ impl Limits {
                 self.string_bytes,
                 self.expanded_items,
                 self.output_commands,
+                self.bundle_bytes,
             ]
             .contains(&0)
         {

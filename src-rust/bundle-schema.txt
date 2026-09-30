@@ -1,0 +1,18 @@
+nextnc-native/bundle/1
+All integer and IEEE-754 binary64 fields use little endian. Unknown tags,
+nonfinite floats, out-of-range indexes, trailing data and noncanonical encodings fail.
+No padding, Rust memory layout, pointers, timestamps or live controller state.
+Header: bytes[8] NEXTNC NUL 01; compiler SHA256 ASCII[64]; schema SHA256 ASCII[64]; policy SHA256 ASCII[64].
+Inputs: source, setup, optional tool-table, optional target-manifest, each u64 byte length + UTF8 bytes; UINT64_MAX means absent only for optional inputs.
+Commands: u64 count, followed by records. Record: u8 site (policy=0,retract=1,approach=2,link=3,end=4,source=5); u64 ordinal (UINT64_MAX=absent); action.
+Action tags: motion=0, event=1, reset-modes=2, clear-temporary-offsets=3, reset-spindle-demand=4, select-work-offset=5 + u8 index, restore-feed-per-minute=6, waypoint=7 + u8 frame(machine=0,work=1) + u8 axis + f64 value-mm.
+Motion: geometry, feed, termination, entry-gate, movement, tolerance.
+Geometry: line=0 + point start + point end; circular=1 + point start + point end + point center + plane + rotation + f64 sweep-radians + f64 axial-rise-mm. Point: f64 X,Y,Z, always X radius. Plane u8 XY=0,XZ=1,YZ=2; rotation u8 CW=0,CCW=1.
+Feed: rapid=0; per-second=1 + f64 mm/s; per-revolution=2 + f64 mm/rev + u8 spindle.
+Termination: exact-path=0; exact-stop=1; blend=2 + f64 max-deviation-mm.
+Entry gate u8: none=0, spindles-at-speed=1.
+Movement u8: unspecified=0,rapid=1,cutting=2,finish-cutting=3,lead-in=4,lead-out=5,link-transition=6,link-direct=7,ramp-helix=8,ramp-profile=9,ramp-zig-zag=10,ramp=11,plunge=12,predrill=13,extended=14,reduced=15,high-feed=16.
+Tolerance: missing=0; fusion-operation=1 + f64 mm; source-declared=2 + f64 mm.
+Event: spindle-stop=0; spindle-rpm=1 + f64 RPM + bool clockwise; spindle-css=2 + f64 surface-mm/s + f64 maximum-RPM + bool clockwise; coolant=3 + u8 off=0/flood=1/mist=2; change-tool=4 + u32 tool; tool-offset=5 + u32 offset; dwell=6 + f64 seconds; fence=7; end=8. Bool u8 false=0,true=1.
+Spans: u64 count, followed by phase + u64 start + u64 exclusive-end. Phase: header=0; transition=1 + u64 section; entry=2 + u64 section; path=3 + u64 section + u64 path; end=4. Section/path indexes are zero-based.
+Source/setup parse, command geometry/completeness/policy audits and optional snapshot checks must all pass after decoding. Successful decoding never creates run permission.

@@ -17,6 +17,8 @@ cargo run --locked -- check-syntax examples/synthetic.stpnc
 cargo run --locked -- inspect input.stpnc
 cargo run --locked -- preflight input.stpnc plan.json --tool-table tool.tbl --target capabilities.json
 cargo run --locked -- prepare input.stpnc plan.json --tool-table tool.tbl --target capabilities.json
+cargo run --locked -- publish input.stpnc plan.json --store job-store --tool-table tool.tbl --target capabilities.json
+cargo run --locked -- verify-bundle job-store/objects/CONTENT-SHA256.nncb
 ```
 
 `check-syntax` validates the bounded Part 21 envelope, syntax, references and
@@ -31,6 +33,14 @@ no native bundle, cache, selected job or execution stream is published. All
 optional checks finish before success JSON is printed. A failure prints only
 diagnostic JSON on stderr and exits nonzero, including a late tool-table or
 capability failure after compilation.
+
+`publish` additionally serializes the complete plan, independently reloads and
+audits it, then publishes it in an empty or existing native artifact store. Inputs
+must be outside that store. `verify-bundle` checks an existing artifact against
+the current compiler/schema/policy and its embedded source/setup. Both report
+`executable:false`. The CLI exits without retaining any selection; the future
+task adapter must own a fresh selection and live binding. See
+[bundle publication and recovery](native-publication.md).
 
 Implemented modules include full revision-1/revision-2 source decoding,
 dimensional units, closed executable graphs and ordered source uses, independent
@@ -51,11 +61,8 @@ Synthetic transition coordinates are not physical clearances.
 
 ## Required work still open
 
-- Persistent diagnostic archives, independent native-bundle serialization audits
-  and the complete check-by-check migration inventory.
+- Persistent diagnostic archives and the complete check-by-check migration inventory.
 - Explicit fit/blend budgets, exact reductions and measured rate diagnostics.
-- Staged bundles, content identities, selection generations, cache rules and
-  failure/crash/cancellation/source-mutation/storage/corruption tests.
 - Complete check-by-check migration disposition, full negative corpus, native
   geometry/event equivalence and cold/warm/memory/large-job benchmarks.
 
@@ -114,5 +121,5 @@ for the legacy intermediate metres/feet conversion. All 130 native fixtures also
 prepare without replacing analytic curves with segments. Deleting/replacing each
 command (with adjusted spans), changing provenance or motion semantics, reducing
 the output bound and omitting compiler-required capabilities all fail closed.
-This is compiler evidence; physical tool completion, controller execution and
-failure-safe artifact publication remain unqualified.
+This is compiler evidence; physical tool completion and controller execution
+remain unqualified. Offline bundle publication has separate failure tests.

@@ -6,6 +6,12 @@ An experimental translator and LinuxCNC input filter for XZ lathe and fixed-axis
 
 It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` profiles, validates it, and produces LinuxCNC RS274 G-code. LinuxCNC supplies preview, interpretation, trajectory planning, limits and HAL. This is a translation bridge, not a native STEP-NC interpreter or a general AP238 implementation. No LinuxCNC machine configuration or hardware is changed by installing this repository.
 
+The development branch also includes a [Rust native job compiler](docs/native-compiler.md)
+for revision-1/revision-2 source profiles. It prepares audited motion/event plans
+and [immutable native bundles](docs/native-publication.md), without Node or G-code
+in that path. Controller execution is a later stage; these commands report
+`executable:false` and do not move a machine.
+
 ## Quick start
 
 Version 0.12.0 adds an offline interactive toolpath reviewer for lathe and XYZ

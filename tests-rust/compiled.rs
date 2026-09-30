@@ -369,12 +369,25 @@ fn all_native_engine_and_synthetic_profiles_prepare_without_losing_analytic_geom
         }
         let text = std::fs::read_to_string(&file)?;
         let source = profile::decode(&text, &Limits::default())?;
-        let p = compiled::prepare(
-            &text,
-            &synthetic_setup(&source)?.to_string(),
+        let setup_text = synthetic_setup(&source)?.to_string();
+        let p = compiled::prepare(&text, &setup_text, &Limits::default())
+            .map_err(|e| format!("{}: {e}", file.display()))?;
+        let artifact = nextnc_native::bundle::compile(
+            nextnc_native::bundle::Inputs {
+                source: &text,
+                setup: &setup_text,
+                tool_table: None,
+                target: None,
+            },
             &Limits::default(),
-        )
-        .map_err(|e| format!("{}: {e}", file.display()))?;
+        )?;
+        assert_eq!(
+            artifact.prepared().commands(),
+            p.commands(),
+            "native bundle {}",
+            file.display()
+        );
+        assert_eq!(artifact.prepared().spans(), p.spans());
         let circular_source: usize = source.model["sections"]
             .as_array()
             .ok_or("sections")?

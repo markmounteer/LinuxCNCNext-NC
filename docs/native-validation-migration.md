@@ -1,8 +1,8 @@
 # Native validation migration checkpoint
 
 This is a disposition of implemented validation groups, not yet the final
-check-by-check Stage 2 acceptance inventory. Artifact serialization/publication,
-diagnostic archives and optimization remain missing and prevent native admission.
+check-by-check Stage 2 acceptance inventory. Persistent diagnostic archives,
+the complete inventory, optimization and benchmarks still prevent native admission.
 The original JavaScript runtime is retained unchanged as a development oracle.
 
 | Existing checks | Current Rust disposition | Evidence |
@@ -15,10 +15,10 @@ The original JavaScript runtime is retained unchanged as a development oracle.
 | Reviewed plan schemas 1–4, program binding, units, machine, T/H/WCS mapping, exact continuation, links, ordered single-axis approaches/retracts/end | Ported | `tests-rust/plan.rs`; 54 captured legacy failures with same error codes |
 | File tool-table size, syntax, T/P/Q spelling/ranges, duplicates and mapped record presence | Ported | `tests-rust/plan.rs`; 15 captured failures with same error codes |
 | Error source identity and ordered geometry/property uses | Ported with UTF-8 byte columns and additional sequence-link records | Profile tests; errors contain section/path context; no source reference participates in semantic fingerprint |
-| Original command contracts, ordered completeness and independent policy audit | Ported to the unoptimized prepared plan; serialized-bundle audit still missing | `command_audit.rs`, exhaustive per-command deletion/replacement/use-tag mutations, geometry/feed/gate mutations |
+| Original command contracts, ordered completeness and independent policy audit | Ported to the unoptimized plan and independently decoded native bundle | `command_audit.rs`, serialized-command corruption, exhaustive per-command deletion/replacement/use-tag mutations, geometry/feed/gate mutations |
 | Full semantic command/source-map parity with optimization disabled | Four preserved complete fixtures pass ordered geometry/event/waypoint/feed comparison; full per-check disposition remains open | `tests-rust/compiled.rs`; every coordinate compares exactly, with separately bounded CSS conversion roundoff |
 | Output-command expansion bounds and source lookup | Ported before immutable plan construction; repeated metadata stored in spans | Limit boundary tests, source/provenance lookup for every fixture command |
-| Immutable plan publication, artifact/cache identity, selection generations and failure handling | Missing | No native command bundle/cache/selection is published by this checkpoint |
+| Immutable plan publication, artifact/cache identity, selection generations and failure handling | Offline implementation and failure tests pass; task/arm integration remains Stage 3 | `bundle.rs`, `publication.rs`, process-exit/partial-write/source-mutation/corruption/stale-worker tests; no restored selection on owner restart |
 | Exact reductions, error budgets, measured rate warnings and large-job benchmarks | Missing | Geometry is not reduced and no speed claim is made |
 | GUI/filter/report visualization | Outside the native compiler request | Existing JavaScript functionality remains available; no native GUI integration claimed |
 | Full AP238 EXPRESS/WHERE/global rules, physical clearance, live tool/coordinate/controller binding | Never established by these subset checks | Remains explicitly unverified |
@@ -46,7 +46,8 @@ The original JavaScript runtime is retained unchanged as a development oracle.
   command plan. Typed feeds/planes replace G-code formatting modes, atomic shared
   spindle events replace mode/start text pairs, and the at-speed gate is explicit
   before the first nonrapid motion after a spindle event. Stage 3 must qualify
-  task timing, live state and handshake behavior. No prepared bundle is published.
+  task timing, live state and handshake behavior. `publish` separately creates an
+  audited binary candidate; every CLI command still reports `executable:false`.
 - Native baseline termination is exact path. Source CAM tolerance grants no
   implicit fit/blend budget. Reviewed partial-axis setup moves remain unresolved
   task intents until live binding; their unknown starting axes are never guessed.
@@ -86,3 +87,14 @@ command and alter its source-use tag; motion feed/gate/termination/intent/endpoi
 mutations are rejected. A source-only capability manifest is rejected when it
 lacks compiler-added at-speed/linear requirements. The standalone `prepare` CLI
 runs with no PATH/Node and emits no success output on a late validation failure.
+
+The bundle/publication checkpoint adds an explicit bounded wire format, automatic
+compiler/source/schema/policy identities and independent serialized-command
+verification. Four legacy and all 130 native cases traverse encoding/decoding.
+The store uses one OS-locked owner, opaque worker tickets, distinct generations
+and staged content-addressed publication. It invalidates selection before a
+replacement attempt; owner restart never restores one from disk. Unit tests cover
+actual subprocess exits at six checkpoints and injected partial-write/storage
+failures. CLI tests publish/reuse/verify with no Node and reject failed replacement
+without falling back to the old object. Detailed scope and platform limits are
+in [native publication](native-publication.md).
