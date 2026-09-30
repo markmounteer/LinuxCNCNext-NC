@@ -20,6 +20,8 @@ jobs:
         run: cargo build --release --locked --example native_benchmark
       - name: Verify benchmark measurements and analytic geometry on portable fixtures
         run: python tools/native-benchmark/run.py tests-rust/fixtures/benchmark artifacts/native-benchmark-smoke --worker target/release/examples/native_benchmark${{ runner.os == 'Windows' && '.exe' || '' }} --processes 1 --samples 2
+      - name: Verify raw benchmark evidence and render its report
+        run: python tools/native-benchmark/report.py artifacts/native-benchmark-smoke/results.json artifacts/native-benchmark-smoke/report.md
       - name: Preserve native benchmark smoke evidence
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

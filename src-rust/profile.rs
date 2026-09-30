@@ -10,7 +10,6 @@ use crate::{
 use motion_command::{v2::Geometry, Plane, Rotation};
 use serde::Serialize;
 use serde_json::{json, Value as Json};
-use sha2::{Digest, Sha256};
 use std::{collections::BTreeSet, f64::consts::TAU};
 
 pub const MOVEMENTS: [&str; 17] = [
@@ -932,12 +931,12 @@ pub fn decode_document(doc: &Document, limits: &Limits) -> Result<Program> {
     let fingerprint = Fingerprint {
         schema: schema.clone(),
         algorithm: "sha256".into(),
-        value: format!(
-            "{:x}",
-            Sha256::digest(json::stringify(&json!({"schema":schema,"model":model}))?.as_bytes())
-        ),
+        value: json::fingerprint(&schema, &model)?,
     };
-    let provenance = json!({"schema":"next-nc/source-provenance/2","inputSHA256":doc.input_sha256,"columnConvention":"one-based UTF-8 byte column","workplan":r.location(workplan),"geometryContext":r.location(context),"sections":sources});
+    let mut provenance = json!({"schema":"next-nc/source-provenance/2","inputSHA256":doc.input_sha256,"columnConvention":"one-based UTF-8 byte column","workplan":r.location(workplan),"geometryContext":r.location(context)});
+    // Move the owned provenance tree into its envelope. json! would serialize a
+    // borrowed Vec and duplicate every operation/path/source record at peak RAM.
+    provenance["sections"] = Json::Array(sources);
     let report=Report{profile,machine:if milling{"mill"}else{"lathe"}.into(),units:length,entities:doc.records.len(),sections:model["sections"].as_array().map_or(0,Vec::len),paths:r.paths,expanded_items:r.expanded,fingerprint,bounds:json!({"min":r.min,"max":r.max}),required_capabilities:required,validation:"Next-NC source profile only; not AP238 certification, machine/setup validation or execution authorization"};
     Ok(Program {
         model,

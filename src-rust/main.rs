@@ -1,6 +1,7 @@
 use nextnc_native::{
     bundle, capabilities, compiled,
     diagnostics::{self, Trace},
+    error_budget,
     part21::{parse, Limits},
     plan, profile, publication, shape, tool_table, Diagnostic, Result,
 };
@@ -46,8 +47,11 @@ fn run(args: &[String], trace: &mut Trace) -> Result<Value> {
             t.read_bytes("artifact", Path::new(&args[2]), limits.bundle_bytes)
         })?;
         let artifact = trace.stage("bundle-validation", |_| bundle::load(bytes, &limits))?;
+        let budget = trace.stage("error-budget", |_| {
+            error_budget::describe(artifact.prepared())
+        })?;
         return Ok(
-            json!({"status":"native-bundle-verified","executable":false,"artifactSHA256":artifact.sha256(),"identity":artifact.identity(),"audit":artifact.prepared().audit(),"liveBinding":"not_checked"}),
+            json!({"status":"native-bundle-verified","executable":false,"artifactSHA256":artifact.sha256(),"identity":artifact.identity(),"audit":artifact.prepared().audit(),"errorBudget":budget,"liveBinding":"not_checked"}),
         );
     }
     if args[1] == "publish" {
@@ -82,11 +86,20 @@ fn run(args: &[String], trace: &mut Trace) -> Result<Value> {
                 return Err(e);
             }
         };
+        let budget = match trace.stage("error-budget", |_| {
+            error_budget::describe(artifact.prepared())
+        }) {
+            Ok(report) => report,
+            Err(e) => {
+                let _ = store.reject(&ticket, &e);
+                return Err(e);
+            }
+        };
         let selected = trace.stage("publication", |_| store.commit(&ticket, &artifact))?;
         return Ok(
             json!({"status":"native-artifact-published","executable":false,
             "artifact":store.root().join("objects").join(format!("{}.nncb",artifact.sha256())),"artifactSHA256":artifact.sha256(),
-            "identity":artifact.identity(),"audit":artifact.prepared().audit(),"selection":selected,"selectionRetainedAfterExit":false,
+            "identity":artifact.identity(),"audit":artifact.prepared().audit(),"errorBudget":budget,"selection":selected,"selectionRetainedAfterExit":false,
             "liveBinding":"not_checked"}),
         );
     }
@@ -107,10 +120,11 @@ fn run(args: &[String], trace: &mut Trace) -> Result<Value> {
         let target_report = trace.checked_report("target-capabilities", || {
             capabilities::check_prepared(target.as_deref(), &prepared, &limits)
         })?;
+        let budget = trace.stage("error-budget", |_| error_budget::describe(&prepared))?;
         return Ok(
             json!({"status":"native-commands-audited","executable":false,
             "policy":compiled::POLICY,"programFingerprint":prepared.program().report.fingerprint,
-            "audit":prepared.audit(),"toolTable":table_report,"targetCapabilities":target_report,
+            "audit":prepared.audit(),"toolTable":table_report,"targetCapabilities":target_report,"errorBudget":budget,
             "notChecked":["native bundle serialization, publication and selection lifecycle","runtime capabilities and live coordinate binding","physical clearance and machine readiness"]}),
         );
     }

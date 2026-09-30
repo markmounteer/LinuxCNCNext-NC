@@ -128,3 +128,15 @@ with exact observed input identities, actual stage outcomes, correction guidance
 and bounded source excerpts. The standard directory holds `latest-error.txt` and
 JSON evidence; later success preserves the latest failure. Archiving failures are
 reported separately and never conceal the original preparation error.
+
+Prepared, published and reloaded jobs also report [explicit error accounting](native-error-budget.md).
+The exact-path baseline spends zero fit/blend allowance. Source CAM tolerance
+is separate, and absent post/numeric/total bounds remain unknown. No positive
+approximation policy is enabled by this report.
+
+The [benchmark harness](../tools/native-benchmark/README.md) measures fresh-process
+and warm preparation, complete bundle creation and independently validated reloads,
+with OS peak memory and exact ordered-command comparisons. Compiler fingerprinting
+streams canonical bytes into SHA-256 with fixed scratch space, and provenance
+construction moves its existing tree into the envelope. These remove temporary
+copies without changing the semantic fingerprint, commands or source-use order.

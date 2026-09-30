@@ -159,6 +159,15 @@ fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json(
         assert_eq!(prepared["status"], "native-commands-audited");
         assert_eq!(prepared["executable"], false);
         assert_eq!(prepared["audit"]["status"], "passed");
+        assert_eq!(prepared["errorBudget"]["approximation_enabled"], false);
+        assert!(prepared["errorBudget"]["operations"]
+            .as_array()
+            .ok_or("error budget operations")?
+            .iter()
+            .all(|o| o["cam_tolerance_mm"].is_null()
+                && o["pre_shaper_total_bound_mm"].is_null()
+                && o["fit_used_mm"] == serde_json::json!(0.0)
+                && o["blend_used_mm"] == serde_json::json!(0.0)));
         assert!(prepared["audit"]["commands"]
             .as_u64()
             .is_some_and(|n| n > 0));
@@ -253,6 +262,13 @@ fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving
             assert_eq!(record["command"], command);
             assert_eq!(record["status"], "passed");
             assert_eq!(record["executionAuthorized"], false);
+            if ["prepare", "publish"].contains(&command) {
+                assert_eq!(record["result"]["errorBudget"], outcome["errorBudget"]);
+                assert_eq!(
+                    record["result"]["errorBudget"]["approximation_enabled"],
+                    false
+                );
+            }
             let stages = record["validationStages"].as_array().ok_or("stages")?;
             assert!(stages
                 .iter()

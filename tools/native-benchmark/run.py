@@ -157,6 +157,8 @@ def main():
             runs = []
             for repeat in range(args.processes):
                 result = measure([str(worker), str(case_file), phase, str(args.samples), str(bundle_file)], args.timeout)
+                if sha(worker) != evidence["workerSHA256"]:
+                    raise RuntimeError("Benchmark executable changed during the run")
                 actual = result["worker"]
                 digest = actual["result"]["orderedCommandSpanSHA256"]
                 if ordered is not None and digest != ordered:

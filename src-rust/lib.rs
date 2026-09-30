@@ -5,6 +5,7 @@ pub mod command_audit;
 pub mod compiled;
 pub mod diagnostic;
 pub mod diagnostics;
+pub mod error_budget;
 mod fileio;
 pub mod geometry;
 pub mod json;

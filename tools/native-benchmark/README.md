@@ -68,3 +68,16 @@ processes and phases. Artifact bytes must agree across compile/create/load.
 The process stays alive briefly for the parent to query its OS peak-memory
 counter; the timed compiler phase has already finished. This is offline
 correctness/resource evidence, not machining-time or continuous path-error proof.
+
+Create a Markdown report from a completed run, optionally with a matched baseline:
+
+```powershell
+python tools/native-benchmark/report.py artifacts/benchmark-results/results.json NEW_REPORT.md --baseline BASELINE_RESULTS.json
+```
+
+The report verifies process/sample counts, summaries against raw values, exact
+input identities and ordered command/span digests. A comparison additionally
+requires identical input manifests, environments, sampling, schema and policy.
+Compiler and artifact hashes may change after an implementation change; semantic
+fingerprints and command/provenance-span identities must agree. Timing ratios
+are observed results, not claims about real-time execution or physical speedup.

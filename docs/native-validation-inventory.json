@@ -889,9 +889,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 114,
+          "line": 113,
           "anchor": "fn positive(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1117,9 +1117,9 @@
         },
         {
           "file": "src-rust/profile.rs",
-          "line": 84,
+          "line": 83,
           "anchor": "fn one(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1156,9 +1156,9 @@
         },
         {
           "file": "src-rust/profile.rs",
-          "line": 84,
+          "line": 83,
           "anchor": "fn one(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1723,9 +1723,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 259,
+          "line": 258,
           "anchor": "fn geometry_item(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1822,9 +1822,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1855,9 +1855,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1888,9 +1888,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1921,9 +1921,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1954,9 +1954,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -1987,9 +1987,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2020,9 +2020,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2053,9 +2053,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2086,9 +2086,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2119,15 +2119,15 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 233,
+          "line": 232,
           "anchor": "fn point(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/profile.rs",
-          "line": 125,
+          "line": 124,
           "anchor": "fn three(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2158,9 +2158,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 245,
+          "line": 244,
           "anchor": "fn vector(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2197,9 +2197,9 @@
         },
         {
           "file": "src-rust/profile.rs",
-          "line": 860,
+          "line": 859,
           "anchor": "pub fn decode_document",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2236,9 +2236,9 @@
         },
         {
           "file": "src-rust/profile.rs",
-          "line": 860,
+          "line": 859,
           "anchor": "pub fn decode_document",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2269,9 +2269,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 359,
+          "line": 358,
           "anchor": "fn arc(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -2314,9 +2314,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 359,
+          "line": 358,
           "anchor": "fn arc(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -2359,9 +2359,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 359,
+          "line": 358,
           "anchor": "fn arc(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -2404,9 +2404,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 359,
+          "line": 358,
           "anchor": "fn arc(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -2449,9 +2449,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 359,
+          "line": 358,
           "anchor": "fn arc(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -2494,9 +2494,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 359,
+          "line": 358,
           "anchor": "fn arc(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -2539,9 +2539,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 359,
+          "line": 358,
           "anchor": "fn arc(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -2584,9 +2584,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 359,
+          "line": 358,
           "anchor": "fn arc(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -2629,9 +2629,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 94,
+          "line": 93,
           "anchor": "fn nonnegative(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2662,9 +2662,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 564,
+          "line": 563,
           "anchor": "fn section(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2695,9 +2695,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 564,
+          "line": 563,
           "anchor": "fn section(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2728,9 +2728,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2767,9 +2767,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2806,9 +2806,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2845,9 +2845,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2884,9 +2884,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2923,9 +2923,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -2962,9 +2962,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -3640,15 +3640,15 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -3679,15 +3679,15 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -3718,15 +3718,15 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 270,
+          "line": 269,
           "anchor": "fn state(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/profile.rs",
-          "line": 662,
+          "line": 661,
           "anchor": "fn path(",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         }
       ],
       "tests": [
@@ -3757,15 +3757,15 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 192,
+          "line": 206,
           "anchor": "fn main()",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/diagnostics.rs",
-          "line": 522,
+          "line": 529,
           "anchor": "pub fn archive",
-          "sha256": "c0d6057d4991214090cc7964d4081207087724bc5a4b2b90f07674a126aea131"
+          "sha256": "fa9d5310b2841c3dd009810edbdb1fc754f7d6184e672b3439707bd2b2c66060"
         }
       ],
       "tests": [
@@ -8803,9 +8803,9 @@
         },
         {
           "file": "src-rust/diagnostics.rs",
-          "line": 419,
+          "line": 426,
           "anchor": "fn visible",
-          "sha256": "c0d6057d4991214090cc7964d4081207087724bc5a4b2b90f07674a126aea131"
+          "sha256": "fa9d5310b2841c3dd009810edbdb1fc754f7d6184e672b3439707bd2b2c66060"
         }
       ],
       "tests": [
@@ -8842,9 +8842,9 @@
         },
         {
           "file": "src-rust/diagnostics.rs",
-          "line": 419,
+          "line": 426,
           "anchor": "fn visible",
-          "sha256": "c0d6057d4991214090cc7964d4081207087724bc5a4b2b90f07674a126aea131"
+          "sha256": "fa9d5310b2841c3dd009810edbdb1fc754f7d6184e672b3439707bd2b2c66060"
         }
       ],
       "tests": [
@@ -8881,9 +8881,9 @@
         },
         {
           "file": "src-rust/diagnostics.rs",
-          "line": 419,
+          "line": 426,
           "anchor": "fn visible",
-          "sha256": "c0d6057d4991214090cc7964d4081207087724bc5a4b2b90f07674a126aea131"
+          "sha256": "fa9d5310b2841c3dd009810edbdb1fc754f7d6184e672b3439707bd2b2c66060"
         }
       ],
       "tests": [
@@ -9388,9 +9388,9 @@
       "rust": [
         {
           "file": "src-rust/profile.rs",
-          "line": 860,
+          "line": 859,
           "anchor": "pub fn decode_document",
-          "sha256": "dd376d428cd0d9d6aec2e290139bd96b71bb58b360b2ec9406ecbd221d1b7391"
+          "sha256": "8f78252a15f5c1cc49f3300c0b81a684438a62aa828d328da7efb346d6d055ee"
         },
         {
           "file": "src-rust/command_audit.rs",
@@ -9511,9 +9511,9 @@
         },
         {
           "file": "src-rust/diagnostics.rs",
-          "line": 347,
+          "line": 354,
           "anchor": "pub fn correction",
-          "sha256": "c0d6057d4991214090cc7964d4081207087724bc5a4b2b90f07674a126aea131"
+          "sha256": "fa9d5310b2841c3dd009810edbdb1fc754f7d6184e672b3439707bd2b2c66060"
         }
       ],
       "tests": [
@@ -9583,9 +9583,9 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         }
       ],
       "tests": [
@@ -9593,7 +9593,7 @@
           "file": "tests-rust/native_cli.rs",
           "line": 4,
           "anchor": "fn standalone_publication_and_bundle_verification_need_no_node_or_live_state",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         }
       ]
     },
@@ -9624,9 +9624,9 @@
       "tests": [
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 372,
+          "line": 388,
           "anchor": "fn native_input_rejects_fifo_without_waiting_for_a_writer",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "src-rust/publication.rs",
@@ -9669,9 +9669,9 @@
       "tests": [
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 372,
+          "line": 388,
           "anchor": "fn native_input_rejects_fifo_without_waiting_for_a_writer",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "src-rust/publication.rs",
@@ -9714,9 +9714,9 @@
       "tests": [
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 372,
+          "line": 388,
           "anchor": "fn native_input_rejects_fifo_without_waiting_for_a_writer",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "src-rust/publication.rs",
@@ -9829,23 +9829,23 @@
         },
         {
           "file": "src-rust/diagnostics.rs",
-          "line": 165,
+          "line": 172,
           "anchor": "pub fn read_text",
-          "sha256": "c0d6057d4991214090cc7964d4081207087724bc5a4b2b90f07674a126aea131"
+          "sha256": "fa9d5310b2841c3dd009810edbdb1fc754f7d6184e672b3439707bd2b2c66060"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 10,
+          "line": 11,
           "anchor": "const OPTION_LIMIT",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         }
       ],
       "tests": [
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 372,
+          "line": 388,
           "anchor": "fn native_input_rejects_fifo_without_waiting_for_a_writer",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/diagnostics.rs",
@@ -9868,21 +9868,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -9890,19 +9890,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -9919,21 +9919,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -9941,19 +9941,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -9970,21 +9970,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -9992,19 +9992,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10021,21 +10021,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10043,19 +10043,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10072,21 +10072,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10094,19 +10094,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10123,21 +10123,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10145,19 +10145,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10174,21 +10174,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10196,19 +10196,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10225,21 +10225,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10247,19 +10247,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10276,21 +10276,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10298,19 +10298,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10327,21 +10327,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10349,19 +10349,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10378,21 +10378,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10400,19 +10400,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10429,21 +10429,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10451,19 +10451,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10480,21 +10480,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10502,19 +10502,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10531,21 +10531,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10553,19 +10553,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     },
@@ -10582,21 +10582,21 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 11,
+          "line": 12,
           "anchor": "fn run(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 154,
+          "line": 168,
           "anchor": "fn option_paths(",
-          "sha256": "b1767960f57471af2adc2ae6e37d4a643c8431d0691a7eb401b5add939e49e77"
+          "sha256": "fd5d5ae551e49d3c1c33181d2a84196b8e3c3ccb9e4017852b0a0381d37da1ad"
         },
         {
           "file": "src-rust/json.rs",
-          "line": 99,
+          "line": 100,
           "anchor": "pub fn parse",
-          "sha256": "4c21c8290c8842cb44fc14cef0d8639f8c9cb9ed4c2d30d5e6698500fd0e6769"
+          "sha256": "519aeaa936d473520fea500fa5598d9f41924b97f269bfff60671a6ddd9e8beb"
         }
       ],
       "tests": [
@@ -10604,19 +10604,19 @@
           "file": "tests-rust/native_cli.rs",
           "line": 98,
           "anchor": "fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/native_cli.rs",
-          "line": 194,
+          "line": 203,
           "anchor": "fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails",
-          "sha256": "f2a7b165f303676fb691cd9cf612f9b731335fa3aab7a399ffc1461516851b20"
+          "sha256": "b5bcc7a4871000a69df82a7dc8847a975cd9c5cc09f4c8ebdd2ab826d79e9bc4"
         },
         {
           "file": "tests-rust/json.rs",
           "line": 4,
           "anchor": "fn strict_json_rejects_duplicates_at_every_depth_and_resource_limit",
-          "sha256": "2f729f4a09e8d54c370bad23df85ac5a2a1e082947b282ca91bb90f5e84d923f"
+          "sha256": "11612a3d452eff2d84614e910f3799431da5c38853cc3641f69d610e2f8dc8bf"
         }
       ]
     }

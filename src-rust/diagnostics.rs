@@ -65,15 +65,22 @@ impl Trace {
                 "option-inputs",
                 "tool-table",
                 "target-capabilities",
+                "error-budget",
             ],
             "publish" => &[
                 "arguments",
                 "open-store",
                 "input-snapshot",
                 "native-bundle",
+                "error-budget",
                 "publication",
             ],
-            "verify-bundle" => &["arguments", "artifact-read", "bundle-validation"],
+            "verify-bundle" => &[
+                "arguments",
+                "artifact-read",
+                "bundle-validation",
+                "error-budget",
+            ],
             _ => &["arguments"],
         };
         Self {

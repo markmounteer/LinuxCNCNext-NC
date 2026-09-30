@@ -3,7 +3,8 @@
 use crate::{part21::Limits, Diagnostic, Result};
 use serde::de::{DeserializeSeed, Error as DeError, MapAccess, SeqAccess, Visitor};
 use serde_json::{Map, Number, Value};
-use std::{cell::Cell, fmt};
+use sha2::{Digest, Sha256};
+use std::{cell::Cell, fmt, io::Write};
 
 struct Budget<'a> {
     limits: &'a Limits,
@@ -172,4 +173,81 @@ pub fn stringify(value: &Value) -> Result<String> {
     let mut out = String::new();
     emit(value, &mut out)?;
     Ok(out)
+}
+
+/// Hash the same ordered ECMAScript JSON envelope without cloning the model or
+/// materializing its full JSON text. `stringify` remains the separate migration
+/// oracle. The caller supplies a validated, bounded model, as for `stringify`.
+pub fn fingerprint(schema: &str, model: &Value) -> Result<String> {
+    struct HashWriter(Sha256);
+    impl Write for HashWriter {
+        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+            self.0.update(bytes);
+            Ok(bytes.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+    fn io_error(e: std::io::Error) -> Diagnostic {
+        Diagnostic::new("serialize", "HASH", e.to_string())
+    }
+    fn text(out: &mut impl Write, s: &str) -> Result<()> {
+        serde_json::to_writer(out, s)
+            .map_err(|e| Diagnostic::new("serialize", "STRING", e.to_string()))
+    }
+    fn bytes(out: &mut impl Write, b: &[u8]) -> Result<()> {
+        out.write_all(b).map_err(io_error)
+    }
+    fn emit(out: &mut impl Write, value: &Value) -> Result<()> {
+        match value {
+            Value::Null => bytes(out, b"null"),
+            Value::Bool(v) => bytes(out, if *v { b"true" } else { b"false" }),
+            Value::Number(n) => {
+                let n = n.as_f64().filter(|n| n.is_finite()).ok_or_else(|| {
+                    Diagnostic::new("serialize", "NUMBER", "Invalid semantic number")
+                })?;
+                if n == 0.0 {
+                    bytes(out, b"0")
+                } else {
+                    bytes(out, ryu_js::Buffer::new().format_finite(n).as_bytes())
+                }
+            }
+            Value::String(s) => text(out, s),
+            Value::Array(a) => {
+                bytes(out, b"[")?;
+                for (i, v) in a.iter().enumerate() {
+                    if i > 0 {
+                        bytes(out, b",")?;
+                    }
+                    emit(out, v)?;
+                }
+                bytes(out, b"]")
+            }
+            Value::Object(m) => {
+                bytes(out, b"{")?;
+                for (i, (k, v)) in m.iter().enumerate() {
+                    if i > 0 {
+                        bytes(out, b",")?;
+                    }
+                    text(out, k)?;
+                    bytes(out, b":")?;
+                    emit(out, v)?;
+                }
+                bytes(out, b"}")
+            }
+        }
+    }
+    let mut hasher = HashWriter(Sha256::new());
+    {
+        // Fixed scratch space, independent of job size; avoid per-byte SHA calls.
+        let mut out = std::io::BufWriter::with_capacity(16 * 1024, &mut hasher);
+        bytes(&mut out, b"{\"schema\":")?;
+        text(&mut out, schema)?;
+        bytes(&mut out, b",\"model\":")?;
+        emit(&mut out, model)?;
+        bytes(&mut out, b"}")?;
+        out.flush().map_err(io_error)?;
+    }
+    Ok(format!("{:x}", hasher.0.finalize()))
 }
