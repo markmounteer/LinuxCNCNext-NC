@@ -1,0 +1,3 @@
+# Reports are evidence: Git must preserve their exact hashed bytes.
+*.json -text
+raw/*.json -text

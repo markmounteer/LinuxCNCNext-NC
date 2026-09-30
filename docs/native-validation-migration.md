@@ -7,8 +7,9 @@ legacy expression and Rust implementation/test references. All 32 legacy modules
 have an explicit scope disposition. The JSON evidence pins source and reference
 hashes; the development verifier detects stale, missing or changed evidence.
 This does not claim exhaustive branch coverage or physical-machine qualification.
-Optimization budgets/reductions, measured rate diagnostics and benchmarks remain
-required Stage 2 work before the later native execution/admission stages.
+Exact reductions, error accounting, measured-reference demand diagnostics and
+large-job benchmarks are now qualified by the
+[Stage 1–2 acceptance review](qualification/stages12/README.md).
 The original JavaScript runtime is retained unchanged as a development oracle.
 
 | Existing checks | Current Rust disposition | Evidence |
@@ -26,7 +27,7 @@ The original JavaScript runtime is retained unchanged as a development oracle.
 | Full semantic command/source-map parity with optimization disabled | Four preserved complete fixtures pass ordered geometry/event/waypoint/feed comparison; every legacy validation site has an explicit disposition | `tests-rust/compiled.rs` and the check-by-check inventory; every coordinate compares exactly, with separately bounded CSS conversion roundoff |
 | Output-command expansion bounds and source lookup | Ported before immutable plan construction; repeated metadata stored in spans | Limit boundary tests, source/provenance lookup for every fixture command |
 | Immutable plan publication, artifact/cache identity, selection generations and failure handling | Offline implementation and failure tests pass; task/arm integration remains Stage 3 | `bundle.rs`, `publication.rs`, process-exit/partial-write/source-mutation/corruption/stale-worker tests; no restored selection on owner restart |
-| Exact reductions, error budgets, measured rate warnings and large-job benchmarks | Missing | Geometry is not reduced and no speed claim is made |
+| Exact reductions, error budgets, measured rate warnings and large-job benchmarks | Implemented and qualified offline | [Exact reductions](native-exact-reductions.md), [error accounting](native-error-budget.md), [demand diagnostics](native-command-demand.md), [matched benchmarks](benchmarks/2026-09-30-windows/comparison.md); geometric baseline unchanged, native capacity unqualified |
 | GUI/filter/report visualization | Outside the native compiler request | Existing JavaScript functionality remains available; no native GUI integration claimed |
 | Full AP238 EXPRESS/WHERE/global rules, physical clearance, live tool/coordinate/controller binding | Never established by these subset checks | Remains explicitly unverified |
 

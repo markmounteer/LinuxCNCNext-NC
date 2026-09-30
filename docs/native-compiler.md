@@ -1,6 +1,7 @@
 # Rust native compiler implementation
 
-Work in progress for stages 1 and 2 of the controller's native execution plan.
+Stages 1 and 2 of the controller's native execution plan are qualified offline;
+see the [requirement-by-requirement acceptance review](qualification/stages12/README.md).
 The existing JavaScript translator is retained as a revision-1 migration oracle
 and G-code tool. The Rust executable has no Node subprocess/runtime dependency.
 The single `motion-command` source is the `crates/motion-command` workspace crate.
@@ -60,9 +61,11 @@ mm/inch cases preserve source text, decoded model, reviewed synthetic plan, tool
 table, independent reference G-code and the legacy audited command/source map.
 Synthetic transition coordinates are not physical clearances.
 
-## Required work still open
+## Qualification and next stage
 
-- Final Stage 2 acceptance review against the controller's authoritative plan.
+The Stage 1–2 review records every requirement, its implementation and evidence,
+including the exact tested revisions. Stage 3 is the task-owned executing adapter
+and its full-stack simulator qualification.
 
 The [command-demand report](native-command-demand.md) now counts complete prepared
 motion/state actions and source expansion, predicts nominal feed/dwell density,
@@ -76,7 +79,7 @@ unoptimized motion baseline; geometric combining and positive fit/blend budgets
 are not enabled.
 
 No native task adapter, controller connection or execution capability is provided
-by this checkpoint. Compiler qualification must finish before stage 3 begins.
+by this checkpoint. Passing compiler qualification does not authorize a job to run.
 
 ## Unoptimized command preparation
 

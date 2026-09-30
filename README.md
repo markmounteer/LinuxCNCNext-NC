@@ -13,6 +13,9 @@ in that path. Controller execution is a later stage; these commands report
 `executable:false` and do not move a machine.
 Every native invocation also saves [detailed diagnostics](docs/native-diagnostics.md)
 in the standard translator state directory, including `latest-error.txt`.
+The [Stage 1–2 acceptance review](docs/qualification/stages12/README.md) records
+the qualified source contract, offline compiler and large-job evidence. Native
+task execution is the next stage.
 
 ## Quick start
 

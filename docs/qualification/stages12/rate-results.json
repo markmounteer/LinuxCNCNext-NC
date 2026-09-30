@@ -1,0 +1,381 @@
+{
+  "schema": "nextnc-native/rate-qualification/1",
+  "compilerRevision": "a31dd543e917cd314e7806ede7e099bc7a332f3f",
+  "executableSHA256": "a44b33b87e2232d898485434d2461543c029c4eaec55c48f889fb35798c9f67f",
+  "referenceSHA256": "f5ce23faeb6cf46d262091c8a531e14b9b9124910884d607f20ecdf4312edd5c",
+  "runnerSHA256": "766edbce2e25a2139ae3f8533d26ab1a50033c1c775b34af9128b0a07c2aef2f",
+  "inputManifestSHA256": "1284f549585e52761c7b7661a8058eb53787c7a1bbce413370cdec173f742547",
+  "complete": true,
+  "executionAuthorized": false,
+  "cases": [
+    {
+      "case": "mill-mm-arcs-34000",
+      "sourceSHA256": "46e9de4561b2957bcf5a7df1a1d345bb2129453718bf46203def4373ae21774b",
+      "setupSHA256": "b682bbcc9d80f05bf2cd60e1cf4422d276232d4b0bc6fd4605fc0f3333797b04",
+      "artifactSHA256": "c99bb4fcc4c401e790e2af04aa668fbad384b24e0c4fdd84c0e29db85bc66d78",
+      "artifactBytes": 33916376,
+      "bundleIdentity": {
+        "source_sha256": "46e9de4561b2957bcf5a7df1a1d345bb2129453718bf46203def4373ae21774b",
+        "setup_sha256": "b682bbcc9d80f05bf2cd60e1cf4422d276232d4b0bc6fd4605fc0f3333797b04",
+        "tool_table_sha256": null,
+        "target_sha256": null,
+        "compiler_sha256": "e480aec103bbb05e1a80114a73f0068e42793acda56a4af36f9da7042eaadb64",
+        "schema_sha256": "b909ca24df878ad8214b7befafbab2f0e7ca49696e8c94ff0a6f119d47d33b86",
+        "policy_sha256": "e9d175d6294150fd608357e402e74f6c828f653c2fa7dd349e40b30bf1632e3e"
+      },
+      "counts": {
+        "prepared_commands": 34133,
+        "motion_commands": 34000,
+        "line_commands": 0,
+        "planar_circular_commands": 25500,
+        "helical_commands": 8500,
+        "multi_turn_commands": 8500,
+        "state_commands": 123,
+        "state_by_kind": {
+          "change-tool": 1,
+          "clear-temporary-offsets": 2,
+          "coolant": 71,
+          "dwell": 34,
+          "end": 1,
+          "reset-modes": 2,
+          "reset-spindle-demand": 3,
+          "restore-feed-per-minute": 1,
+          "select-work-offset": 1,
+          "spindle": 4,
+          "tool-offset": 3
+        },
+        "reviewed_waypoints": 10,
+        "rapid_motions": 0,
+        "per_revolution_motions": 0,
+        "at_speed_gates": 1,
+        "zero_length_feed_motions": 0,
+        "numeric_duration_unavailable": 0,
+        "source_geometry_paths": 34000
+      },
+      "knownFeedAndDwellSeconds": 160225.95652252884,
+      "densestNominalWindow": {
+        "first_command": 34063,
+        "last_command": 34126,
+        "prepared_commands": 64,
+        "motion_commands": 60,
+        "state_commands": 4,
+        "nominal_feed_and_dwell_seconds": 282.75262798102557,
+        "nominal_prepared_commands_per_second": 0.22634626053517987
+      },
+      "observedReferenceRange": [
+        5.625351578604802,
+        1000.0667845185251
+      ],
+      "warnings": [],
+      "analysisProcessSeconds": 3.3161920999991708,
+      "deterministicReport": true,
+      "unchangedArtifact": true,
+      "rawAnalysisSHA256": "ce1e9645bb8e5969d77721296c436d4752563422d3d33cf25634658096531bfd"
+    },
+    {
+      "case": "lathe-mm-arcs-34000",
+      "sourceSHA256": "969b53f5f98869e893993672b4c4c9c4186fa8d8b00fa31953b9653a92d16121",
+      "setupSHA256": "d4fcd29ec917e14fd53f2460eb445069d56aa504c44fbc3f3a638ad48c8a9bd0",
+      "artifactSHA256": "4747def16332d3e72aa26f8df2f8ed365d8ed10d6cf2543c6376741a8573a430",
+      "artifactBytes": 33949163,
+      "bundleIdentity": {
+        "source_sha256": "969b53f5f98869e893993672b4c4c9c4186fa8d8b00fa31953b9653a92d16121",
+        "setup_sha256": "d4fcd29ec917e14fd53f2460eb445069d56aa504c44fbc3f3a638ad48c8a9bd0",
+        "tool_table_sha256": null,
+        "target_sha256": null,
+        "compiler_sha256": "e480aec103bbb05e1a80114a73f0068e42793acda56a4af36f9da7042eaadb64",
+        "schema_sha256": "b909ca24df878ad8214b7befafbab2f0e7ca49696e8c94ff0a6f119d47d33b86",
+        "policy_sha256": "e9d175d6294150fd608357e402e74f6c828f653c2fa7dd349e40b30bf1632e3e"
+      },
+      "counts": {
+        "prepared_commands": 34129,
+        "motion_commands": 34000,
+        "line_commands": 0,
+        "planar_circular_commands": 34000,
+        "helical_commands": 0,
+        "multi_turn_commands": 0,
+        "state_commands": 123,
+        "state_by_kind": {
+          "change-tool": 1,
+          "clear-temporary-offsets": 2,
+          "coolant": 71,
+          "dwell": 34,
+          "end": 1,
+          "reset-modes": 2,
+          "reset-spindle-demand": 3,
+          "restore-feed-per-minute": 1,
+          "select-work-offset": 1,
+          "spindle": 4,
+          "tool-offset": 3
+        },
+        "reviewed_waypoints": 6,
+        "rapid_motions": 0,
+        "per_revolution_motions": 34000,
+        "at_speed_gates": 1,
+        "zero_length_feed_motions": 0,
+        "numeric_duration_unavailable": 0,
+        "source_geometry_paths": 34000
+      },
+      "knownFeedAndDwellSeconds": 0.03400000000000002,
+      "densestNominalWindow": null,
+      "observedReferenceRange": [
+        58.99824205784748,
+        1000.0470540223835
+      ],
+      "warnings": [
+        "SYNCHRONIZED_DURATION_UNKNOWN"
+      ],
+      "analysisProcessSeconds": 3.378270799992606,
+      "deterministicReport": true,
+      "unchangedArtifact": true,
+      "rawAnalysisSHA256": "cbac06daff79d4365f31887565cd9d483d2b016faffe77dc1f64e494953aea6b"
+    },
+    {
+      "case": "mill-inch-arcs-1000",
+      "sourceSHA256": "b443d468a1d427bc09e72d710185af60fe35c47e75da07ce1b673734f88f8726",
+      "setupSHA256": "c40e1d16e53e6ff670371e1e257c9c0cedfccd60efd0f311fa79e50420bbc11e",
+      "artifactSHA256": "2f069a437a1d46636459fbd7824d2c76a5badb3976ff95fbcd541ceca7a75441",
+      "artifactBytes": 960864,
+      "bundleIdentity": {
+        "source_sha256": "b443d468a1d427bc09e72d710185af60fe35c47e75da07ce1b673734f88f8726",
+        "setup_sha256": "c40e1d16e53e6ff670371e1e257c9c0cedfccd60efd0f311fa79e50420bbc11e",
+        "tool_table_sha256": null,
+        "target_sha256": null,
+        "compiler_sha256": "e480aec103bbb05e1a80114a73f0068e42793acda56a4af36f9da7042eaadb64",
+        "schema_sha256": "b909ca24df878ad8214b7befafbab2f0e7ca49696e8c94ff0a6f119d47d33b86",
+        "policy_sha256": "e9d175d6294150fd608357e402e74f6c828f653c2fa7dd349e40b30bf1632e3e"
+      },
+      "counts": {
+        "prepared_commands": 1034,
+        "motion_commands": 1000,
+        "line_commands": 0,
+        "planar_circular_commands": 750,
+        "helical_commands": 250,
+        "multi_turn_commands": 250,
+        "state_commands": 24,
+        "state_by_kind": {
+          "change-tool": 1,
+          "clear-temporary-offsets": 2,
+          "coolant": 5,
+          "dwell": 1,
+          "end": 1,
+          "reset-modes": 2,
+          "reset-spindle-demand": 3,
+          "restore-feed-per-minute": 1,
+          "select-work-offset": 1,
+          "spindle": 4,
+          "tool-offset": 3
+        },
+        "reviewed_waypoints": 10,
+        "rapid_motions": 0,
+        "per_revolution_motions": 0,
+        "at_speed_gates": 1,
+        "zero_length_feed_motions": 0,
+        "numeric_duration_unavailable": 0,
+        "source_geometry_paths": 1000
+      },
+      "knownFeedAndDwellSeconds": 7121.373297091269,
+      "densestNominalWindow": {
+        "first_command": 964,
+        "last_command": 1027,
+        "prepared_commands": 64,
+        "motion_commands": 60,
+        "state_commands": 4,
+        "nominal_feed_and_dwell_seconds": 427.2833378254806,
+        "nominal_prepared_commands_per_second": 0.1497835144372986
+      },
+      "observedReferenceRange": [
+        5.625351578604802,
+        1000.0667845185251
+      ],
+      "warnings": [],
+      "analysisProcessSeconds": 0.10779299994464964,
+      "deterministicReport": true,
+      "unchangedArtifact": true,
+      "rawAnalysisSHA256": "f4596a28c856603f084e96e85c52ca806c919a21bc487a0d015803014685491c"
+    },
+    {
+      "case": "mill-mm-polyline-34000",
+      "sourceSHA256": "317710e8d8bef6678d11777df5ef4b515a2be8af8a38a96e2de66ca554413fc8",
+      "setupSHA256": "ebea681326229eeb59e57634f5559803c38070a24960020b48234ee988562c87",
+      "artifactSHA256": "28860a5880dfa222a578f7b0616eec110261a3504728c7bf4a2f5aba1b967ff9",
+      "artifactBytes": 4502378,
+      "bundleIdentity": {
+        "source_sha256": "317710e8d8bef6678d11777df5ef4b515a2be8af8a38a96e2de66ca554413fc8",
+        "setup_sha256": "ebea681326229eeb59e57634f5559803c38070a24960020b48234ee988562c87",
+        "tool_table_sha256": null,
+        "target_sha256": null,
+        "compiler_sha256": "e480aec103bbb05e1a80114a73f0068e42793acda56a4af36f9da7042eaadb64",
+        "schema_sha256": "b909ca24df878ad8214b7befafbab2f0e7ca49696e8c94ff0a6f119d47d33b86",
+        "policy_sha256": "e9d175d6294150fd608357e402e74f6c828f653c2fa7dd349e40b30bf1632e3e"
+      },
+      "counts": {
+        "prepared_commands": 34133,
+        "motion_commands": 34000,
+        "line_commands": 34000,
+        "planar_circular_commands": 0,
+        "helical_commands": 0,
+        "multi_turn_commands": 0,
+        "state_commands": 123,
+        "state_by_kind": {
+          "change-tool": 1,
+          "clear-temporary-offsets": 2,
+          "coolant": 71,
+          "dwell": 34,
+          "end": 1,
+          "reset-modes": 2,
+          "reset-spindle-demand": 3,
+          "restore-feed-per-minute": 1,
+          "select-work-offset": 1,
+          "spindle": 4,
+          "tool-offset": 3
+        },
+        "reviewed_waypoints": 10,
+        "rapid_motions": 0,
+        "per_revolution_motions": 0,
+        "at_speed_gates": 1,
+        "zero_length_feed_motions": 0,
+        "numeric_duration_unavailable": 0,
+        "source_geometry_paths": 34
+      },
+      "knownFeedAndDwellSeconds": 0.20399999999999996,
+      "densestNominalWindow": {
+        "first_command": 21,
+        "last_command": 84,
+        "prepared_commands": 64,
+        "motion_commands": 61,
+        "state_commands": 3,
+        "nominal_feed_and_dwell_seconds": 0.0003049999999999997,
+        "nominal_prepared_commands_per_second": 209836.0655737707
+      },
+      "observedReferenceRange": [
+        5.625351578604802,
+        1000.0667845185251
+      ],
+      "warnings": [
+        "NOMINAL_DENSITY_ABOVE_REFERENCE"
+      ],
+      "analysisProcessSeconds": 0.15093569998862222,
+      "deterministicReport": true,
+      "unchangedArtifact": true,
+      "rawAnalysisSHA256": "6afa6891fe0147120b1ae0695eea245dedc6410605e9188e375785168bd1762c"
+    },
+    {
+      "case": "lathe-inch-arcs-1000",
+      "sourceSHA256": "cd06651c1f5766d9e928ef9ecc4f6f1b61571c2462fc37bc73b9b5ff7f554c2c",
+      "setupSHA256": "9e6c29d66c1fdb4772b95799f5b6f13adeaca332f5a48ab287d9bf490156dde0",
+      "artifactSHA256": "3864d57de6f57f94a86c250fd85ebff9d6099bc207a77e400de8aac76b81195b",
+      "artifactBytes": 960646,
+      "bundleIdentity": {
+        "source_sha256": "cd06651c1f5766d9e928ef9ecc4f6f1b61571c2462fc37bc73b9b5ff7f554c2c",
+        "setup_sha256": "9e6c29d66c1fdb4772b95799f5b6f13adeaca332f5a48ab287d9bf490156dde0",
+        "tool_table_sha256": null,
+        "target_sha256": null,
+        "compiler_sha256": "e480aec103bbb05e1a80114a73f0068e42793acda56a4af36f9da7042eaadb64",
+        "schema_sha256": "b909ca24df878ad8214b7befafbab2f0e7ca49696e8c94ff0a6f119d47d33b86",
+        "policy_sha256": "e9d175d6294150fd608357e402e74f6c828f653c2fa7dd349e40b30bf1632e3e"
+      },
+      "counts": {
+        "prepared_commands": 1030,
+        "motion_commands": 1000,
+        "line_commands": 0,
+        "planar_circular_commands": 1000,
+        "helical_commands": 0,
+        "multi_turn_commands": 0,
+        "state_commands": 24,
+        "state_by_kind": {
+          "change-tool": 1,
+          "clear-temporary-offsets": 2,
+          "coolant": 5,
+          "dwell": 1,
+          "end": 1,
+          "reset-modes": 2,
+          "reset-spindle-demand": 3,
+          "restore-feed-per-minute": 1,
+          "select-work-offset": 1,
+          "spindle": 4,
+          "tool-offset": 3
+        },
+        "reviewed_waypoints": 6,
+        "rapid_motions": 0,
+        "per_revolution_motions": 1000,
+        "at_speed_gates": 1,
+        "zero_length_feed_motions": 0,
+        "numeric_duration_unavailable": 0,
+        "source_geometry_paths": 1000
+      },
+      "knownFeedAndDwellSeconds": 0.001,
+      "densestNominalWindow": null,
+      "observedReferenceRange": [
+        58.99824205784748,
+        1000.0470540223835
+      ],
+      "warnings": [
+        "SYNCHRONIZED_DURATION_UNKNOWN"
+      ],
+      "analysisProcessSeconds": 0.1094633000320755,
+      "deterministicReport": true,
+      "unchangedArtifact": true,
+      "rawAnalysisSHA256": "5bd752cadc2f33dfb26522eff818f1c3ba7a712edd3ae5c5bef6d5c0119ffce8"
+    },
+    {
+      "case": "lathe-mm-polyline-34000",
+      "sourceSHA256": "d2dedd8e3afa911418761dcc77e3b2c888dda414d65cd9dd1813eb1df6c64d13",
+      "setupSHA256": "a0eea4bba4b58ebb05c44090c00159e1f32612d7ea454fd6b73e8bf0195946a4",
+      "artifactSHA256": "5525e7c11f3fad843de59d398325fb30fc4a321c72b1a0878b49e098c6c42d84",
+      "artifactBytes": 4549263,
+      "bundleIdentity": {
+        "source_sha256": "d2dedd8e3afa911418761dcc77e3b2c888dda414d65cd9dd1813eb1df6c64d13",
+        "setup_sha256": "a0eea4bba4b58ebb05c44090c00159e1f32612d7ea454fd6b73e8bf0195946a4",
+        "tool_table_sha256": null,
+        "target_sha256": null,
+        "compiler_sha256": "e480aec103bbb05e1a80114a73f0068e42793acda56a4af36f9da7042eaadb64",
+        "schema_sha256": "b909ca24df878ad8214b7befafbab2f0e7ca49696e8c94ff0a6f119d47d33b86",
+        "policy_sha256": "e9d175d6294150fd608357e402e74f6c828f653c2fa7dd349e40b30bf1632e3e"
+      },
+      "counts": {
+        "prepared_commands": 34129,
+        "motion_commands": 34000,
+        "line_commands": 34000,
+        "planar_circular_commands": 0,
+        "helical_commands": 0,
+        "multi_turn_commands": 0,
+        "state_commands": 123,
+        "state_by_kind": {
+          "change-tool": 1,
+          "clear-temporary-offsets": 2,
+          "coolant": 71,
+          "dwell": 34,
+          "end": 1,
+          "reset-modes": 2,
+          "reset-spindle-demand": 3,
+          "restore-feed-per-minute": 1,
+          "select-work-offset": 1,
+          "spindle": 4,
+          "tool-offset": 3
+        },
+        "reviewed_waypoints": 6,
+        "rapid_motions": 0,
+        "per_revolution_motions": 34000,
+        "at_speed_gates": 1,
+        "zero_length_feed_motions": 0,
+        "numeric_duration_unavailable": 0,
+        "source_geometry_paths": 34
+      },
+      "knownFeedAndDwellSeconds": 0.03400000000000002,
+      "densestNominalWindow": null,
+      "observedReferenceRange": [
+        58.99824205784748,
+        1000.0470540223835
+      ],
+      "warnings": [
+        "SYNCHRONIZED_DURATION_UNKNOWN"
+      ],
+      "analysisProcessSeconds": 0.1545068999985233,
+      "deterministicReport": true,
+      "unchangedArtifact": true,
+      "rawAnalysisSHA256": "30fc81c2fd1dde3231ec0daefb01288cb0eed5a721cc5c0cfb0ee71a014e212a"
+    }
+  ],
+  "scope": "Offline release CLI validation; process times include reload and diagnostics, not motion performance"
+}
