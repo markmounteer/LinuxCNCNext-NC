@@ -1,0 +1,22 @@
+[package]
+name = "nextnc-task-ffi"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Checked native task ABI; not yet qualified for execution"
+
+[lib]
+crate-type = ["rlib", "staticlib", "cdylib"]
+
+[dependencies]
+nextnc-native = { path = "../.." }
+nextnc-task = { path = "../nextnc-task" }
+motion-command = { path = "../motion-command" }
+
+[lints.rust]
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+undocumented_unsafe_blocks = "deny"

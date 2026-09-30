@@ -1,9 +1,10 @@
 # Native task execution components — Stage 3 in progress
 
 This safe Rust library implements the control and coordinate components of the
-planned LinuxCNC task integration. **It does not execute a job.** There is no
-checked C ABI, native task executable or native full-stack acceptance yet. The
-compiler CLI still reports `executable:false`.
+planned LinuxCNC task integration. **It does not execute a job.** The companion
+`nextnc-task-ffi` crate provides checked preparation/read access to native messages;
+the task lifecycle is not yet connected to a native task executable. Native
+full-stack acceptance is pending. The compiler CLI reports `executable:false`.
 
 ## Implemented components
 
@@ -27,6 +28,10 @@ compiler CLI still reports `executable:false`.
   task/I/O/guarded-motion results, command admission only after all pieces, and
   observation ticks newer than dispatch. Uncertain delivery closes admission;
   retrying a receipt cannot resend a motion. A fatal receipt retains source identity.
+- `lowering`: whole-job task pieces with directional velocity/acceleration/jerk,
+  analytic circular turn counts, explicit stationary-source receipts and ordered
+  termination deltas. Policy changes add owner drain barriers. Scalar lowering
+  does not replace the planner's own limits or qualify motion timing.
 
 Tests supply synthetic host observations. They prove Rust state transitions and
 geometry binding under those observations; they do **not** prove that LinuxCNC
@@ -36,9 +41,10 @@ motion or shaper drain. The owning host must combine it with real status.
 
 ## Remaining integration gates
 
-1. A checked, versioned ABI and task-message adapter pinned to the qualified
-   LinuxCNC source. Validate message sizes/variants/numeric values and preserve
-   the original source identity through message expansion and real return codes.
+1. Extend the checked preparation/read ABI to task lifecycle dispatch and actual
+   results. The companion pinned C++ adapter converts motion/termination fields
+   to NML types but does not enqueue them. Connect it to the owning task while
+   preserving original source identity and real return codes.
 2. Live snapshot acquisition, identity/freshness checks and whole-job binding
    outside the task's control loop. Recheck before start and after procedures;
    cached snapshots cannot authorize execution.

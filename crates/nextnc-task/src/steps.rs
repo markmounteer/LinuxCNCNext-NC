@@ -118,6 +118,55 @@ impl Layout {
         self.barriers
             .get(self.barriers.partition_point(|b| b.end <= completed))
     }
+
+    /// Use after whole-job lowering so termination changes, as well as shaper
+    /// lane changes, become actual owner barriers rather than advisory flags.
+    pub fn from_lowered(
+        plan: &PreparedPlan,
+        bound: &crate::binding::BoundPlan,
+        lowered: &crate::lowering::Plan,
+    ) -> Result<Self, &'static str> {
+        use crate::{binding::BoundAction, lowering::Payload};
+        let mut result = Self::from_bound(plan, bound)?;
+        if lowered.commands().len() != result.commands {
+            return Err("lowered command count differs");
+        }
+        for (i, range) in lowered.commands().iter().enumerate() {
+            let pieces = lowered
+                .pieces()
+                .get(range.clone())
+                .ok_or("lowered range outside pieces")?;
+            if pieces.is_empty()
+                || pieces
+                    .iter()
+                    .enumerate()
+                    .any(|(p, v)| v.command != i || v.ordinal != p)
+            {
+                return Err("lowered piece identity differs");
+            }
+            for piece in pieces {
+                let matches = match (piece.payload, bound.records()[i].action) {
+                    (Payload::Termination(t), BoundAction::Motion(m)) => t == m.termination,
+                    (
+                        Payload::Motion { motion, .. } | Payload::Stationary(motion),
+                        BoundAction::Motion(m),
+                    ) => motion == m,
+                    (Payload::State(a), b) => a == b,
+                    _ => false,
+                };
+                if !matches {
+                    return Err("lowered source payload differs");
+                }
+            }
+        }
+        result.drains_before = lowered
+            .drains_before()
+            .iter()
+            .copied()
+            .filter(|p| *p > 0)
+            .collect();
+        Ok(result)
+    }
     pub(crate) fn next_drain(&self, completed: usize) -> Option<usize> {
         self.drains_before
             .get(self.drains_before.partition_point(|p| *p <= completed))
