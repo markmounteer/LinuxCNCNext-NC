@@ -37,8 +37,8 @@ unwrap_used = "deny"
 expect_used = "deny"
 
 [workspace]
-members = ["crates/motion-command"]
-default-members = [".", "crates/motion-command"]
+members = ["crates/motion-command", "crates/nextnc-task"]
+default-members = [".", "crates/motion-command", "crates/nextnc-task"]
 resolver = "2"
 
 [[test]]

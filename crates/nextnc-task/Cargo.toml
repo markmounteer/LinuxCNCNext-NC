@@ -1,0 +1,21 @@
+[package]
+name = "nextnc-task"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Task-owned Next-NC lifecycle; LinuxCNC host integration under qualification"
+
+[dependencies]
+nextnc-native = { path = "../.." }
+motion-command = { path = "../motion-command" }
+
+[dev-dependencies]
+serde_json = "1"
+sha2 = "0.10"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"

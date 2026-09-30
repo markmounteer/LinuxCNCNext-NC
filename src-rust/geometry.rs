@@ -38,7 +38,9 @@ pub fn validate(geometry: Geometry) -> Result<Metrics> {
 }
 // The source profile specifies its numeric consistency floor in source units.
 // Callers convert it to millimetres; this is never an extra fit/blend allowance.
-pub(crate) fn validate_with_floor(geometry: Geometry, numeric_floor_mm: f64) -> Result<Metrics> {
+/// Check geometry using the source profile's dimensional numeric consistency
+/// floor. This is not a fitting/blending allowance or a physical-error budget.
+pub fn validate_with_floor(geometry: Geometry, numeric_floor_mm: f64) -> Result<Metrics> {
     if !numeric_floor_mm.is_finite() || numeric_floor_mm <= 0.0 {
         return Err(problem("Invalid numeric consistency floor"));
     }

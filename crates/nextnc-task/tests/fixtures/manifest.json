@@ -1,0 +1,686 @@
+{
+  "schema": "nextnc-task/fixtures/1",
+  "producer": "b31904b3d5ad9d56cc4cc16b8090e768b0e1958d",
+  "generatorSHA256": "e88561c0ed8e4cf2297ec3f6f54fb4f2731dbdac5cfd3c5b03ff1be852e1dc83",
+  "scope": "Synthetic simulator/unit fixtures; not physical setup or clearance approval",
+  "cases": [
+    {
+      "name": "mill-mm-line",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "line",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        6,
+        4,
+        4
+      ],
+      "center": null,
+      "plane": null,
+      "clockwise": false,
+      "sweepRadians": null,
+      "axialRise": 0,
+      "sourceSHA256": "0c4bc78ce2b176114afaa36066a46b1b868e3ba3f73b7867ff921250b309549c",
+      "setupSHA256": "5d539707c490109f1725936412fb01bcc313f58c76152d2201937b4af070b2a7"
+    },
+    {
+      "name": "mill-mm-pure-z",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "pure-z",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        5,
+        4,
+        4
+      ],
+      "center": null,
+      "plane": null,
+      "clockwise": false,
+      "sweepRadians": null,
+      "axialRise": 0,
+      "sourceSHA256": "0aeb0296591fa80fb59a185647604de59321ded1bf1149ec4119a038cd92ce8b",
+      "setupSHA256": "538f21e555c7113cefa0cc970639d850d2dad481cfa3b73f4666847ab06d554e"
+    },
+    {
+      "name": "mill-mm-arc-xy",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "arc-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        3,
+        6,
+        5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "0149066c7a01e517d8f1d7c0d09e0c24652c1aa5f991e3139e6dec9be3399a18",
+      "setupSHA256": "a51cbd37f95baa7ed6c92b4255b880c7713d8afb8651e39f011a6abf76a37163"
+    },
+    {
+      "name": "mill-mm-arc-xz",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "arc-xz",
+      "start": [
+        3,
+        4,
+        7
+      ],
+      "end": [
+        5,
+        4,
+        5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XZ",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "5e09e004bf88bba942e3dc85b6f05ac010630866d7ee79b25ef5d56c074fe943",
+      "setupSHA256": "e9a51800e95b4e5cac3a5c9d1411ec8834c78fa11bdbae7950383751987da8cd"
+    },
+    {
+      "name": "mill-mm-arc-yz",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "arc-yz",
+      "start": [
+        3,
+        6,
+        5
+      ],
+      "end": [
+        3,
+        4,
+        7
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "YZ",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "7e235bcbe87bad8de4dbd0225d7322660584615233c7f9bddab70dd653e899be",
+      "setupSHA256": "f504872c297b84584700f89abdc20890e4788e12fe78209fc87e725b9c51e4f2"
+    },
+    {
+      "name": "mill-mm-full-xy",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "full-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        5,
+        4,
+        5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": false,
+      "sweepRadians": 6.283185307179586,
+      "axialRise": 0,
+      "sourceSHA256": "554ad6f923b4f741d3f5de708fb7efd159e9c48db622ddb35853187d1930adba",
+      "setupSHA256": "d5e724886994a3fd5cae37168a1f84a356eb004825ea608ada1afb3ada34c695"
+    },
+    {
+      "name": "mill-mm-cw-xy",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "cw-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        3,
+        2,
+        5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": true,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "21cbd5d83f0f1cd06d71b4aa3e81b4b2e8f09e3144cfa7469e2ee82dbf1c9192",
+      "setupSHA256": "2d81c83ac03d668a26713d307b6a0c75631e34de506f4e2ad2d3a6e14390cc7a"
+    },
+    {
+      "name": "mill-mm-helix-xy",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "helix-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        3,
+        6,
+        5.5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0.5,
+      "sourceSHA256": "bae251f948d7a1c63164f06752e1b0f43f8b8b6863fa41bef1c4a38f7049d939",
+      "setupSHA256": "304567fa2d94a4c8954a0776609b5f194ea06d0fc3505e347499bca0cf2c818c"
+    },
+    {
+      "name": "mill-mm-multi-xy",
+      "machine": "mill",
+      "units": "mm",
+      "shape": "multi-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        3,
+        6,
+        5.5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": false,
+      "sweepRadians": 14.137166941154069,
+      "axialRise": 0.5,
+      "sourceSHA256": "2bd7e5c7cd1cb66df4439caea1df2c681841ebbaf60dfecc08ab0d04c3ca9528",
+      "setupSHA256": "8c520b4f748fedfa97d8f3c5df3cdc07dcd4e0ef290abecfa2779e761f34f253"
+    },
+    {
+      "name": "mill-inch-line",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "line",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        6,
+        4,
+        4
+      ],
+      "center": null,
+      "plane": null,
+      "clockwise": false,
+      "sweepRadians": null,
+      "axialRise": 0,
+      "sourceSHA256": "20fde5453e04ab6d999e29c0fbe744392ac896bdc97eb96b2778ba27c70fe3c6",
+      "setupSHA256": "84a28f0b92de789373dfdc03cf0bd78a31317f038afdab76502722b12bdce9ea"
+    },
+    {
+      "name": "mill-inch-pure-z",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "pure-z",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        5,
+        4,
+        4
+      ],
+      "center": null,
+      "plane": null,
+      "clockwise": false,
+      "sweepRadians": null,
+      "axialRise": 0,
+      "sourceSHA256": "10194ceb9b9612adad25421376be3b627f9787028fd1a22ad500d0a6b8012a30",
+      "setupSHA256": "0e03b7a31cee483901cdc094290a8df5a4b982a05d8737adbe99f26c19912932"
+    },
+    {
+      "name": "mill-inch-arc-xy",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "arc-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        3,
+        6,
+        5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "d185763a9b8e744c886537cb85efa6d7df08b5f45b578ba819ebf0f5259fb668",
+      "setupSHA256": "4fdbe31ce5cae204ba03938ff5aeedcda611f2822402c9ed0c42b3056552f48d"
+    },
+    {
+      "name": "mill-inch-arc-xz",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "arc-xz",
+      "start": [
+        3,
+        4,
+        7
+      ],
+      "end": [
+        5,
+        4,
+        5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XZ",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "4e43e2905fb6c39631b1984b16ffaab410f6ddb2d5989ac716bb2d80e1bb6a5f",
+      "setupSHA256": "653c974919de4ad3b0d9c91f6f55137bb89f81a06542c9d9d4123c700ca7e9e1"
+    },
+    {
+      "name": "mill-inch-arc-yz",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "arc-yz",
+      "start": [
+        3,
+        6,
+        5
+      ],
+      "end": [
+        3,
+        4,
+        7
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "YZ",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "b29b95a2ad22c57a3e590594055abe5a11d803d22885ad5427e7fbd2bcbd7770",
+      "setupSHA256": "478448159ead70493b5def778ef5aba01c0901981915ad30c66d56871930509a"
+    },
+    {
+      "name": "mill-inch-full-xy",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "full-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        5,
+        4,
+        5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": false,
+      "sweepRadians": 6.283185307179586,
+      "axialRise": 0,
+      "sourceSHA256": "028dcdbf76f122afa4adf4fe401633a288718e924a0f80f85e0125ae57401de2",
+      "setupSHA256": "190bf3e495bacb73321f621ee5a83917dd606737cb02abd80cc1185c2d689e29"
+    },
+    {
+      "name": "mill-inch-cw-xy",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "cw-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        3,
+        2,
+        5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": true,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "3f67627b357e9bd0f3977abf2104a457ad02670243b4c6da6519bfa3cfcc6ae8",
+      "setupSHA256": "1a46353e52493c94d1c127d4cfef6960b242d406c5e9c3e2763742b427fdb1d6"
+    },
+    {
+      "name": "mill-inch-helix-xy",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "helix-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        3,
+        6,
+        5.5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0.5,
+      "sourceSHA256": "2facc81bfee061d2e55aed074de32d8f9404db474935c012465d527d2fc83897",
+      "setupSHA256": "ce8821000cb340ba3bc72bc1b95e17853e9e5887491b016d5115dba8776deaca"
+    },
+    {
+      "name": "mill-inch-multi-xy",
+      "machine": "mill",
+      "units": "inch",
+      "shape": "multi-xy",
+      "start": [
+        5,
+        4,
+        5
+      ],
+      "end": [
+        3,
+        6,
+        5.5
+      ],
+      "center": [
+        3,
+        4,
+        5
+      ],
+      "plane": "XY",
+      "clockwise": false,
+      "sweepRadians": 14.137166941154069,
+      "axialRise": 0.5,
+      "sourceSHA256": "a50cf6d93ebd103687dcfaf5af7f927e734a39e16fcafd96c57a8f76d1d7778b",
+      "setupSHA256": "cbab687f555295d0dbeee3b3ba62201dbfaaf4d9a909aaaa1356f25d2e154520"
+    },
+    {
+      "name": "lathe-mm-line",
+      "machine": "lathe",
+      "units": "mm",
+      "shape": "line",
+      "start": [
+        8,
+        0,
+        2
+      ],
+      "end": [
+        9,
+        0,
+        1
+      ],
+      "center": null,
+      "plane": null,
+      "clockwise": false,
+      "sweepRadians": null,
+      "axialRise": 0,
+      "sourceSHA256": "03b8dd7251078b790c519807ed974f30d4953915a1773ca57d1e91aa0a12061e",
+      "setupSHA256": "ebe845ed208f0fb03d3c391023a048a03251bf27220a29c0b7598734d776baeb"
+    },
+    {
+      "name": "lathe-mm-arc-xz",
+      "machine": "lathe",
+      "units": "mm",
+      "shape": "arc-xz",
+      "start": [
+        8,
+        0,
+        2
+      ],
+      "end": [
+        10,
+        0,
+        0
+      ],
+      "center": [
+        8,
+        0,
+        0
+      ],
+      "plane": "XZ",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "163a1c18955f809af16e1b363e2775883185f546b5d586914370bc9c7d083e31",
+      "setupSHA256": "3a4ccb67ea091c62a028855712982e5b1df57c391b724687cf88adaf1f368d8b"
+    },
+    {
+      "name": "lathe-mm-full-xz",
+      "machine": "lathe",
+      "units": "mm",
+      "shape": "full-xz",
+      "start": [
+        8,
+        0,
+        2
+      ],
+      "end": [
+        8,
+        0,
+        2
+      ],
+      "center": [
+        8,
+        0,
+        0
+      ],
+      "plane": "XZ",
+      "clockwise": false,
+      "sweepRadians": 6.283185307179586,
+      "axialRise": 0,
+      "sourceSHA256": "da0a80403e9c62806dc6b4db6e5817fc27cc4da2772f9abd50c6fee93c2d8bb2",
+      "setupSHA256": "88dbea74c965981af9c42156310cb5ba880bef5234935c18649325280e34b311"
+    },
+    {
+      "name": "lathe-mm-cw-xz",
+      "machine": "lathe",
+      "units": "mm",
+      "shape": "cw-xz",
+      "start": [
+        8,
+        0,
+        2
+      ],
+      "end": [
+        6,
+        0,
+        0
+      ],
+      "center": [
+        8,
+        0,
+        0
+      ],
+      "plane": "XZ",
+      "clockwise": true,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "7407bb1a9b2ac6901d924fff39a77930807f917d83a181b4d842900fa840972b",
+      "setupSHA256": "2fc1fd2026590ecfa6f3edfd56c87170c38e1c1f3374b555fa6f49fa5ff0b719"
+    },
+    {
+      "name": "lathe-inch-line",
+      "machine": "lathe",
+      "units": "inch",
+      "shape": "line",
+      "start": [
+        8,
+        0,
+        2
+      ],
+      "end": [
+        9,
+        0,
+        1
+      ],
+      "center": null,
+      "plane": null,
+      "clockwise": false,
+      "sweepRadians": null,
+      "axialRise": 0,
+      "sourceSHA256": "4795884fa3199f1fb99016a6266a3e81dc1501169870ccd11e022a5b1e3942ae",
+      "setupSHA256": "5311afef4bdeae4a12d1777ae3651c219d2aeae85831c68ee67b9d7a5ad9f46e"
+    },
+    {
+      "name": "lathe-inch-arc-xz",
+      "machine": "lathe",
+      "units": "inch",
+      "shape": "arc-xz",
+      "start": [
+        8,
+        0,
+        2
+      ],
+      "end": [
+        10,
+        0,
+        0
+      ],
+      "center": [
+        8,
+        0,
+        0
+      ],
+      "plane": "XZ",
+      "clockwise": false,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "dd3eff265cf560bc410df9a7b87fc4b46e1ad42c5d1f01ddfad4f7ed88f0caa0",
+      "setupSHA256": "a7d84c0500e9f2c186be40b67df9ded8e5375fe2d302a589ae56b4211b545385"
+    },
+    {
+      "name": "lathe-inch-full-xz",
+      "machine": "lathe",
+      "units": "inch",
+      "shape": "full-xz",
+      "start": [
+        8,
+        0,
+        2
+      ],
+      "end": [
+        8,
+        0,
+        2
+      ],
+      "center": [
+        8,
+        0,
+        0
+      ],
+      "plane": "XZ",
+      "clockwise": false,
+      "sweepRadians": 6.283185307179586,
+      "axialRise": 0,
+      "sourceSHA256": "57410d9c2f3c48b0999927fd1489e660b575c2f9052668ab861713d92270bc87",
+      "setupSHA256": "7e7ad4c2c69126d39a8836874f5c18075e571abdeec72d9a532efd4a06c6fc2a"
+    },
+    {
+      "name": "lathe-inch-cw-xz",
+      "machine": "lathe",
+      "units": "inch",
+      "shape": "cw-xz",
+      "start": [
+        8,
+        0,
+        2
+      ],
+      "end": [
+        6,
+        0,
+        0
+      ],
+      "center": [
+        8,
+        0,
+        0
+      ],
+      "plane": "XZ",
+      "clockwise": true,
+      "sweepRadians": 1.5707963267948966,
+      "axialRise": 0,
+      "sourceSHA256": "afabd77dc56a52faf73f8cc501db67904170a46c13ad2d7862df4190ebe6b294",
+      "setupSHA256": "7441e66b71d34716c0790e2662fb6a19ef2afd4f838aa619af2fb7c1e5108742"
+    }
+  ]
+}

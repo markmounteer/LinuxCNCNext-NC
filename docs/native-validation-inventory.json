@@ -2275,9 +2275,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -2320,9 +2320,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -2365,9 +2365,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -2410,9 +2410,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -2455,9 +2455,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -2500,9 +2500,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -2545,9 +2545,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -2590,9 +2590,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -6187,9 +6187,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -6244,9 +6244,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -6301,9 +6301,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -6358,9 +6358,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -6415,9 +6415,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -6472,9 +6472,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -6529,9 +6529,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
@@ -6586,9 +6586,9 @@
         },
         {
           "file": "src-rust/geometry.rs",
-          "line": 41,
-          "anchor": "pub(crate) fn validate_with_floor",
-          "sha256": "3c1c7b869ecdad2d3bca8e1eb2b3a6dfda45e4a1034cde57f2b68435e5541655"
+          "line": 43,
+          "anchor": "pub fn validate_with_floor",
+          "sha256": "cfe59de3f53fe78d86a0a04c176250b36efab6a02357dad13320b9b47f09b49a"
         }
       ],
       "tests": [
