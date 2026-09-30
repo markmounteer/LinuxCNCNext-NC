@@ -4,7 +4,26 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The companion controller's latest queued-recovery build is
+The companion controller's latest zero-tool/state-publication build is
+`af2eb0d723997d73f85d09010cbaafa7e13d5466`, with this compiler unchanged at
+`ebcae527ac61099cc3ad55d8544f2323036e594f`. **41 simulator sessions pass**:
+15 zero-tool native/RS274/G7/G8 pipelines, 14 execution/shaper/freshness
+regressions, ten earlier coordinate pipelines and two loading/G-code sessions.
+Native state now distinguishes active G43 with a zero H offset from G49, and
+publishes accepted interpreter modes after a verified drain. Canonical work
+coordinates retain their original millimetre bits, preventing false held-resume
+refusals after inch conversion. Exact Rust fingerprints remain unchanged.
+
+The controller's `2026-09-30-zero-tools` evidence retains 738 successful-run raw
+files and both the original and intermediate failed attempts (248 and 250 raw
+files). Offline audits rederive geometry, offset modes, held positions and state
+handoff; corruption challenges require semantic rejection despite fresh hashes.
+Only the task executable changed across these runtime images. Zero-H abort/fault
+combinations, multiple-job/task-restart receipt identity, receipt loss, stationary
+records, full-stack braking crossings and the remaining
+coordinate/procedure/termination/entry/fault matrix stay open.
+
+The preceding, separately pinned queued-recovery build is
 `c7536114b37818ba596efc9692f41bcefa8cd5f5`, with this compiler unchanged at
 `ebcae527ac61099cc3ad55d8544f2323036e594f`. It passes **36 simulator sessions**:
 queued and single-cut state/abort cases, later plane/feed/direction transitions,
@@ -21,9 +40,7 @@ The controller evidence retains 647 successful-run and 38 baseline raw files,
 16,807 servo samples, 228 source-input hashes and semantic corruption challenges.
 See the controller's `2026-09-30-queued-recovery` evidence and
 [PR #1365](https://github.com/markmounteer/linuxcnc/pull/1365).
-This does not complete Stage 3: zero-valued active H, multiple-job/task-restart
-receipt identity, receipt loss, stationary records, full-stack braking crossings
-and the remaining coordinate/procedure/termination/entry/fault matrix stay open.
+Neither checkpoint completes Stage 3 or qualifies physical-machine execution.
 
 The current implementation is the safe Rust
 [`nextnc-task` library](../../../crates/nextnc-task/README.md). It has 27 tests:
