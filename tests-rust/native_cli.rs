@@ -144,6 +144,11 @@ fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json(
         assert_eq!(report["executable"], false);
         assert_eq!(report["toolTable"]["status"], "passed");
         assert_eq!(report["targetCapabilities"]["status"], "not_checked");
+        assert_eq!(report["diagnostics"]["status"], "unavailable");
+        assert_eq!(
+            report["diagnostics"]["error"]["code"],
+            "DIRECTORY_UNAVAILABLE"
+        );
         let prepared = run("prepare")?;
         assert!(
             prepared.status.success(),
@@ -183,4 +188,181 @@ fn standalone_cli_has_no_node_path_and_publishes_only_complete_preflight_json(
     })();
     std::fs::remove_dir_all(&root)?;
     outcome
+}
+
+#[test]
+fn persistent_cli_reports_cover_all_commands_and_preserve_failure_when_archiving_fails(
+) -> Result<(), Box<dyn std::error::Error>> {
+    let root = std::env::temp_dir().join(format!(
+        "nextnc-diagnostic-cli-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)?
+            .as_nanos()
+    ));
+    std::fs::create_dir(&root)?;
+    let result = (|| -> Result<(), Box<dyn std::error::Error>> {
+        let fixture: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(
+            "tests-rust/fixtures/legacy/mill-mm.json",
+        )?)?;
+        let source = root.join("source.stpnc");
+        let setup = root.join("plan.json");
+        let table = root.join("tool.tbl");
+        let target = root.join("target.json");
+        let store = root.join("store");
+        let diagnostics = root.join("diagnostics");
+        std::fs::write(&source, fixture["text"].as_str().ok_or("source")?)?;
+        std::fs::write(&setup, fixture["plan"].to_string())?;
+        std::fs::write(&table, fixture["toolTable"].as_str().ok_or("table")?)?;
+        let run = |command: &str,
+                   input: &std::path::Path,
+                   args: &[&std::path::Path],
+                   archive: &std::path::Path| {
+            Command::new(env!("CARGO_BIN_EXE_nextnc-native"))
+                .env_clear()
+                .env("NEXTNC_DIAGNOSTICS", archive)
+                .arg(command)
+                .arg(input)
+                .args(args)
+                .output()
+        };
+        let flag_table = std::path::Path::new("--tool-table");
+        let flag_store = std::path::Path::new("--store");
+        let flag_target = std::path::Path::new("--target");
+        let mut artifact = None;
+        for command in ["check-syntax", "inspect", "preflight", "prepare", "publish"] {
+            let mut args = Vec::new();
+            if ["preflight", "prepare", "publish"].contains(&command) {
+                args.extend([setup.as_path(), flag_table, table.as_path()]);
+            }
+            if command == "publish" {
+                args.extend([flag_store, store.as_path()]);
+            }
+            let output = run(command, &source, &args, &diagnostics)?;
+            assert!(
+                output.status.success(),
+                "{command}: {}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+            assert!(output.stderr.is_empty());
+            let outcome: serde_json::Value = serde_json::from_slice(&output.stdout)?;
+            assert_eq!(outcome["diagnostics"]["status"], "saved", "{outcome}");
+            let record: serde_json::Value = serde_json::from_slice(&std::fs::read(
+                outcome["diagnostics"]["json"].as_str().ok_or("report")?,
+            )?)?;
+            assert_eq!(record["command"], command);
+            assert_eq!(record["status"], "passed");
+            assert_eq!(record["executionAuthorized"], false);
+            let stages = record["validationStages"].as_array().ok_or("stages")?;
+            assert!(stages
+                .iter()
+                .all(|s| s["status"] == "passed" || s["status"] == "not_checked"));
+            assert!(record["inputs"][0]["sha256"]
+                .as_str()
+                .is_some_and(|s| s.len() == 64));
+            assert!(record["result"]["program"]["model"].is_null());
+            if command == "publish" {
+                artifact = outcome["artifact"].as_str().map(PathBuf::from);
+            }
+        }
+        let artifact = artifact.ok_or("artifact")?;
+        let output = run("verify-bundle", &artifact, &[], &diagnostics)?;
+        assert!(output.status.success());
+        let record: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(diagnostics.join("latest.json"))?)?;
+        assert_eq!(record["inputs"][0]["role"], "artifact");
+        assert_eq!(record["validationStages"][2]["status"], "passed");
+
+        // JSON syntax failure must point into the setup file, not the STEP file.
+        std::fs::write(&setup, "{\n\"bad\":\n}")?;
+        let output = run("prepare", &source, &[&setup], &diagnostics)?;
+        assert!(!output.status.success());
+        assert!(output.stdout.is_empty());
+        let failed: serde_json::Value = serde_json::from_slice(&output.stderr)?;
+        assert_eq!(failed["error"]["code"], "JSON");
+        assert_eq!(failed["diagnostics"]["status"], "saved");
+        let record: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(diagnostics.join("latest-error.json"))?)?;
+        assert_eq!(record["sourceExcerpt"]["role"], "setup");
+        assert_eq!(record["sourceExcerpt"]["requestedLine"], 3);
+        assert_eq!(record["validationStages"][3]["status"], "failed");
+        assert_eq!(record["validationStages"][4]["status"], "not_reached");
+        assert!(
+            std::fs::read_to_string(diagnostics.join("latest-error.txt"))?
+                .contains("jsonByteColumn")
+        );
+        let error_record = std::fs::read(diagnostics.join("latest-error.json"))?;
+        let output = run("inspect", &source, &[], &diagnostics)?;
+        assert!(output.status.success());
+        assert_eq!(
+            std::fs::read(diagnostics.join("latest-error.json"))?,
+            error_record
+        );
+
+        std::fs::write(&setup, fixture["plan"].to_string())?;
+        std::fs::write(&table, "Tbad P1\n")?;
+        let output = run(
+            "preflight",
+            &source,
+            &[&setup, flag_table, &table],
+            &diagnostics,
+        )?;
+        assert!(!output.status.success());
+        let record: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(diagnostics.join("latest-error.json"))?)?;
+        assert_eq!(record["sourceExcerpt"]["role"], "tool-table");
+        assert_eq!(record["sourceExcerpt"]["requestedLine"], 1);
+        std::fs::write(&target, "{\nBAD}")?;
+        let output = run(
+            "prepare",
+            &source,
+            &[&setup, flag_target, &target],
+            &diagnostics,
+        )?;
+        assert!(!output.status.success());
+        let record: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(diagnostics.join("latest-error.json"))?)?;
+        assert_eq!(record["sourceExcerpt"]["role"], "target");
+
+        // Archive errors never replace the job diagnostic or turn failure into success.
+        let blocked = root.join("archive-is-a-file");
+        std::fs::write(&blocked, "preserve")?;
+        let output = run(
+            "prepare",
+            &source,
+            &[&setup, flag_target, &target],
+            &blocked,
+        )?;
+        assert!(!output.status.success());
+        assert!(output.stdout.is_empty());
+        let failed: serde_json::Value = serde_json::from_slice(&output.stderr)?;
+        assert_eq!(failed["error"]["code"], "JSON");
+        assert_eq!(failed["diagnostics"]["status"], "unavailable");
+        assert_eq!(std::fs::read_to_string(&blocked)?, "preserve");
+        let output = run("inspect", &source, &[], &blocked)?;
+        assert!(output.status.success());
+        let outcome: serde_json::Value = serde_json::from_slice(&output.stdout)?;
+        assert_eq!(outcome["diagnostics"]["status"], "unavailable");
+        assert_eq!(outcome["executable"], false);
+        let collision = diagnostics.join("latest.json");
+        std::fs::write(&collision, "preserve even on argument error")?;
+        let output = run("inspect", &collision, &[&setup], &diagnostics)?;
+        assert!(!output.status.success());
+        let failed: serde_json::Value = serde_json::from_slice(&output.stderr)?;
+        assert_eq!(failed["error"]["code"], "USAGE");
+        assert_eq!(failed["diagnostics"]["error"]["code"], "INPUT_COLLISION");
+        assert_eq!(
+            std::fs::read_to_string(collision)?,
+            "preserve even on argument error"
+        );
+        Ok(())
+    })();
+    let path = std::fs::canonicalize(&root)?;
+    let temp = std::fs::canonicalize(std::env::temp_dir())?;
+    if path.parent() == Some(temp.as_path()) {
+        std::fs::remove_dir_all(path)?;
+    } else {
+        return Err("unexpected diagnostics test root".into());
+    }
+    result
 }

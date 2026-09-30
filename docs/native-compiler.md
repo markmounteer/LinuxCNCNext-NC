@@ -123,3 +123,9 @@ command (with adjusted spans), changing provenance or motion semantics, reducing
 the output bound and omitting compiler-required capabilities all fail closed.
 This is compiler evidence; physical tool completion and controller execution
 remain unqualified. Offline bundle publication has separate failure tests.
+
+Every native CLI command saves [persistent diagnostics](native-diagnostics.md)
+with exact observed input identities, actual stage outcomes, correction guidance
+and bounded source excerpts. The standard directory holds `latest-error.txt` and
+JSON evidence; later success preserves the latest failure. Archiving failures are
+reported separately and never conceal the original preparation error.

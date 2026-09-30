@@ -4,6 +4,7 @@ pub mod capabilities;
 pub mod command_audit;
 pub mod compiled;
 pub mod diagnostic;
+pub mod diagnostics;
 pub mod geometry;
 pub mod json;
 pub mod part21;

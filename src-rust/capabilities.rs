@@ -40,7 +40,7 @@ fn fail(message: impl Into<String>) -> Diagnostic {
 }
 impl Manifest {
     pub fn parse(text: &str, limits: &Limits) -> Result<Self> {
-        let value = json::parse(text, limits)?;
+        let value = json::parse(text, limits).map_err(|e| e.with("inputRole", "target"))?;
         let result: Self = serde_json::from_value(value).map_err(|e| fail(e.to_string()))?;
         if result.schema != "nextnc-native/target-capabilities/1"
             || !["mill", "lathe"].contains(&result.machine.as_str())

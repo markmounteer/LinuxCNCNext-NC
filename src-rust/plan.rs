@@ -442,5 +442,8 @@ pub fn validate(value: &Value, program: &Program) -> Result<ValidatedPlan> {
     })
 }
 pub fn parse(text: &str, program: &Program, limits: &Limits) -> Result<ValidatedPlan> {
-    validate(&json::parse(text, limits)?, program)
+    validate(
+        &json::parse(text, limits).map_err(|e| e.with("inputRole", "setup"))?,
+        program,
+    )
 }

@@ -11,6 +11,8 @@ for revision-1/revision-2 source profiles. It prepares audited motion/event plan
 and [immutable native bundles](docs/native-publication.md), without Node or G-code
 in that path. Controller execution is a later stage; these commands report
 `executable:false` and do not move a machine.
+Every native invocation also saves [detailed diagnostics](docs/native-diagnostics.md)
+in the standard translator state directory, including `latest-error.txt`.
 
 ## Quick start
 

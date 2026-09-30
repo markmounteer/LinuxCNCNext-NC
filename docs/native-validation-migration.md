@@ -1,8 +1,8 @@
 # Native validation migration checkpoint
 
 This is a disposition of implemented validation groups, not yet the final
-check-by-check Stage 2 acceptance inventory. Persistent diagnostic archives,
-the complete inventory, optimization and benchmarks still prevent native admission.
+check-by-check Stage 2 acceptance inventory. The complete inventory, optimization
+and benchmarks still prevent native admission.
 The original JavaScript runtime is retained unchanged as a development oracle.
 
 | Existing checks | Current Rust disposition | Evidence |
@@ -15,6 +15,7 @@ The original JavaScript runtime is retained unchanged as a development oracle.
 | Reviewed plan schemas 1–4, program binding, units, machine, T/H/WCS mapping, exact continuation, links, ordered single-axis approaches/retracts/end | Ported | `tests-rust/plan.rs`; 54 captured legacy failures with same error codes |
 | File tool-table size, syntax, T/P/Q spelling/ranges, duplicates and mapped record presence | Ported | `tests-rust/plan.rs`; 15 captured failures with same error codes |
 | Error source identity and ordered geometry/property uses | Ported with UTF-8 byte columns and additional sequence-link records | Profile tests; errors contain section/path context; no source reference participates in semantic fingerprint |
+| Persistent diagnostic archives and correction guidance | Ported to Rust with separate schema, exact observed identities, bounded source excerpts, actual CLI-stage states and JSON/TXT reports | `tests-rust/diagnostics.rs`, all-command CLI/archive-failure tests; [directory and lifecycle](native-diagnostics.md) |
 | Original command contracts, ordered completeness and independent policy audit | Ported to the unoptimized plan and independently decoded native bundle | `command_audit.rs`, serialized-command corruption, exhaustive per-command deletion/replacement/use-tag mutations, geometry/feed/gate mutations |
 | Full semantic command/source-map parity with optimization disabled | Four preserved complete fixtures pass ordered geometry/event/waypoint/feed comparison; full per-check disposition remains open | `tests-rust/compiled.rs`; every coordinate compares exactly, with separately bounded CSS conversion roundoff |
 | Output-command expansion bounds and source lookup | Ported before immutable plan construction; repeated metadata stored in spans | Limit boundary tests, source/provenance lookup for every fixture command |
@@ -98,3 +99,11 @@ actual subprocess exits at six checkpoints and injected partial-write/storage
 failures. CLI tests publish/reuse/verify with no Node and reject failed replacement
 without falling back to the old object. Detailed scope and platform limits are
 in [native publication](native-publication.md).
+
+Native diagnostics now archive every CLI command under the standard translator
+state directory, with a `NEXTNC_DIAGNOSTICS` override. Reports retain original
+errors, collected issues, exact observed input identities and honest stage
+outcomes. Correctly attributed source/setup/table/manifest excerpts are bounded
+and checked against the original read hash. Successful checks preserve the latest
+error. Concurrent native writers, busy indexes, input collisions and failed
+archiving are tested; a reporting failure never changes the preparation outcome.

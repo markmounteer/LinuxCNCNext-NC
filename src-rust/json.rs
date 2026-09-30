@@ -115,10 +115,14 @@ pub fn parse(text: &str, limits: &Limits) -> Result<Value> {
         depth: 0,
     }
     .deserialize(&mut d)
-    .map_err(|e| Diagnostic::new("json", "JSON", e.to_string()))?;
-    d.end()
-        .map_err(|e| Diagnostic::new("json", "JSON", e.to_string()))?;
+    .map_err(json_error)?;
+    d.end().map_err(json_error)?;
     Ok(value)
+}
+fn json_error(e: serde_json::Error) -> Diagnostic {
+    Diagnostic::new("json", "JSON", e.to_string())
+        .with("jsonLine", e.line())
+        .with("jsonByteColumn", e.column())
 }
 /// Semantic hashing, not a wire ABI. Call only on validated bounded model data.
 pub fn stringify(value: &Value) -> Result<String> {
