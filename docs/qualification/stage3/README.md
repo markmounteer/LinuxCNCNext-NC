@@ -53,10 +53,10 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 
 | Stage 3 requirement | Current evidence | Remaining acceptance gate |
 | --- | --- | --- |
-| Rust task owner and checked native ABI | Preparation, lifecycle/dispatch ABI and typed lowering; initial real recipient dispatch | Procedure result/rebind transport and full fault injection missing |
+| Rust task owner and checked native ABI | Preparation, lifecycle/dispatch/procedure-rebind ABI and typed lowering; real recipient dispatch | Full fault injection and wider procedure outcomes missing |
 | Pinned task executable | Native-bound task executes initial mill/lathe jobs in isolated simulation | Full execution acceptance matrix pending |
 | State capture/reconciliation and `on_abort` ordering | Typed canonical/interpreter updates, normal/abort handoff and deferred cleanup implemented | Full offset/unit/modal matrix and abort-race tests missing |
-| One start gate, drain/result/rebind | Central gate, real native dispatch/drains and loading refusal/replacement tests | Full NML/HALUI/pendant coverage and procedure result/rebind transport missing |
+| One start gate, drain/result/rebind | Central gate, actual drains and tool-result suffix rebind; changed H2 and invalid/replaced suffix tests | Full NML/HALUI/pendant and start/hold freshness coverage missing |
 | Semantic stepping and no arbitrary restart | Versioned groups, actual hold-to-step proposal/confirmation and drain | Full held/read-ahead/corner behavior matrix pending |
 | Shaper mode and delayed completion | Geometry refusal, lane-change drains, missing-tail model tests | Engaged-shaper full-stack runs missing |
 | Same-table G7/G8/native coordinate matrix | Synthetic geometry matrix plus real task capture with nonzero WCS/G92/H2 and lathe G7 | Independent executed RS274/native comparison and full state matrix missing |
@@ -64,7 +64,17 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 | Receipts, backpressure, identity, connection loss | Model plus actual queue/guarded-mailbox traces; undersized expansion refuses before selection | Full backpressure/retry/fault injection and disconnect stop tests missing |
 | Lines, planes, full circles, helixes and events | Initial native synthetic jobs through real task/motmod/shim with a source/setup oracle | Full state/event/job corpus remains pending |
 
-The next implementation boundary is procedure result/rebind transport and the
+Procedure checkpoint `ab7442e9ac469f86306d03e5d9ed6ffe7d47120a` passed 122
+Windows Rust tests, formatting, Clippy, the validation inventory and
+[all 11 hosted jobs](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36763451270).
+[rebind-ci.json](rebind-ci.json) preserves their exact identities. The companion
+controller `b80d30f75836339396071b7ab7cd24d3df07c083` passed 27 native sessions,
+two loading/G-code regressions and eight Linux release ABI tests. The native
+matrix reruns all earlier cases and adds changed H2, out-of-limit H2, replaced
+bundle and tool cancellation for both machines. These are still mm/G94 sessions
+with shaping disabled, and do not complete Stage 3.
+
+The next implementation boundary is wider procedure/freshness coverage and the
 remaining full-stack qualification matrix. It must keep the existing task and motmod guards. Appending an
 NML message is not a guarded-motion receipt; planner-done is not shaper-done.
 Source/operation identity must survive any one-to-many message expansion.
