@@ -308,7 +308,8 @@ pub unsafe extern "C" fn nextnc_task_rebind(
 /// result/rebind barrier revalidates the whole suffix before further motion.
 /// # Safety
 /// Inputs are valid immutable nonoverlapping extents as in prepare. Output is
-/// a disjoint writable Fingerprint; its common header is zero on any refusal.
+/// a disjoint writable Fingerprint. Once its size/address checks pass, output
+/// is cleared before any other validation and remains zero on refusal.
 #[no_mangle]
 pub unsafe extern "C" fn nextnc_task_check_current(
     handle: u64,

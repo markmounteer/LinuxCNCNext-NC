@@ -8,7 +8,7 @@ The current implementation is the safe Rust
 [`nextnc-task` library](../../../crates/nextnc-task/README.md). It has 27 tests:
 one semantic-group test, seven binding tests over a 26-fixture geometry matrix,
 eight lifecycle tests, six dispatch-receipt tests and five lowering tests. The
-[`nextnc-task-ffi` crate](../../../crates/nextnc-task-ffi/README.md) adds seven ABI
+[`nextnc-task-ffi` crate](../../../crates/nextnc-task-ffi/README.md) adds nine ABI
 tests. These are model/unit tests,
 not task integration or physical-machine qualification.
 
@@ -94,9 +94,27 @@ changes from the previous runtime; Rust compiler/ABI code is unchanged.
 The separate `2026-09-30-shaper-boundary` evidence folder contains 305 raw files
 and its own verifier. Earlier failure evidence remains intact.
 
-The immediate next step is wider source/state freshness coverage around RUN,
-RESUME and tool procedures, followed by the
-remaining full-stack qualification matrix. It must keep the existing task and motmod guards. Appending an
+The start/resume checkpoint at compiler `ebcae527ac61099cc3ad55d8544f2323036e594f`
+and controller `4df1f22348402043412eb39ff170c53c28351b03` passes 60 simulator
+sessions: 32 normal cases, 16 deterministic worker races, two loading/G-code
+regressions and ten repeated holds. Rust checks selected-source identity and
+bound inputs; the task rechecks live state before adoption. Late results lose
+authority after PAUSE, ABORT or replacement. Changed cached NEXTNC policy is
+refused with a restart diagnostic. Tool confirmation still requires actual
+result/drain/suffix rebind. The companion controller preserves both successful
+and earlier failed runs under `2026-09-30-start-resume`, with an offline verifier
+and semantic corruption challenges. Full Stage 3 remains incomplete.
+
+The workspace passes 123 Rust tests, formatting, Clippy and the 259-site
+inventory. Nine Linux release ABI tests pass in the task image. Documentation
+checkpoint `cd61bae17e42895e18c8b1bb226fc500a8c4dbf7` passes
+[all 11 hosted jobs](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36772650184),
+recorded in [freshness-ci.json](freshness-ci.json). An ARM64 workspace/all-targets
+compile check passes; ARM64 execution is untested.
+
+Next are the complete coordinate/modal, procedure, termination, entry-route and
+fault/disconnect tests, including remaining freshness combinations. This work
+must keep the existing task and motmod guards. Appending an
 NML message is not a guarded-motion receipt; planner-done is not shaper-done.
 Source/operation identity must survive any one-to-many message expansion.
 
