@@ -4,6 +4,18 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
+The [complete-job checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-full-jobs)
+passes four supported mill/lathe mm/inch jobs with unchanged production binaries:
+186 motions, 28 analytic arcs, 24 dwells, 12 explicit tool confirmations and
+176,481 consecutive servo samples. Independent source/setup geometry and actual
+tool/spindle/coolant state, end modes and subsequent MDI/ordinary AUTO pass.
+The 222-file archive retains five failed attempts and one earlier pass separately.
+Synthetic reverse/coolant capabilities do not qualify physical machines. G95/CSS
+remains Stage 4. The next step is the explicit Stage 3 requirement audit, including
+interrupted unit/offset state and runtime semantic stepping through machine events.
+Both hosted workflows passed at documentation head `2092ea611d`
+(`36824981162`, `36824977455`); later heads need their own checks.
+
 The [braking checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-braking)
 qualifies two actual line-to-arc braking crossings and eight regressions with all
 six production binaries unchanged. Its 11,700 servo samples show actual abort
@@ -348,7 +360,9 @@ checkpoint `cd61bae17e42895e18c8b1bb226fc500a8c4dbf7` passes
 recorded in [freshness-ci.json](freshness-ci.json). An ARM64 workspace/all-targets
 compile check passes; ARM64 execution is untested.
 
-Next is the supported full-job corpus and explicit Stage 3 requirement audit.
+Next is the explicit Stage 3 requirement audit; the supported full-job corpus
+now has the normal-completion evidence above. Audit interrupted units/offsets
+and runtime event stepping against their actual saved coverage.
 Actual line-to-arc braking crossings and entry routes have the scoped checkpoints
 above; program stepping
 uses HALUI, not the pendant's jog Step button. Audit remaining state/procedure requirements against their
