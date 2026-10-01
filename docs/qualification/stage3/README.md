@@ -4,7 +4,24 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The latest checkpoint binds native commands to an independent **motion birth
+The latest [controller lease checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-native-lease)
+uses controller runtime `6550142805ac666f9b9dbb32d0ff0ae6fb544716`, this compiler
+unchanged at `1baf531dc1b4f672983cb5ef2a14b09d567a3e24`, and additional probe harness
+`8125cdecae2864f74d1b42ec2fa14489832acea4`. Sixteen simulator sessions pass: eight
+actual task-kill/freeze cases and eight completion, cutting/held abort and step
+controls. A task-loop heartbeat now arms a controller-owned Rust lease before
+native recipients. Mode-independent servo supervision initiates controlled abort
+on expiry; spindle off and axis disable follow the actual downstream drain.
+All 28 direct motmod command attempts after the fault are refused. Both frozen
+tasks are then resumed and remain unable to restart motion or the spindle.
+The 299-file archive, source/byte audit and five rehashed semantic challenges
+retain the distinction between these commanded simulator results and machine
+acceptance. Linux shim tests pass 297 cases, four ignored, plus Clippy; task-side
+publication/acknowledgment tests also pass. Coolant output gating, explicit fault
+recovery and shaped task-loss qualification remain open. The compiler still
+does not advertise full native execution acceptance.
+
+The preceding checkpoint binds native commands to an independent **motion birth
 identity** at controller `31483c0f6fccb9288ca4c175048c816d34463e46` and compiler
 `1baf531dc1b4f672983cb5ef2a14b09d567a3e24`. Fourteen sessions pass: eight execution
 controls, two aborts after admission but before any pose output, two mismatched
@@ -19,8 +36,8 @@ committed-byte verification and six rehashed semantic challenges. All 39 local
 task/ABI tests and Clippy pass; the task/ABI suites also pass in Linux. The shim
 binary matches the retained build with 290 passing tests and four ignored.
 
-Controller-owned stopping on task/connection loss, task crash during motion,
-full-stack braking-boundary crossing, recovery from latched uncertainty and the
+The wider task/connection-loss and machine-event matrix, full-stack
+braking-boundary crossing, recovery from latched uncertainty and the
 remaining Stage 3 matrices stay open. No physical controller was used.
 
 The preceding checkpoint adds **motion-owned execution provenance** at
