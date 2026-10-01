@@ -17,9 +17,18 @@ tasks are then resumed and remain unable to restart motion or the spindle.
 The 299-file archive, source/byte audit and five rehashed semantic challenges
 retain the distinction between these commanded simulator results and machine
 acceptance. Linux shim tests pass 297 cases, four ignored, plus Clippy; task-side
-publication/acknowledgment tests also pass. Coolant output gating, explicit fault
-recovery and shaped task-loss qualification remain open. The compiler still
-does not advertise full native execution acceptance.
+publication/acknowledgment tests also pass. The next checkpoint covers actual-task
+refusal of unsupported machine events, shaped task loss and explicit restart
+recovery with fresh-load authority. The saved mill profile has manual flood
+control, and the saved lathe profile has no coolant system; neither provides
+software coolant actuation/feedback. The synthetic fixtures' `CAPABILITIES=6`
+is not a policy for those machines. Preserve the manual-control decision rather
+than adding coolant wiring or claiming pump shutdown from a software bit.
+Rust binding already refuses coolant without a qualified procedure; whole-stack
+qualification with those capability bits absent remains pending. Full task/motion
+restart with a new motion birth and fresh load still needs fault-recovery
+qualification; there is no in-place lease reset or automatic resume. The compiler
+still does not advertise full native execution acceptance.
 
 The preceding checkpoint binds native commands to an independent **motion birth
 identity** at controller `31483c0f6fccb9288ca4c175048c816d34463e46` and compiler
