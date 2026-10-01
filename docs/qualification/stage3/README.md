@@ -4,7 +4,26 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The latest accepted-receipt projection is compiler/runtime
+The latest controller checkpoint adds **motion-owned execution provenance** at
+runtime `436ae05724c530d2b54f4a26fe5272d8ed493c9a`, with this compiler/runtime
+unchanged at `68fe04696876706e53b6496f0406d34b369892bb`. Fourteen simulator sessions
+pass: eight completion/abort/step controls and six stopped-receipt faults across
+the mill and lathe. Two baselines show whole accepted-receipt replay restoring
+G1/F480 after actual G3/F120 motion. The Rust shim now publishes successful
+admission and commanded-pose serials under a coherent HAL snapshot; the task
+matches the stopped receipt to motion's serial before this library's exact modal
+lookup. All 36 competing controls after the faults are refused. The controller's
+`2026-09-30-motion-progress` evidence retains 282 raw files and seven rehashed
+semantic challenges. Linux shim tests pass 289 with four ignored; Clippy,
+shipping build and the standalone C++ snapshot checks pass.
+
+This is commanded-output provenance, not encoder evidence or restart authority.
+Shim tests cover pending-but-unexecuted abort and brake-boundary crossing; their
+deterministic full-task versions, motion-module lifecycle binding, controller-owned
+connection-loss stop, explicit recovery from a latched failure and the remaining
+Stage 3 matrices stay open. No physical controller was used.
+
+The preceding accepted-receipt projection is compiler/runtime
 `68fe04696876706e53b6496f0406d34b369892bb`, paired with controller
 `49c35409f5930c76ed5f219916f6f28aebce1556`. **24 simulator sessions pass**:
 18 missing/invalid/legal-but-wrong receipt cases and six normal/abort controls on
@@ -18,10 +37,9 @@ pass in the new image; 38 local Rust task/FFI tests, formatting and Clippy pass.
 The controller's `2026-09-30-exact-receipts` checkpoint preserves 486 raw files,
 source/component identity, geometry/state audits and rehashed evidence challenges.
 
-Acceptance lookup is not execution evidence. Whole-receipt replay, proof that
-accepted work never executed, motion-side progress, explicit recovery from a
-latched failure, connection-loss stopping and the remaining Stage 3 matrices
-stay open. The preceding `2026-09-30-stopped-receipts` checkpoint passed 14
+Acceptance lookup alone is not execution evidence; the motion-progress checkpoint
+above supplies a separately checked motion record. The preceding
+`2026-09-30-stopped-receipts` checkpoint passed 14
 sessions by refusing ambiguous recovery instead of guessing pre-motion modes.
 
 The companion controller's task-local start-authority checkpoint is
