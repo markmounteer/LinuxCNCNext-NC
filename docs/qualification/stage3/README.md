@@ -4,7 +4,26 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The latest controller checkpoint adds **motion-owned execution provenance** at
+The latest checkpoint binds native commands to an independent **motion birth
+identity** at controller `31483c0f6fccb9288ca4c175048c816d34463e46` and compiler
+`1baf531dc1b4f672983cb5ef2a14b09d567a3e24`. Fourteen sessions pass: eight execution
+controls, two aborts after admission but before any pose output, two mismatched
+motion-identity refusals and two graceful task-replacement/repeated-job sequences.
+Twelve competing commands are refused after the identity faults. Restart testing
+found roundoff-only positioning moves; this compiler now treats those reviewed
+waypoints as stationary while retaining source cutting geometry and rapid modal
+effects. The motion receipt check is unchanged. The controller's
+`2026-09-30-motion-birth` evidence retains 536 raw files, including both failed
+restart baselines and the preceding twelve passing probes, with independent
+committed-byte verification and six rehashed semantic challenges. All 39 local
+task/ABI tests and Clippy pass; the task/ABI suites also pass in Linux. The shim
+binary matches the retained build with 290 passing tests and four ignored.
+
+Controller-owned stopping on task/connection loss, task crash during motion,
+full-stack braking-boundary crossing, recovery from latched uncertainty and the
+remaining Stage 3 matrices stay open. No physical controller was used.
+
+The preceding checkpoint adds **motion-owned execution provenance** at
 runtime `436ae05724c530d2b54f4a26fe5272d8ed493c9a`, with this compiler/runtime
 unchanged at `68fe04696876706e53b6496f0406d34b369892bb`. Fourteen simulator sessions
 pass: eight completion/abort/step controls and six stopped-receipt faults across
@@ -18,10 +37,10 @@ semantic challenges. Linux shim tests pass 289 with four ignored; Clippy,
 shipping build and the standalone C++ snapshot checks pass.
 
 This is commanded-output provenance, not encoder evidence or restart authority.
-Shim tests cover pending-but-unexecuted abort and brake-boundary crossing; their
-deterministic full-task versions, motion-module lifecycle binding, controller-owned
-connection-loss stop, explicit recovery from a latched failure and the remaining
-Stage 3 matrices stay open. No physical controller was used.
+Shim tests at that checkpoint covered pending-but-unexecuted abort and
+brake-boundary crossing; the later motion-birth checkpoint above qualifies the
+first through the actual task and binds commands to a specific motion lifetime.
+Braking-boundary crossing still needs its full-stack test.
 
 The preceding accepted-receipt projection is compiler/runtime
 `68fe04696876706e53b6496f0406d34b369892bb`, paired with controller
