@@ -4,6 +4,17 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
+The [braking checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-braking)
+qualifies two actual line-to-arc braking crossings and eight regressions with all
+six production binaries unchanged. Its 11,700 servo samples show actual abort
+entry before crossing from G1/F600 to G3/F660; the stopped receipt, task state,
+cleanup and MDI handoff recover the arc's state. Fifteen failed trials remain
+archived; reverse-direction attempts stop at the arc endpoint and are not
+qualified crossings. Only the test observer changes, releasing its HAL component
+on termination. Complete supported jobs and the explicit requirement audit are
+next. The preceding documentation head `7ea6e9c8de` passed both hosted workflows
+(`36822428306`, `36822434945`); that is not evidence for later unrun checks.
+
 The [entry-route checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-entry-routes)
 passes 24 HALUI/production-pendant sessions and 12 regressions. The task at
 `0d5a3444a7` publishes its prepared native filename, fixing fresh native-only RUN
@@ -279,7 +290,7 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 | --- | --- | --- |
 | Rust task owner and checked native ABI | Preparation, lifecycle/dispatch/procedure-rebind ABI and typed lowering; real recipient dispatch | Full fault injection and wider procedure outcomes missing |
 | Pinned task executable | Native-bound task executes initial mill/lathe jobs in isolated simulation | Full execution acceptance matrix pending |
-| State capture/reconciliation and `on_abort` ordering | Typed updates, cached modes, executing tags, queued-state recovery, active zero-valued H, accepted/output receipt validation, motion-birth and kill/freeze restart evidence | Remaining offset/unit/modal and abort/procedure combinations, including full-stack braking across a mode boundary |
+| State capture/reconciliation and `on_abort` ordering | Typed updates, cached modes, executing tags, queued-state recovery, active zero-valued H, accepted/output receipt validation, motion-birth, kill/freeze restart and actual line-to-arc braking crossings | Audit explicit remaining offset/unit/modal and abort/procedure requirements; combine scoped evidence with complete jobs |
 | One start gate, drain/result/rebind | Central gate, actual drains and tool-result suffix rebind; changed H2 and invalid/replaced suffix tests; 24 HALUI/production-pendant sessions with missing/stale authority and ordinary handoff | Reconcile remaining partial-transfer, contention and procedure outcomes with the explicit requirements; physical USB is outside simulator scope |
 | Semantic stepping and no arbitrary restart | Versioned groups, refused arbitrary restart, actual hold-to-step confirmation, full-queue proposal includes accepted deferred work and drains at the confirmed endpoint | Combine covered controls with remaining entry-route and full-job gates |
 | Shaper mode and delayed completion | Bounded lane comparison fixes CW-to-Z fault; 15 execution/preflight/guard cases and two loading regressions pass, with cutting-arc tail hold/abort | Wider unit/state/fault combinations remain part of full qualification |
@@ -337,8 +348,9 @@ checkpoint `cd61bae17e42895e18c8b1bb226fc500a8c4dbf7` passes
 recorded in [freshness-ci.json](freshness-ci.json). An ARM64 workspace/all-targets
 compile check passes; ARM64 execution is untested.
 
-Next is a full-stack braking-boundary crossing, followed by the supported
-full-job corpus. Entry routes have the scoped checkpoint above; program stepping
+Next is the supported full-job corpus and explicit Stage 3 requirement audit.
+Actual line-to-arc braking crossings and entry routes have the scoped checkpoints
+above; program stepping
 uses HALUI, not the pendant's jog Step button. Audit remaining state/procedure requirements against their
 specific earlier evidence rather than treating a larger count as acceptance.
 Controller-owned kill/freeze stopping and explicit full-restart recovery now have
