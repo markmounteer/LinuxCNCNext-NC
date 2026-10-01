@@ -28,7 +28,7 @@ impl Modes {
                         [1.0, 0.0, 0.0] => 3,
                         _ => return Err("unsupported recovery motion plane".into()),
                     };
-                } else if message.kind == 1 || !rapid {
+                } else {
                     self.motion = if rapid { 1 } else { 2 };
                 }
                 if message.kind != 3 {
@@ -94,6 +94,21 @@ mod tests {
         message.kind = 15;
         assert_eq!(modes.apply(&message)?, None);
         assert_eq!(modes.feed_mm_s, Some(0.0));
+        message.kind = 2;
+        message.flags = 0;
+        assert_eq!(
+            modes.apply(&message)?.ok_or("missing arc receipt")?.motion,
+            3
+        );
+        message.kind = 3;
+        message.flags = 1;
+        assert_eq!(modes.apply(&message)?, None);
+        assert_eq!(
+            modes.motion, 1,
+            "stationary rapid selects G0 without a motion receipt"
+        );
+        assert_eq!(modes.feed_mm_s, Some(4.0), "rapid preserves the last feed");
+        assert_eq!(modes.plane, 2, "rapid preserves the last plane");
         Ok(())
     }
 }

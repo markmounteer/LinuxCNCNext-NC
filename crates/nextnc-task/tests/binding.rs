@@ -91,6 +91,87 @@ fn close(a: f64, b: f64) {
 }
 
 #[test]
+fn repeated_job_waypoints_treat_only_roundoff_as_stationary() -> TestResult {
+    use nextnc_task::lowering::{lower, AxisDynamics, Dynamics, Payload};
+    for name in [
+        "mill-mm-line",
+        "mill-inch-line",
+        "lathe-mm-line",
+        "lathe-inch-line",
+    ] {
+        let plan = fixture(name)?;
+        let machine = if name.starts_with("lathe") {
+            Machine::LatheXz
+        } else {
+            Machine::MillXyz
+        };
+        let mut live = snapshot(machine);
+        let first = bind(&plan, &live)?;
+        live.commanded_pose_mm = first.final_pose_mm();
+        let axis = if machine == Machine::MillXyz { 1 } else { 2 };
+        let scale = live
+            .commanded_pose_mm
+            .into_iter()
+            .map(f64::abs)
+            .fold(1.0_f64, f64::max);
+        // Reproduce the tiny residue left by the last segment's pose mapping.
+        live.commanded_pose_mm[axis] += 2.0 * f64::EPSILON * scale;
+        let repeated = bind(&plan, &live)?;
+        let dynamics = Dynamics {
+            axis_mask: if machine == Machine::MillXyz { 7 } else { 5 },
+            axes: [AxisDynamics {
+                velocity_mm_s: 200.0,
+                acceleration_mm_s2: 1000.0,
+                jerk_mm_s3: 10000.0,
+            }; 3],
+        };
+        let lowered = lower(&repeated, dynamics)?;
+        let before_tool = repeated
+            .records()
+            .iter()
+            .position(|r| {
+                matches!(
+                    r.source.action,
+                    Action::Event(motion_command::Command::ChangeTool { .. })
+                )
+            })
+            .ok_or("missing tool")?;
+        let mut stationary = 0;
+        for r in &repeated.records()[..before_tool] {
+            if let BoundAction::Motion(m) = r.action {
+                assert_eq!(m.start_mm, live.commanded_pose_mm, "{name}");
+                assert_eq!(m.end_mm, m.start_mm, "{name}");
+                let range = lowered.commands()[r.command].clone();
+                assert!(lowered.pieces()[range]
+                    .iter()
+                    .any(|p| matches!(p.payload, Payload::Stationary(_))));
+                stationary += 1;
+            }
+        }
+        assert_eq!(stationary, if machine == Machine::MillXyz { 3 } else { 2 });
+        for (a, b) in first.records().iter().zip(repeated.records()) {
+            assert_eq!(a.source, b.source, "reviewed source must stay intact");
+            if matches!(a.source.action, Action::Motion(_)) {
+                assert_eq!(
+                    a.action, b.action,
+                    "source cutting geometry must stay intact"
+                );
+            }
+        }
+        // A move smaller than the geometry-validation floor is still real
+        // when it exceeds arithmetic roundoff. Do not use CAM tolerance here.
+        live.commanded_pose_mm = first.final_pose_mm();
+        live.commanded_pose_mm[axis] += 1e-8;
+        let real = bind(&plan, &live)?;
+        assert!(real.records()[..before_tool]
+            .iter()
+            .any(|r| matches!(r.action,
+            BoundAction::Motion(m) if m.start_mm != m.end_mm)));
+    }
+    Ok(())
+}
+
+#[test]
 fn complete_mm_inch_xyz_xz_matrix_keeps_same_table_and_independent_t_h_mapping() -> TestResult {
     let manifest: serde_json::Value = serde_json::from_str(include_str!("fixtures/manifest.json"))?;
     let cases = manifest["cases"].as_array().ok_or("cases")?;

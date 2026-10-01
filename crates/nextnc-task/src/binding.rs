@@ -393,9 +393,23 @@ fn bind_from(
                         // XY component on a pure-Z shaper-bypass move.
                         for i in 0..3 {if column[i]!=0.0 {end[i]=target[i];}}
                     }
-                    let motion=Motion {start_mm:position,end_mm:end,circular:None,feed:Feed::Rapid,
+                    let mut motion=Motion {start_mm:position,end_mm:end,circular:None,feed:Feed::Rapid,
                         termination:motion_command::Termination::ExactPath,entry_gate:motion_command::EntryGate::None};
-                    snapshot.motion(motion,floor)?;position=end;Ok(BoundAction::Motion(motion))
+                    snapshot.motion(motion,floor)?;
+                    // A completed planner segment can report a few floating
+                    // point rounding units away from its exact nominal target.
+                    // A reviewed positioning waypoint at that same target is
+                    // stationary. Keep the observed pose (no invented motion),
+                    // while retaining the requested waypoint in `source`.
+                    // This bound is numerical roundoff, capped by the existing
+                    // coordinate validation floor, never the CAM/blend tolerance.
+                    // Source cutting geometry is deliberately not coalesced.
+                    let scale=position.into_iter().chain(end).map(f64::abs).fold(1.0_f64,f64::max);
+                    let roundoff=(8.0*f64::EPSILON*scale).min(floor);
+                    if (0..9).all(|i|(end[i]-position[i]).abs()<=roundoff) {
+                        motion.end_mm=position;
+                    }
+                    position=motion.end_mm;Ok(BoundAction::Motion(motion))
                 }
                 Action::SelectWorkOffset(index)=>{
                     require((1..=9).contains(&index),"invalid selected work offset")?;
