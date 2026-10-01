@@ -1,4 +1,34 @@
-# Stage 3 progress — native task execution is not accepted
+# Stage 3 — desktop simulator acceptance
+
+Date: 2026-10-01. **Stage 3 is accepted for the planned desktop-simulator scope.**
+The [controller requirement audit](https://github.com/markmounteer/linuxcnc/blob/wip/nextnc-motion-contract-20260929/controller/motion/motion/docs/nextnc-native-stage3-acceptance-audit.md)
+maps all ten plan requirements to pinned source and saved runtime evidence.
+
+The final task build at `98c99109a04f8baa9181df7de99f96b9916e81f7` passes
+26 complete/control/task-loss sessions, followed by six unhomed/disabled start
+cases on identical runtime bytes. These include 409,528 full-job servo samples,
+127 held semantic groups, 56 post-fault direct-command refusals, four late frozen
+task returns, 18 readiness start refusals and six ordinary AUTO handoffs.
+The coherent lease reader now resolves private pins before the sequence window,
+retries contention with bounded work, rejects regressed/unpublished acknowledgements
+and preserves controller-owned expiry and exact ownership. The original failing
+runtime trace and unsuccessful harness attempts remain archived.
+
+This Rust compiler/owner runtime remains at `1452b77ed2920419bdc6a54a4e245e605bfc5ea1`;
+subsequent changes here are documentation. All 27 prior checkpoint audits and the
+new full-control, lease-reader and readiness evidence audits pass. Semantic
+corruption challenges reject seven, eight and five cases respectively.
+
+The native route remains experimental and enabled only by the simulator's explicit
+activation setting. Compiler execution disclaimers remain; this milestone does
+not authorize production execution. G95/CSS is Stage 4, measured optimization is
+Stage 5, and packaging/stock-planner compatibility/physical-machine acceptance is
+Stage 6. No physical controller was contacted or modified.
+
+## Earlier checkpoint history
+
+The incomplete and pending statements below describe their individual historical
+pins. Use the current requirement audit above for the present acceptance decision.
 
 Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
