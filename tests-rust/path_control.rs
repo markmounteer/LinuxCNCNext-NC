@@ -14,7 +14,16 @@ fn fixture(name: &str) -> Result<(String, Value), Box<dyn std::error::Error>> {
 #[test]
 fn reviewed_operation_controls_survive_whole_job_roundtrip_without_spending_cam_tolerance(
 ) -> TestResult {
-    for name in ["mill-mm", "lathe-mm", "mill-inch", "lathe-inch"] {
+    for name in [
+        "mill-mm",
+        "lathe-mm",
+        "mill-inch",
+        "lathe-inch",
+        "mill-mm-blend",
+        "lathe-mm-blend",
+        "mill-inch-blend",
+        "lathe-inch-blend",
+    ] {
         let (source, setup) = fixture(name)?;
         let setup_text = setup.to_string();
         let artifact = bundle::compile(

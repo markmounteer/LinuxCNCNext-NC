@@ -1,0 +1,88 @@
+{
+  "schema": "linuxcnc-next-nc/execution-plan/5",
+  "machine": "mill",
+  "units": "inch",
+  "programFingerprint": "34ee26647a44187e4b26499b29ae59994ec0e4795ac4d9bee49dbbb28d9579d3",
+  "tools": {
+    "1:2": {
+      "tool": 1,
+      "offset": 2
+    }
+  },
+  "workOffsets": {
+    "1": "G54"
+  },
+  "sections": [
+    {
+      "mode": "retract",
+      "retract": [
+        {
+          "z": 0.7874015748031497
+        },
+        {
+          "x": 0
+        },
+        {
+          "y": 0
+        }
+      ],
+      "approach": [
+        {
+          "z": 0.3937007874015748
+        },
+        {
+          "x": 0.15748031496062992
+        },
+        {
+          "y": 0.15748031496062992
+        },
+        {
+          "z": 0.1968503937007874
+        }
+      ]
+    },
+    {
+      "mode": "continue"
+    },
+    {
+      "mode": "continue"
+    },
+    {
+      "mode": "continue"
+    },
+    {
+      "mode": "continue"
+    }
+  ],
+  "pathControl": [
+    {
+      "mode": "blend",
+      "additionalDeviation": 0.0007874015748031497
+    },
+    {
+      "mode": "blend",
+      "additionalDeviation": 0.007874015748031498
+    },
+    {
+      "mode": "exactPath"
+    },
+    {
+      "mode": "exactStop"
+    },
+    {
+      "mode": "blend",
+      "additionalDeviation": 0.00039370078740157485
+    }
+  ],
+  "end": [
+    {
+      "z": 0.7874015748031497
+    },
+    {
+      "x": 0
+    },
+    {
+      "y": 0
+    }
+  ]
+}
