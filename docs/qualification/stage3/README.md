@@ -4,7 +4,19 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The latest [controller lease checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-native-lease)
+The latest [machine-event and shaped-loss checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-machine-events-shaped-loss)
+passes **18 sessions** with this compiler unchanged at `1baf531dc1` and controller
+runtime `6550142805`; only the harness/fixtures change at `d625dbd30b`. Flood and
+mist are each refused before native motion on both machines when automatic
+coolant capabilities are absent; two coolant-off jobs execute and hand back to
+MDI. Four shaped queued-cut/tail kill/freeze cases pass independent servo-window
+and FIR-convolution audits. Eight control regressions pass. All 42 direct commands
+after the six faults are refused, and three late task returns stay stationary and
+latched. The 679-file archive preserves both attempts, including two pre-injection
+observer failures. No coolant hardware or manual-coolant procedure is qualified.
+Explicit restart recovery and the broader Stage 3 matrix remain open.
+
+The preceding [controller lease checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-native-lease)
 uses controller runtime `6550142805ac666f9b9dbb32d0ff0ae6fb544716`, this compiler
 unchanged at `1baf531dc1b4f672983cb5ef2a14b09d567a3e24`, and additional probe harness
 `8125cdecae2864f74d1b42ec2fa14489832acea4`. Sixteen simulator sessions pass: eight
@@ -17,15 +29,14 @@ tasks are then resumed and remain unable to restart motion or the spindle.
 The 299-file archive, source/byte audit and five rehashed semantic challenges
 retain the distinction between these commanded simulator results and machine
 acceptance. Linux shim tests pass 297 cases, four ignored, plus Clippy; task-side
-publication/acknowledgment tests also pass. The next checkpoint covers actual-task
-refusal of unsupported machine events, shaped task loss and explicit restart
-recovery with fresh-load authority. The saved mill profile has manual flood
+publication/acknowledgment tests also pass. The next remaining checkpoint covers
+explicit restart recovery with fresh-load authority. The saved mill profile has manual flood
 control, and the saved lathe profile has no coolant system; neither provides
 software coolant actuation/feedback. The synthetic fixtures' `CAPABILITIES=6`
 is not a policy for those machines. Preserve the manual-control decision rather
 than adding coolant wiring or claiming pump shutdown from a software bit.
-Rust binding already refuses coolant without a qualified procedure; whole-stack
-qualification with those capability bits absent remains pending. Full task/motion
+Rust binding refuses coolant without a qualified procedure; the newer checkpoint
+above qualifies whole-stack refusal with those capability bits absent. Full task/motion
 restart with a new motion birth and fresh load still needs fault-recovery
 qualification; there is no in-place lease reset or automatic resume. The compiler
 still does not advertise full native execution acceptance.
