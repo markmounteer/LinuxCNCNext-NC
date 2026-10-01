@@ -109,3 +109,10 @@ geometry/control simulations through actual recipients. Mode reset expands into
 separately receipted termination and feed-mode changes before its task-state
 update. Candidate attachment checks the maximum expansion against dispatch
 capacity, using a worker-computed bound; no whole-job scan runs at attachment.
+
+Stationary rapid records select G0 in both the immutable mode projection and the
+companion task, preserving the previous feed and plane without inventing a motion
+receipt. The companion motion-birth checkpoint at controller `31483c0f6f` and
+compiler `1baf531dc1` passes 14 isolated simulator sessions, including repeated
+jobs after graceful drained task replacement. Controller-owned stop after task
+or connection loss and crashes during motion remain unqualified.

@@ -23,6 +23,12 @@ full-stack acceptance is pending. The compiler CLI reports `executable:false`.
   waypoints, analytic arcs/helixes and continuous path travel checks. Auxiliary
   positions/offsets are checked and unsupported nonzero values are refused.
   Supported principal-plane work rotations preserve analytic geometry.
+  Reviewed positioning waypoints within arithmetic roundoff of the observed
+  position are stationary: the bound is `min(8 * f64::EPSILON * scale, floor)`,
+  with scale the largest endpoint coordinate magnitude (at least 1 mm) and floor
+  the existing unit-specific coordinate-validation floor. The original waypoint
+  remains in the source record and is limit-checked before normalization. Source
+  cutting geometry is unchanged; CAM/blending tolerances are not used here.
 - Shaper compatibility: shaped XY or pure-Z bypass; mixed XY/Z and incompatible
   circles/helixes are refused. Switching lanes inserts a drain requirement without
   adding synthetic motion or altering semantic step groups.
