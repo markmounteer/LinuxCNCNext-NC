@@ -7,6 +7,7 @@
 //! pointer must be valid for the declared extent; inputs and outputs must not
 //! overlap, and the caller must not mutate input storage during a call.
 #![deny(unsafe_op_in_unsafe_fn)]
+mod recovery;
 pub mod runtime;
 pub mod wire;
 
@@ -29,6 +30,7 @@ struct Candidate {
     environment: [u8; 32],
     maximum_pieces: usize,
     rebind: Option<(u64, usize)>,
+    recovery: Vec<Option<recovery::Modes>>,
 }
 
 fn candidate(
@@ -41,8 +43,10 @@ fn candidate(
 ) -> Result<u64> {
     let lowered = lowering::lower(&bound, dynamics).map_err(|e| e.to_string())?;
     let layout = nextnc_task::steps::Layout::from_lowered(artifact.prepared(), &bound, &lowered)?;
+    let mut modes = recovery::Modes::default();
+    let mut recovery = Vec::with_capacity(lowered.pieces().len());
     for piece in lowered.pieces() {
-        wire::encode(
+        let message = wire::encode(
             piece,
             lowered.commands()[piece.command].len(),
             lowered
@@ -50,6 +54,7 @@ fn candidate(
                 .binary_search(&piece.command)
                 .is_ok(),
         )?;
+        recovery.push(modes.apply(&message)?);
     }
     let maximum_pieces = lowered
         .commands()
@@ -74,6 +79,7 @@ fn candidate(
             environment,
             maximum_pieces,
             rebind,
+            recovery,
         }),
     );
     Ok(handle)

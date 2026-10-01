@@ -111,6 +111,11 @@ impl Ledger {
             pending_pieces: self.pending.len(),
         }
     }
+    /// Retained accounting identity, including after close. This never grants
+    /// execution authority; the owner independently revokes admission on stop.
+    pub fn binding(&self) -> Binding {
+        self.binding
+    }
     pub fn closed(&self) -> bool {
         self.closed
     }

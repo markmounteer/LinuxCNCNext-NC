@@ -165,8 +165,96 @@ struct Runtime {
     issued: Option<Ticket>,
     clock: u64,
     stop_tick: u64,
+    recovery_completed: u64,
     proposed: Option<usize>,
     procedure: Option<Procedure>,
+}
+
+/// Expected modes of one successfully accepted motion piece. This output is
+/// not an execution acknowledgment and grants no start or recovery authority.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct MotionReceipt {
+    pub abi: u32,
+    pub bytes: u32,
+    pub selection: u64,
+    pub serial: u64,
+    pub command: u64,
+    pub piece: u32,
+    pub motion: u32,
+    pub plane: u32,
+    pub feed_known: u32,
+    pub feed_mm_s: f64,
+}
+
+/// Look up immutable expected modes only inside the actual accepted piece
+/// prefix. Serial zero, unissued/pending/unknown results and stale selections
+/// never acquire authority merely because the source contains the command.
+/// # Safety
+/// Output supplies exactly the stated writable extent, without aliasing.
+#[no_mangle]
+pub unsafe extern "C" fn nextnc_owner_motion_receipt(
+    handle: u64,
+    selection: u64,
+    serial: u64,
+    output: *mut MotionReceipt,
+    size: u64,
+) -> i32 {
+    boundary(|| {
+        if size != std::mem::size_of::<MotionReceipt>() as u64 {
+            return Err("invalid motion receipt output size".into());
+        }
+        address(output)?;
+        // SAFETY: caller supplies the checked writable extent.
+        unsafe {
+            output.write(MotionReceipt::default());
+        }
+        let value = with(handle, |r| {
+            let ledger = r.ledger.as_ref().ok_or("no accepted motion ledger")?;
+            // Stop revokes Owner's live binding before host reconciliation.
+            // Retained accounting may still validate an accepted piece while
+            // stopped, but it must not outlive the reconciliation handoff.
+            if matches!(
+                r.owner.phase(),
+                Phase::Empty | Phase::Loading | Phase::Selected | Phase::Armed | Phase::Complete
+            ) {
+                return Err("native motion recovery is not active".into());
+            }
+            let binding = ledger.binding();
+            if selection != binding.generation.selection
+                || serial <= r.recovery_completed
+                || serial > ledger.counts().accepted_pieces
+            {
+                return Err("motion receipt is outside the accepted selection/piece prefix".into());
+            }
+            let candidate = &r.candidate.as_ref().ok_or("no native candidate")?.1;
+            let index = usize::try_from(serial - 1).map_err(|_| "motion receipt index overflow")?;
+            let modes = candidate
+                .recovery
+                .get(index)
+                .copied()
+                .flatten()
+                .ok_or("receipt does not identify a motion piece")?;
+            let piece = &candidate.lowered.pieces()[index];
+            Ok(MotionReceipt {
+                abi: wire::ABI,
+                bytes: std::mem::size_of::<MotionReceipt>() as u32,
+                selection,
+                serial,
+                command: piece.command as u64,
+                piece: piece.ordinal as u32,
+                motion: modes.motion,
+                plane: modes.plane,
+                feed_known: u32::from(modes.feed_mm_s.is_some()),
+                feed_mm_s: modes.feed_mm_s.unwrap_or(0.0),
+            })
+        })?;
+        // SAFETY: the same checked writable extent remains valid.
+        unsafe {
+            output.write(value);
+        }
+        Ok(())
+    })
 }
 #[derive(Default)]
 struct Owners {
@@ -429,6 +517,7 @@ pub unsafe extern "C" fn nextnc_owner_create(capacity: u32, output: *mut u64) ->
                 issued: None,
                 clock: 0,
                 stop_tick: 0,
+                recovery_completed: 0,
                 proposed: None,
                 procedure: None,
             },
@@ -576,6 +665,7 @@ pub unsafe extern "C" fn nextnc_owner_start(
                 .start(binding, ready, mode, 0)
                 .map_err(|e| e.to_string())?;
             r.ledger = Some(ledger);
+            r.recovery_completed = 0;
             Ok(())
         })
     })
@@ -780,6 +870,23 @@ pub unsafe extern "C" fn nextnc_owner_rebind(
             {
                 return Err("procedure has not drained at its exact result boundary".into());
             }
+            // Dispatch serials are global piece ordinals within this selection.
+            // Rebinding may change only the suffix, never renumber receipts for
+            // the already accepted prefix.
+            let accepted = r
+                .ledger
+                .as_ref()
+                .ok_or("no native dispatch ledger")?
+                .counts()
+                .accepted_pieces;
+            if c.lowered
+                .commands()
+                .get(prefix.completed.saturating_sub(1))
+                .map(|range| range.end as u64)
+                != Some(accepted)
+            {
+                return Err("procedure suffix renumbered the accepted piece prefix".into());
+            }
             let observed = r
                 .ledger
                 .as_ref()
@@ -870,7 +977,17 @@ pub extern "C" fn nextnc_owner_control(
                         .is_some_and(|l| l.observed_after_dispatch(tick));
                     r.owner
                         .drained(r.binding()?, drain(flags, observed)?)
-                        .map_err(|e| e.to_string())
+                        .map_err(|e| e.to_string())?;
+                    // Owner clears live prefixes on abort. Keep this separate
+                    // accepted-piece floor so stale, already-drained receipts
+                    // cannot become eligible again while recovering a stop.
+                    r.recovery_completed = r
+                        .ledger
+                        .as_ref()
+                        .ok_or("no native dispatch ledger")?
+                        .counts()
+                        .accepted_pieces;
+                    Ok(())
                 }
                 9 if argument <= 1 => {
                     let observed = tick > r.stop_tick

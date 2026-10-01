@@ -130,6 +130,19 @@ int32_t nextnc_owner_start(uint64_t owner, const nextnc_fingerprint *, uint64_t 
 int32_t nextnc_owner_next(uint64_t, nextnc_dispatch *, uint64_t);
 int32_t nextnc_owner_issue(uint64_t, uint64_t selection, uint64_t serial, uint64_t tick);
 int32_t nextnc_owner_result(uint64_t, uint64_t selection, uint64_t serial, uint32_t outcome, uint64_t tick);
+/* Immutable expected modes from the successfully accepted motion-piece prefix.
+ * This is NOT evidence of execution or permission to release task ownership.
+ * motion: 1 rapid, 2 line, 3 clockwise arc, 4 counterclockwise arc.
+ * plane: 0 inherit launch plane, 1 XY, 2 XZ, 3 YZ.
+ * feed_known=0 inherits launch feed; otherwise feed_mm_s is authoritative. */
+typedef struct {
+    uint32_t abi, bytes;
+    uint64_t selection, serial, command;
+    uint32_t piece, motion, plane, feed_known;
+    double feed_mm_s;
+} nextnc_motion_receipt;
+int32_t nextnc_owner_motion_receipt(uint64_t, uint64_t selection, uint64_t serial,
+    nextnc_motion_receipt *, uint64_t);
 int32_t nextnc_owner_control(uint64_t, uint32_t operation, uint64_t argument, uint32_t flags, uint64_t tick);
 int32_t nextnc_owner_status(uint64_t, nextnc_owner_status_value *, uint64_t);
 #ifdef __cplusplus

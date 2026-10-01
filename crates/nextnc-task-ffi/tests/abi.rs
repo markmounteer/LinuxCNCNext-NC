@@ -248,6 +248,82 @@ fn observe(s: &mut Snapshot, m: Message) {
     }
 }
 
+fn motion_receipt(owner: u64, selection: u64, serial: u64) -> (i32, MotionReceipt) {
+    let mut result = MotionReceipt::default();
+    // SAFETY: result is a live, aligned output of exactly the stated size.
+    let code = unsafe {
+        nextnc_owner_motion_receipt(
+            owner,
+            selection,
+            serial,
+            &mut result,
+            std::mem::size_of::<MotionReceipt>() as u64,
+        )
+    };
+    (code, result)
+}
+
+#[test]
+fn accepted_motion_lookup_survives_abort_but_never_claims_execution() -> TestResult {
+    let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
+    let a = artifact()?;
+    let mut candidate = 0;
+    assert_eq!(prepare(&a, &snapshot(), &tools(), &mut candidate), 0);
+    let (owner, selection) = owner_selection(candidate);
+    assert_eq!(start(owner, &fresh(&snapshot(), &tools()), 0, 127, 0), 0);
+    assert_eq!(
+        motion_receipt(owner, selection, 0),
+        (-1, MotionReceipt::default())
+    );
+    let mut found = false;
+    for tick in 1..200 {
+        let d = next(owner);
+        if d.serial == 0 {
+            assert_eq!(nextnc_owner_control(owner, 5, 0, 63, tick), 0);
+            continue;
+        }
+        assert_eq!(
+            motion_receipt(owner, selection, d.serial),
+            (-1, MotionReceipt::default())
+        );
+        assert_eq!(nextnc_owner_issue(owner, selection, d.serial, tick), 0);
+        assert_eq!(
+            motion_receipt(owner, selection, d.serial),
+            (-1, MotionReceipt::default())
+        );
+        assert_eq!(nextnc_owner_result(owner, selection, d.serial, 0, tick), 0);
+        if matches!(d.message.kind, 1 | 2) {
+            let expected = motion_receipt(owner, selection, d.serial);
+            assert_eq!(expected.0, 0);
+            assert_eq!(expected.1.command, d.message.command);
+            assert_eq!(expected.1.piece, d.message.piece);
+            assert_eq!(
+                motion_receipt(owner, selection + 1, d.serial),
+                (-1, MotionReceipt::default())
+            );
+            assert_eq!(
+                motion_receipt(owner, selection, d.serial + 1),
+                (-1, MotionReceipt::default())
+            );
+            assert_eq!(nextnc_owner_control(owner, 6, 0, 0, tick), 0);
+            assert_eq!(motion_receipt(owner, selection, d.serial), expected);
+            assert_eq!(next(owner).serial, 0);
+            assert_eq!(state(owner).allows_mdi, 0);
+            assert_eq!(nextnc_owner_control(owner, 9, 1, 63, tick + 1), 0);
+            assert_eq!(
+                motion_receipt(owner, selection, d.serial),
+                (-1, MotionReceipt::default())
+            );
+            found = true;
+            break;
+        }
+    }
+    assert!(found, "fixture never reached a motion result");
+    assert_eq!(nextnc_owner_destroy(owner), 0);
+    assert_eq!(nextnc_task_release(candidate), 0);
+    Ok(())
+}
+
 #[test]
 fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestResult {
     let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
@@ -293,6 +369,10 @@ fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestRe
             // A new observation and all six actual completion domains are needed.
             assert_eq!(nextnc_owner_control(owner, 5, 0, 47, tick), -1);
             assert_eq!(nextnc_owner_control(owner, 5, 0, 63, tick), 0);
+            assert_eq!(
+                motion_receipt(owner, selection, pieces),
+                (-1, MotionReceipt::default())
+            );
             if p.serial != 0 {
                 assert_eq!(
                     adopt(owner, p, replacement, &fresh(&live, &table), 99, tick),
@@ -347,10 +427,38 @@ fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestRe
             assert_eq!(d.serial, pieces + 1);
             assert_eq!(d.message.command, commands);
             assert_eq!(state(owner).admitted, commands);
+            assert_eq!(
+                motion_receipt(owner, selection, d.serial),
+                (-1, MotionReceipt::default())
+            );
             assert_eq!(nextnc_owner_issue(owner, selection, d.serial, tick), 0);
             assert_eq!(nextnc_owner_issue(owner, selection, d.serial, tick), -1);
             assert_eq!(nextnc_owner_result(owner, selection, d.serial, 0, tick), 0);
             assert_eq!(nextnc_owner_result(owner, selection, d.serial, 0, tick), 0);
+            let (code, receipt) = motion_receipt(owner, selection, d.serial);
+            if matches!(d.message.kind, 1 | 2) {
+                assert_eq!(code, 0);
+                assert_eq!(receipt.command, d.message.command);
+                assert_eq!(receipt.piece, d.message.piece);
+                let wanted = if d.message.kind == 2 {
+                    if d.message.turn < 0 {
+                        3
+                    } else {
+                        4
+                    }
+                } else if d.message.flags & 1 != 0 {
+                    1
+                } else {
+                    2
+                };
+                assert_eq!(receipt.motion, wanted);
+                if d.message.flags & 1 == 0 {
+                    assert_eq!(receipt.feed_known, 1);
+                    assert_eq!(receipt.feed_mm_s, d.message.feed_mm_s);
+                }
+            } else {
+                assert_eq!((code, receipt), (-1, MotionReceipt::default()));
+            }
             // Same-cycle status is too old even if every completion bit is true.
             assert_eq!(nextnc_owner_control(owner, 5, 0, 63, tick), -1);
             pieces += 1;
