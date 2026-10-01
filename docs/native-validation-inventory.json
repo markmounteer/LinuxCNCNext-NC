@@ -4542,9 +4542,9 @@
         },
         {
           "file": "tests-rust/path_control.rs",
-          "line": 122,
+          "line": 131,
           "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
-          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
+          "sha256": "83d540121157bfa2d093589d70aa3b73ecf4edc16f093e63925131d1ec41db44"
         }
       ]
     },
@@ -4587,9 +4587,9 @@
         },
         {
           "file": "tests-rust/path_control.rs",
-          "line": 122,
+          "line": 131,
           "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
-          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
+          "sha256": "83d540121157bfa2d093589d70aa3b73ecf4edc16f093e63925131d1ec41db44"
         }
       ]
     },
@@ -4632,9 +4632,9 @@
         },
         {
           "file": "tests-rust/path_control.rs",
-          "line": 122,
+          "line": 131,
           "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
-          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
+          "sha256": "83d540121157bfa2d093589d70aa3b73ecf4edc16f093e63925131d1ec41db44"
         }
       ]
     },
@@ -4677,9 +4677,9 @@
         },
         {
           "file": "tests-rust/path_control.rs",
-          "line": 122,
+          "line": 131,
           "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
-          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
+          "sha256": "83d540121157bfa2d093589d70aa3b73ecf4edc16f093e63925131d1ec41db44"
         }
       ]
     },
@@ -4722,9 +4722,9 @@
         },
         {
           "file": "tests-rust/path_control.rs",
-          "line": 122,
+          "line": 131,
           "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
-          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
+          "sha256": "83d540121157bfa2d093589d70aa3b73ecf4edc16f093e63925131d1ec41db44"
         }
       ]
     },
@@ -4767,9 +4767,9 @@
         },
         {
           "file": "tests-rust/path_control.rs",
-          "line": 122,
+          "line": 131,
           "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
-          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
+          "sha256": "83d540121157bfa2d093589d70aa3b73ecf4edc16f093e63925131d1ec41db44"
         }
       ]
     },
@@ -4812,9 +4812,9 @@
         },
         {
           "file": "tests-rust/path_control.rs",
-          "line": 122,
+          "line": 131,
           "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
-          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
+          "sha256": "83d540121157bfa2d093589d70aa3b73ecf4edc16f093e63925131d1ec41db44"
         }
       ]
     },
