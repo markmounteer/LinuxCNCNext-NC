@@ -4,7 +4,21 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The latest [machine-event and shaped-loss checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-machine-events-shaped-loss)
+The latest [explicit recovery checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-explicit-recovery)
+passes six kill/freeze recovery sequences across **12 simulator sessions** on the
+mill, lathe and input-shaped mill. All six runtime binaries remain unchanged.
+The task-only restart is refused by orphaned HAL registration, with that cause
+recorded separately; independent motion samples and direct command probes prove
+the stop remains latched. Full task/motion restart creates a new motion birth,
+refuses RUN/STEP/RESUME without a fresh load, refuses the saved old motion tag,
+then completes a newly selected job with tool confirmation and ordinary MDI
+handoff. Totals are 90 direct motion-command refusals, 18 unselected-start refusals
+and three late frozen-task returns. Earlier unsuccessful/weak-evidence runs are
+retained and excluded from acceptance. This qualifies the bounded simulator
+recovery scenario, not in-place latch reset or physical recovery. Next test
+termination/tolerance changes at queued and held geometry boundaries.
+
+The preceding [machine-event and shaped-loss checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-machine-events-shaped-loss)
 passes **18 sessions** with this compiler unchanged at `1baf531dc1` and controller
 runtime `6550142805`; only the harness/fixtures change at `d625dbd30b`. Flood and
 mist are each refused before native motion on both machines when automatic
@@ -14,7 +28,8 @@ and FIR-convolution audits. Eight control regressions pass. All 42 direct comman
 after the six faults are refused, and three late task returns stay stationary and
 latched. The 679-file archive preserves both attempts, including two pre-injection
 observer failures. No coolant hardware or manual-coolant procedure is qualified.
-Explicit restart recovery and the broader Stage 3 matrix remain open.
+The broader Stage 3 matrix remains open; explicit kill/freeze restart recovery
+is covered by the subsequent checkpoint above.
 
 The preceding [controller lease checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-native-lease)
 uses controller runtime `6550142805ac666f9b9dbb32d0ff0ae6fb544716`, this compiler
@@ -29,16 +44,16 @@ tasks are then resumed and remain unable to restart motion or the spindle.
 The 299-file archive, source/byte audit and five rehashed semantic challenges
 retain the distinction between these commanded simulator results and machine
 acceptance. Linux shim tests pass 297 cases, four ignored, plus Clippy; task-side
-publication/acknowledgment tests also pass. The next remaining checkpoint covers
-explicit restart recovery with fresh-load authority. The saved mill profile has manual flood
+publication/acknowledgment tests also pass. Explicit restart recovery with
+fresh-load authority is now covered above. The saved mill profile has manual flood
 control, and the saved lathe profile has no coolant system; neither provides
 software coolant actuation/feedback. The synthetic fixtures' `CAPABILITIES=6`
 is not a policy for those machines. Preserve the manual-control decision rather
 than adding coolant wiring or claiming pump shutdown from a software bit.
 Rust binding refuses coolant without a qualified procedure; the newer checkpoint
-above qualifies whole-stack refusal with those capability bits absent. Full task/motion
-restart with a new motion birth and fresh load still needs fault-recovery
-qualification; there is no in-place lease reset or automatic resume. The compiler
+above qualifies whole-stack refusal with those capability bits absent. The
+kill/freeze restart checkpoint does not provide an in-place lease reset or
+automatic resume. The compiler
 still does not advertise full native execution acceptance.
 
 The preceding checkpoint binds native commands to an independent **motion birth
@@ -226,13 +241,13 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 | --- | --- | --- |
 | Rust task owner and checked native ABI | Preparation, lifecycle/dispatch/procedure-rebind ABI and typed lowering; real recipient dispatch | Full fault injection and wider procedure outcomes missing |
 | Pinned task executable | Native-bound task executes initial mill/lathe jobs in isolated simulation | Full execution acceptance matrix pending |
-| State capture/reconciliation and `on_abort` ordering | Typed updates, cached modes, executing tags, queued-state recovery and ten observed cleanup cases | Zero-valued active H, restart/receipt-loss identity, full offset/unit/modal and abort-race matrix remain open |
+| State capture/reconciliation and `on_abort` ordering | Typed updates, cached modes, executing tags, queued-state recovery, active zero-valued H, accepted/output receipt validation, motion-birth and kill/freeze restart evidence | Remaining offset/unit/modal and abort/procedure combinations, including full-stack braking across a mode boundary |
 | One start gate, drain/result/rebind | Central gate, actual drains and tool-result suffix rebind; changed H2 and invalid/replaced suffix tests | Full NML/HALUI/pendant and start/hold freshness coverage missing |
 | Semantic stepping and no arbitrary restart | Versioned groups, actual hold-to-step proposal/confirmation and drain | Full held/read-ahead/corner behavior matrix pending |
 | Shaper mode and delayed completion | Bounded lane comparison fixes CW-to-Z fault; 15 execution/preflight/guard cases and two loading regressions pass, with cutting-arc tail hold/abort | Wider unit/state/fault combinations remain part of full qualification |
 | Same-table G7/G8/native coordinate matrix | Ten real native/unchanged-RS274 MDI pipelines across four mm/inch/rotation/T1-H2/G7/G8 cases | Complete coordinate and abort-state matrix missing; these sequential MDI references do not compare throughput |
 | Termination conditions and ordered state deltas | Rust lowering retains ordered events and emits termination deltas with drain barriers | Actual pending-boundary behavior remains untested |
-| Receipts, backpressure, identity, connection loss | Model plus actual queue/guarded-mailbox traces; undersized expansion refuses before selection | Full backpressure/retry/fault injection and disconnect stop tests missing |
+| Receipts, backpressure, identity, connection loss | Motion-owned progress/birth, exact receipt checks, controller-owned kill/freeze stop, shaped-tail stop and explicit full-restart recovery; undersized expansion refuses before selection | Full-capacity backpressure/retry matrix and recovery from remaining receipt/procedure faults |
 | Lines, planes, full circles, helixes and events | Initial native synthetic jobs through real task/motmod/shim with a source/setup oracle | Full state/event/job corpus remains pending |
 
 Procedure checkpoint `ab7442e9ac469f86306d03e5d9ed6ffe7d47120a` passed 122
@@ -284,8 +299,10 @@ checkpoint `cd61bae17e42895e18c8b1bb226fc500a8c4dbf7` passes
 recorded in [freshness-ci.json](freshness-ci.json). An ARM64 workspace/all-targets
 compile check passes; ARM64 execution is untested.
 
-Next are the complete coordinate/modal, procedure, termination, entry-route and
-fault/disconnect tests, including remaining freshness combinations. This work
+Next are actual pending/held termination boundaries, then remaining
+coordinate/modal, procedure, entry-route, backpressure/retry and fault combinations.
+Controller-owned kill/freeze stopping and explicit full-restart recovery now have
+the bounded evidence described above. This work
 must keep the existing task and motmod guards. Appending an
 NML message is not a guarded-motion receipt; planner-done is not shaper-done.
 Source/operation identity must survive any one-to-many message expansion.
