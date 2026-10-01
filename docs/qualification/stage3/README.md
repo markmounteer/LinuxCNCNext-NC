@@ -4,6 +4,26 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
+The latest accepted-receipt projection is compiler/runtime
+`68fe04696876706e53b6496f0406d34b369892bb`, paired with controller
+`49c35409f5930c76ed5f219916f6f28aebce1556`. **24 simulator sessions pass**:
+18 missing/invalid/legal-but-wrong receipt cases and six normal/abort controls on
+the mill and lathe. Six baseline sessions reproduce incorrect mode/feed/plane
+handoff; the repair refuses 108 competing controls while retaining abort/OFF.
+Rust projects expected modes during preparation and serves constant-time lookups
+only inside the accepted, not-yet-drained motion-piece prefix. Stop revokes live
+authority while retaining that accounting; the task compares exact dispatch
+serial, source ordinal and modes before recovery. Ten Linux release ABI tests
+pass in the new image; 38 local Rust task/FFI tests, formatting and Clippy pass.
+The controller's `2026-09-30-exact-receipts` checkpoint preserves 486 raw files,
+source/component identity, geometry/state audits and rehashed evidence challenges.
+
+Acceptance lookup is not execution evidence. Whole-receipt replay, proof that
+accepted work never executed, motion-side progress, explicit recovery from a
+latched failure, connection-loss stopping and the remaining Stage 3 matrices
+stay open. The preceding `2026-09-30-stopped-receipts` checkpoint passed 14
+sessions by refusing ambiguous recovery instead of guessing pre-motion modes.
+
 The companion controller's task-local start-authority checkpoint is
 `101c2f6e3a9a3aa320c4b6bb5fc519b68244fe76`. **12 simulator sessions pass** after
 reproducing unintended motion from a receipt-named G-code file on both machines
@@ -38,10 +58,10 @@ audits and three semantic corruption challenges pass.
 
 That checkpoint qualifies mixed sessions and namespace separation; the later
 checkpoints above add consecutive jobs and drained task replacement.
-No-executed-motion aborts and lost or unmatched receipts remain open. The existing fallback to pre-motion modes on an
-unmatched receipt is still unproven under receipt loss; a new namespace does not
-resolve that recovery policy. Compiler code remains unchanged at
-`ebcae527ac61099cc3ad55d8544f2323036e594f`.
+At that checkpoint, the fallback to pre-motion modes on an unmatched receipt
+remained unproven; a new namespace did not resolve it. The later stopped-receipt
+repair above removes that inference. Compiler code at the sequence checkpoint
+was `ebcae527ac61099cc3ad55d8544f2323036e594f`.
 
 The preceding zero-tool/state-publication build is
 `af2eb0d723997d73f85d09010cbaafa7e13d5466`, with this compiler unchanged at
@@ -182,7 +202,8 @@ result/drain/suffix rebind. The companion controller preserves both successful
 and earlier failed runs under `2026-09-30-start-resume`, with an offline verifier
 and semantic corruption challenges. Full Stage 3 remains incomplete.
 
-The workspace passes 123 Rust tests, formatting, Clippy and the 259-site
+At compiler `ebcae527ac61099cc3ad55d8544f2323036e594f`, the workspace passed
+123 Rust tests, formatting, Clippy and the 259-site
 inventory. Nine Linux release ABI tests pass in the task image. Documentation
 checkpoint `cd61bae17e42895e18c8b1bb226fc500a8c4dbf7` passes
 [all 11 hosted jobs](https://github.com/markmounteer/LinuxCNCNext-NC/actions/runs/36772650184),
