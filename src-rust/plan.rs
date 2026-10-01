@@ -3,11 +3,12 @@ use crate::{json, part21::Limits, profile::Program, Diagnostic, Result};
 use serde::Serialize;
 use serde_json::{json, Value};
 
-const SCHEMAS: [&str; 4] = [
+const SCHEMAS: [&str; 5] = [
     "linuxcnc-next-nc/execution-plan/1",
     "linuxcnc-next-nc/execution-plan/2",
     "linuxcnc-next-nc/execution-plan/3",
     "linuxcnc-next-nc/execution-plan/4",
+    "linuxcnc-next-nc/execution-plan/5",
 ];
 pub const WORK_OFFSETS: [&str; 9] = [
     "G54", "G55", "G56", "G57", "G58", "G59", "G59.1", "G59.2", "G59.3",
@@ -35,12 +36,61 @@ pub enum Transition {
         moves: Vec<Waypoint>,
     },
 }
+
+/// Explicit additional execution policy, independent of source CAM tolerance.
+#[derive(Clone, Copy, Debug, Serialize, PartialEq)]
+#[serde(tag = "mode", rename_all = "camelCase")]
+pub enum PathControl {
+    ExactPath,
+    ExactStop,
+    Blend { additional_deviation_mm: f64 },
+}
+impl PathControl {
+    pub fn termination(self) -> motion_command::Termination {
+        match self {
+            Self::ExactPath => motion_command::Termination::ExactPath,
+            Self::ExactStop => motion_command::Termination::ExactStop,
+            Self::Blend {
+                additional_deviation_mm,
+            } => motion_command::Termination::Blend {
+                max_deviation_mm: additional_deviation_mm,
+            },
+        }
+    }
+}
+
+fn path_control(value: &Value, unit: f64) -> Result<PathControl> {
+    keys(value, &["mode", "additionalDeviation"], "path control")?;
+    match value["mode"].as_str() {
+        Some("exactPath" | "exactStop") => {
+            keys(value, &["mode"], "exact path control")?;
+            Ok(if value["mode"] == "exactPath" {
+                PathControl::ExactPath
+            } else {
+                PathControl::ExactStop
+            })
+        }
+        Some("blend") => {
+            let deviation = value["additionalDeviation"].as_f64().map(|v| v * unit)
+                .filter(|v| v.is_finite() && *v > 0.0 && *v < 1e9)
+                .ok_or_else(|| fail("PATH_CONTROL", "Blend requires an explicit positive additionalDeviation in plan units; CAM tolerance is not an execution allowance"))?;
+            Ok(PathControl::Blend {
+                additional_deviation_mm: deviation,
+            })
+        }
+        _ => Err(fail(
+            "PATH_CONTROL",
+            "Path control must explicitly select exactPath, exactStop or blend",
+        )),
+    }
+}
 /// Only constructed after complete validation; callers receive read-only data.
 #[derive(Clone, Debug, Serialize)]
 pub struct ValidatedPlan {
     source: Value,
     mappings: Vec<Mapping>,
     transitions: Vec<Transition>,
+    path_controls: Vec<PathControl>,
     end: Vec<Waypoint>,
 }
 impl ValidatedPlan {
@@ -55,6 +105,9 @@ impl ValidatedPlan {
     }
     pub fn end(&self) -> &[Waypoint] {
         &self.end
+    }
+    pub fn path_controls(&self) -> &[PathControl] {
+        &self.path_controls
     }
 }
 fn fail(code: &str, message: impl Into<String>) -> Diagnostic {
@@ -208,6 +261,7 @@ pub fn validate(value: &Value, program: &Program) -> Result<ValidatedPlan> {
             "workOffsets",
             "sections",
             "end",
+            "pathControl",
         ],
         "execution plan",
     )?;
@@ -216,14 +270,14 @@ pub fn validate(value: &Value, program: &Program) -> Result<ValidatedPlan> {
         .and_then(|s| SCHEMAS.iter().position(|x| *x == s))
         .ok_or_else(|| fail("PLAN_SCHEMA", "Unsupported execution-plan schema"))?;
     let mill = program.model["machine"] == "mill";
-    if if schema == 3 {
+    if if schema >= 3 {
         value["machine"] != if mill { "mill" } else { "lathe" }
     } else {
         mill || value.get("machine").is_some()
     } {
         return Err(fail(
             "PLAN_MACHINE",
-            "Mill requires execution-plan/4; declared machine must match source",
+            "Mill requires execution-plan/4 or /5; declared machine must match source",
         ));
     }
     if value["programFingerprint"] != program.report.fingerprint.value {
@@ -255,6 +309,46 @@ pub fn validate(value: &Value, program: &Program) -> Result<ValidatedPlan> {
     let mut issues = Vec::new();
     let mut not_checked = Vec::new();
     let mut mappings = Vec::new();
+    let path_controls = if schema == 4 {
+        let controls = value["pathControl"]
+            .as_array()
+            .filter(|c| c.len() == sections.len())
+            .ok_or_else(|| {
+                fail(
+                    "PATH_CONTROL",
+                    "Execution-plan/5 requires one explicit pathControl per operation",
+                )
+            })?;
+        let unit = if program.model["units"] == "inch" {
+            25.4
+        } else {
+            1.0
+        };
+        controls
+            .iter()
+            .enumerate()
+            .map(|(i, control)| match path_control(control, unit) {
+                Ok(control) => Some(control),
+                Err(error) => {
+                    issues.push(section_context(
+                        error,
+                        &sections[i],
+                        i,
+                        format!("pathControl[{i}]"),
+                    ));
+                    None
+                }
+            })
+            .collect::<Vec<_>>()
+    } else {
+        if value.get("pathControl").is_some() {
+            return Err(fail(
+                "PATH_CONTROL",
+                "Explicit pathControl requires execution-plan/5",
+            ));
+        }
+        vec![Some(PathControl::ExactPath); sections.len()]
+    };
     for (i, s) in sections.iter().enumerate() {
         let key = format!("{}:{}", s["tool"]["number"], s["tool"]["offset"]);
         let mapped = (|| -> Result<(u32, u32)> {
@@ -439,6 +533,10 @@ pub fn validate(value: &Value, program: &Program) -> Result<ValidatedPlan> {
             .collect::<Option<Vec<_>>>()
             .ok_or_else(|| fail("INTERNAL", "Incomplete validated transitions"))?,
         end: end.ok_or_else(|| fail("INTERNAL", "Incomplete validated end"))?,
+        path_controls: path_controls
+            .into_iter()
+            .collect::<Option<Vec<_>>>()
+            .ok_or_else(|| fail("INTERNAL", "Incomplete validated path controls"))?,
     })
 }
 pub fn parse(text: &str, program: &Program, limits: &Limits) -> Result<ValidatedPlan> {

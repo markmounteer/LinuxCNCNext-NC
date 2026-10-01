@@ -1,8 +1,8 @@
-//! Explicit accounting for the exact-path baseline, not permission to approximate.
+//! Explicit accounting for reviewed path control, not execution permission.
 //! Source CAM tolerance and observed numeric residuals are not execution budgets.
 use crate::{
     compiled::{self, Action, Phase, PreparedPlan},
-    contract::{v2::Tolerance, Termination},
+    contract::{v2::Tolerance, Feed, Termination},
     geometry, Diagnostic, Result,
 };
 use serde::Serialize;
@@ -17,7 +17,9 @@ pub struct Operation {
     pub fit_allocated_mm: f64,
     pub fit_used_mm: f64,
     pub blend_allocated_mm: f64,
-    pub blend_used_mm: f64,
+    /// No executed continuous-path measurement is available for requested blending.
+    pub blend_used_mm: Option<f64>,
+    pub path_control: crate::plan::PathControl,
     pub numeric_error_bound_mm: Option<f64>,
     pub maximum_observed_arc_endpoint_residual_mm: f64,
     pub pre_shaper_total_bound_mm: Option<f64>,
@@ -36,9 +38,8 @@ pub struct Report {
     pub residual_note: &'static str,
 }
 
-/// Inspect every prepared motion. A future positive-blend/fitting policy must
-/// supply its own approved allocations and independently established bounds;
-/// it cannot quietly inherit zero accounting from this baseline reporter.
+/// Inspect every prepared motion against its separately reviewed allocation.
+/// A positive request never claims zero consumption or a verified path bound.
 pub fn describe(prepared: &PreparedPlan) -> Result<Report> {
     let unit = compiled::scale(prepared.program());
     let sections = compiled::array(&prepared.program().model["sections"])?;
@@ -57,8 +58,14 @@ pub fn describe(prepared: &PreparedPlan) -> Result<Report> {
             post_error_bound_mm: None,
             fit_allocated_mm: 0.0,
             fit_used_mm: 0.0,
-            blend_allocated_mm: 0.0,
-            blend_used_mm: 0.0,
+            blend_allocated_mm: match prepared.setup().path_controls()[index] {
+                crate::plan::PathControl::Blend {
+                    additional_deviation_mm,
+                } => additional_deviation_mm,
+                _ => 0.0,
+            },
+            blend_used_mm: Some(0.0),
+            path_control: prepared.setup().path_controls()[index],
             numeric_error_bound_mm: None,
             maximum_observed_arc_endpoint_residual_mm: 0.0,
             pre_shaper_total_bound_mm: None,
@@ -78,9 +85,30 @@ pub fn describe(prepared: &PreparedPlan) -> Result<Report> {
                         "Motion has no source-operation budget",
                     ));
                 };
-                if motion.termination != Termination::ExactPath {
-                    return Err(Diagnostic::new("error-budget", "UNACCOUNTED_APPROXIMATION", "This reporter qualifies only the exact-path baseline; a different policy needs explicit accounting")
-                        .with("command", span.commands.start + offset).with("section", section + 1));
+                let expected = if motion.feed == Feed::Rapid {
+                    Termination::ExactPath
+                } else {
+                    prepared
+                        .setup()
+                        .path_controls()
+                        .get(section)
+                        .ok_or_else(|| {
+                            Diagnostic::new(
+                                "error-budget",
+                                "OPERATION",
+                                "Unknown operation allocation",
+                            )
+                        })?
+                        .termination()
+                };
+                if motion.termination != expected {
+                    return Err(Diagnostic::new(
+                        "error-budget",
+                        "UNACCOUNTED_APPROXIMATION",
+                        "Motion termination differs from its reviewed operation allocation",
+                    )
+                    .with("command", span.commands.start + offset)
+                    .with("section", section + 1));
                 }
                 let metric = geometry::validate_with_floor(motion.geometry, 1e-7 * unit)?;
                 let operation = operations.get_mut(section).ok_or_else(|| {
@@ -91,6 +119,9 @@ pub fn describe(prepared: &PreparedPlan) -> Result<Report> {
                     )
                 })?;
                 operation.source_motions += 1;
+                if matches!(motion.termination, Termination::Blend { .. }) {
+                    operation.blend_used_mm = None;
+                }
                 operation.maximum_observed_arc_endpoint_residual_mm = operation
                     .maximum_observed_arc_endpoint_residual_mm
                     .max(metric.endpoint_discrepancy_mm);
@@ -98,10 +129,10 @@ pub fn describe(prepared: &PreparedPlan) -> Result<Report> {
         }
     }
     Ok(Report {
-        schema: "nextnc-native/error-budget/1",
+        schema: "nextnc-native/error-budget/2",
         policy: compiled::POLICY,
         coordinate_units: "mm in source work frame; lathe X is radius",
-        approximation_enabled: false,
+        approximation_enabled: operations.iter().any(|o| o.blend_used_mm.is_none()),
         execution_authorized: false,
         operations,
         unqualified_terms: [
@@ -110,7 +141,7 @@ pub fn describe(prepared: &PreparedPlan) -> Result<Report> {
             "No independently established continuous numeric-error bound is available for the complete downstream path",
             "Shaping, kinematics, tracking, tooling and mechanical error require separate qualification",
         ],
-        residual_note: "Endpoint residual is an observed numeric consistency metric, not a continuous path-error bound or spare fit/blend allowance. Missing bounds remain null; CAM tolerance is never spent again.",
+        residual_note: "Endpoint residual is an observed numeric consistency metric, not a continuous path-error bound or spare allowance. Positive blend allocation is separate reviewed intent; actual consumption and total path bound remain unknown until execution is independently qualified. CAM tolerance is never spent again.",
     })
 }
 
@@ -154,7 +185,7 @@ mod tests {
                     o.blend_allocated_mm,
                     o.blend_used_mm
                 ),
-                (0.0, 0.0, 0.0, 0.0)
+                (0.0, 0.0, 0.0, Some(0.0))
             );
             assert!(
                 !r.approximation_enabled

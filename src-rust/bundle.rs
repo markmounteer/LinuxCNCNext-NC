@@ -17,7 +17,7 @@ use sha2::{Digest, Sha256};
 const MAGIC: &[u8; 8] = b"NEXTNC\0\x01";
 const SCHEMA: &str = include_str!("bundle-schema.txt");
 pub const COMPILER_SHA256: &str = env!("NEXTNC_COMPILER_SHA256");
-const POLICY_DETAIL:&str="exact-path;fit-mm=0;blend-mm=0;no-reductions;first-nonrapid-after-spindle-demand-at-speed;task-events-drain;live-binding-required";
+const POLICY_DETAIL:&str="exact-path-default;reviewed-per-operation-path-control;additional-blend-budget-separate-from-cam;rapids-and-setup-exact-path;fit-mm=0;no-reductions;first-nonrapid-after-spindle-demand-at-speed;task-events-drain;live-binding-required";
 pub fn digest(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }

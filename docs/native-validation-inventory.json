@@ -4060,9 +4060,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4093,9 +4093,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4132,9 +4132,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4171,9 +4171,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4210,9 +4210,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4249,9 +4249,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4288,15 +4288,15 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 86,
+          "line": 139,
           "anchor": "pub fn exit_point",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4327,9 +4327,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 63,
+          "line": 116,
           "anchor": "fn keys(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4360,9 +4360,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 128,
+          "line": 181,
           "anchor": "fn waypoints(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4399,9 +4399,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 128,
+          "line": 181,
           "anchor": "fn waypoints(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4438,9 +4438,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 128,
+          "line": 181,
           "anchor": "fn waypoints(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4477,9 +4477,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 128,
+          "line": 181,
           "anchor": "fn waypoints(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4511,14 +4511,20 @@
       "owner": "collectPlanIssues",
       "kind": "need",
       "expression": "need([schema, machineSchema, continuationSchema, legacySchema].includes(plan.schema), \"PLAN_SCHEMA\", \"Unsupported execution plan schema.\")",
-      "disposition": "ported",
-      "reason": "Schemas 1-4, machine/unit/fingerprint binding, explicit mapping objects and one transition per section remain mandatory.",
+      "disposition": "intentionally-changed",
+      "reason": "Schemas 1-4 retain exact-path defaults and original binding rules. Native schema 5 adds explicit per-operation path control with separately reviewed additional blend allowance; machine/unit/fingerprint mappings and one transition per section remain mandatory.",
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
+        },
+        {
+          "file": "src-rust/plan.rs",
+          "line": 62,
+          "anchor": "fn path_control(",
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4533,6 +4539,12 @@
           "line": 60,
           "anchor": "fn captured_legacy_negative_corpus_still_fails_closed",
           "sha256": "5cffd4785c6b400a238e462df827d7c77023b69ed05140b673cfcc08715d9896"
+        },
+        {
+          "file": "tests-rust/path_control.rs",
+          "line": 122,
+          "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
+          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
         }
       ]
     },
@@ -4544,14 +4556,20 @@
       "owner": "collectPlanIssues",
       "kind": "need",
       "expression": "need(plan.schema === machineSchema ? plan.machine === machine : machine === \"lathe\" && !Object.hasOwn(plan, \"machine\"), \"PLAN_MACHINE\", \"XYZ milling requires execution-plan/4 with machine=mill; the plan machine must match the program.\")",
-      "disposition": "ported",
-      "reason": "Schemas 1-4, machine/unit/fingerprint binding, explicit mapping objects and one transition per section remain mandatory.",
+      "disposition": "intentionally-changed",
+      "reason": "Schemas 1-4 retain exact-path defaults and original binding rules. Native schema 5 adds explicit per-operation path control with separately reviewed additional blend allowance; machine/unit/fingerprint mappings and one transition per section remain mandatory.",
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
+        },
+        {
+          "file": "src-rust/plan.rs",
+          "line": 62,
+          "anchor": "fn path_control(",
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4566,6 +4584,12 @@
           "line": 60,
           "anchor": "fn captured_legacy_negative_corpus_still_fails_closed",
           "sha256": "5cffd4785c6b400a238e462df827d7c77023b69ed05140b673cfcc08715d9896"
+        },
+        {
+          "file": "tests-rust/path_control.rs",
+          "line": 122,
+          "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
+          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
         }
       ]
     },
@@ -4577,14 +4601,20 @@
       "owner": "collectPlanIssues",
       "kind": "need",
       "expression": "need(plan.programFingerprint === program.report.programFingerprint.value, \"PLAN_MISMATCH\", \"The execution plan belongs to a different decoded program. Regenerate/review the plan; do not reuse unreviewed entry moves.\")",
-      "disposition": "ported",
-      "reason": "Schemas 1-4, machine/unit/fingerprint binding, explicit mapping objects and one transition per section remain mandatory.",
+      "disposition": "intentionally-changed",
+      "reason": "Schemas 1-4 retain exact-path defaults and original binding rules. Native schema 5 adds explicit per-operation path control with separately reviewed additional blend allowance; machine/unit/fingerprint mappings and one transition per section remain mandatory.",
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
+        },
+        {
+          "file": "src-rust/plan.rs",
+          "line": 62,
+          "anchor": "fn path_control(",
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4599,6 +4629,12 @@
           "line": 60,
           "anchor": "fn captured_legacy_negative_corpus_still_fails_closed",
           "sha256": "5cffd4785c6b400a238e462df827d7c77023b69ed05140b673cfcc08715d9896"
+        },
+        {
+          "file": "tests-rust/path_control.rs",
+          "line": 122,
+          "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
+          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
         }
       ]
     },
@@ -4610,14 +4646,20 @@
       "owner": "collectPlanIssues",
       "kind": "need",
       "expression": "need(plan.units === program.model.units, \"PLAN_UNITS\", \"Plan coordinates must use the same units as the program.\")",
-      "disposition": "ported",
-      "reason": "Schemas 1-4, machine/unit/fingerprint binding, explicit mapping objects and one transition per section remain mandatory.",
+      "disposition": "intentionally-changed",
+      "reason": "Schemas 1-4 retain exact-path defaults and original binding rules. Native schema 5 adds explicit per-operation path control with separately reviewed additional blend allowance; machine/unit/fingerprint mappings and one transition per section remain mandatory.",
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
+        },
+        {
+          "file": "src-rust/plan.rs",
+          "line": 62,
+          "anchor": "fn path_control(",
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4632,6 +4674,12 @@
           "line": 60,
           "anchor": "fn captured_legacy_negative_corpus_still_fails_closed",
           "sha256": "5cffd4785c6b400a238e462df827d7c77023b69ed05140b673cfcc08715d9896"
+        },
+        {
+          "file": "tests-rust/path_control.rs",
+          "line": 122,
+          "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
+          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
         }
       ]
     },
@@ -4643,14 +4691,20 @@
       "owner": "collectPlanIssues",
       "kind": "need",
       "expression": "need(plan.tools && typeof plan.tools === \"object\" && !Array.isArray(plan.tools), \"TOOL_MAPPING\", \"Explicit tool mappings are required.\")",
-      "disposition": "ported",
-      "reason": "Schemas 1-4, machine/unit/fingerprint binding, explicit mapping objects and one transition per section remain mandatory.",
+      "disposition": "intentionally-changed",
+      "reason": "Schemas 1-4 retain exact-path defaults and original binding rules. Native schema 5 adds explicit per-operation path control with separately reviewed additional blend allowance; machine/unit/fingerprint mappings and one transition per section remain mandatory.",
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
+        },
+        {
+          "file": "src-rust/plan.rs",
+          "line": 62,
+          "anchor": "fn path_control(",
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4665,6 +4719,12 @@
           "line": 60,
           "anchor": "fn captured_legacy_negative_corpus_still_fails_closed",
           "sha256": "5cffd4785c6b400a238e462df827d7c77023b69ed05140b673cfcc08715d9896"
+        },
+        {
+          "file": "tests-rust/path_control.rs",
+          "line": 122,
+          "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
+          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
         }
       ]
     },
@@ -4676,14 +4736,20 @@
       "owner": "collectPlanIssues",
       "kind": "need",
       "expression": "need(plan.workOffsets && typeof plan.workOffsets === \"object\" && !Array.isArray(plan.workOffsets), \"WCS_MAPPING\", \"Explicit work-offset mappings are required.\")",
-      "disposition": "ported",
-      "reason": "Schemas 1-4, machine/unit/fingerprint binding, explicit mapping objects and one transition per section remain mandatory.",
+      "disposition": "intentionally-changed",
+      "reason": "Schemas 1-4 retain exact-path defaults and original binding rules. Native schema 5 adds explicit per-operation path control with separately reviewed additional blend allowance; machine/unit/fingerprint mappings and one transition per section remain mandatory.",
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
+        },
+        {
+          "file": "src-rust/plan.rs",
+          "line": 62,
+          "anchor": "fn path_control(",
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4698,6 +4764,12 @@
           "line": 60,
           "anchor": "fn captured_legacy_negative_corpus_still_fails_closed",
           "sha256": "5cffd4785c6b400a238e462df827d7c77023b69ed05140b673cfcc08715d9896"
+        },
+        {
+          "file": "tests-rust/path_control.rs",
+          "line": 122,
+          "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
+          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
         }
       ]
     },
@@ -4709,14 +4781,20 @@
       "owner": "collectPlanIssues",
       "kind": "need",
       "expression": "need(Array.isArray(plan.sections) && plan.sections.length === program.model.sections.length, \"TRANSITION\", \"One transition plan is required for each operation.\")",
-      "disposition": "ported",
-      "reason": "Schemas 1-4, machine/unit/fingerprint binding, explicit mapping objects and one transition per section remain mandatory.",
+      "disposition": "intentionally-changed",
+      "reason": "Schemas 1-4 retain exact-path defaults and original binding rules. Native schema 5 adds explicit per-operation path control with separately reviewed additional blend allowance; machine/unit/fingerprint mappings and one transition per section remain mandatory.",
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
+        },
+        {
+          "file": "src-rust/plan.rs",
+          "line": 62,
+          "anchor": "fn path_control(",
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4731,6 +4809,12 @@
           "line": 60,
           "anchor": "fn captured_legacy_negative_corpus_still_fails_closed",
           "sha256": "5cffd4785c6b400a238e462df827d7c77023b69ed05140b673cfcc08715d9896"
+        },
+        {
+          "file": "tests-rust/path_control.rs",
+          "line": 122,
+          "anchor": "fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan",
+          "sha256": "2f487c54388565c05ce2706398cb8474aeb83f7eae12fd210d38c87ef2f02033"
         }
       ]
     },
@@ -4747,9 +4831,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4774,15 +4858,15 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 180,
+          "line": 233,
           "anchor": "fn integer(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4813,15 +4897,15 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 180,
+          "line": 233,
           "anchor": "fn integer(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4852,15 +4936,15 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 180,
+          "line": 233,
           "anchor": "fn integer(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4891,15 +4975,15 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4936,15 +5020,15 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -4981,15 +5065,15 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -5026,15 +5110,15 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 106,
+          "line": 159,
           "anchor": "fn compatible(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -5071,9 +5155,9 @@
       "rust": [
         {
           "file": "src-rust/plan.rs",
-          "line": 199,
+          "line": 252,
           "anchor": "pub fn validate",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -5364,25 +5448,25 @@
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ],
       "tests": [
@@ -5396,7 +5480,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -5415,25 +5499,25 @@
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ],
       "tests": [
@@ -5447,7 +5531,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -5466,25 +5550,25 @@
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ],
       "tests": [
@@ -5498,7 +5582,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -5517,25 +5601,25 @@
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ],
       "tests": [
@@ -5549,7 +5633,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -5568,25 +5652,25 @@
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ],
       "tests": [
@@ -5600,7 +5684,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -5619,13 +5703,13 @@
           "file": "src-rust/compiled.rs",
           "line": 22,
           "anchor": "pub enum Action",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ],
       "tests": [
@@ -5652,13 +5736,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/compiled.rs",
           "line": 222,
           "anchor": "pub(crate) fn scale",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         }
       ],
       "tests": [
@@ -5691,13 +5775,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/compiled.rs",
           "line": 222,
           "anchor": "pub(crate) fn scale",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         }
       ],
       "tests": [
@@ -5730,13 +5814,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/compiled.rs",
           "line": 222,
           "anchor": "pub(crate) fn scale",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         }
       ],
       "tests": [
@@ -5769,7 +5853,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "crates/motion-command/src/lib.rs",
@@ -5808,7 +5892,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "crates/motion-command/src/lib.rs",
@@ -5847,7 +5931,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "crates/motion-command/src/lib.rs",
@@ -5886,7 +5970,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "crates/motion-command/src/lib.rs",
@@ -5925,7 +6009,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -5958,13 +6042,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/compiled.rs",
           "line": 308,
           "anchor": "fn feed(",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         }
       ],
       "tests": [
@@ -5995,15 +6079,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 180,
+          "line": 233,
           "anchor": "fn integer(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -6034,15 +6118,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/plan.rs",
-          "line": 180,
+          "line": 233,
           "anchor": "fn integer(",
-          "sha256": "69dda1f02fde92ee2bcd4ee13feb2840582b36185a39321e94276b858f2cb996"
+          "sha256": "f13b4b23a6ab7605ce6bb834dd3e459d4d51ae9ff41f08741411b38be1ce7d8f"
         }
       ],
       "tests": [
@@ -6073,15 +6157,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "crates/motion-command/src/lib.rs",
@@ -6124,15 +6208,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "crates/motion-command/src/lib.rs",
@@ -6177,13 +6261,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -6234,13 +6318,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -6291,13 +6375,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -6348,13 +6432,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -6405,13 +6489,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -6462,13 +6546,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -6519,13 +6603,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -6576,13 +6660,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/geometry.rs",
@@ -6633,19 +6717,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -6678,19 +6762,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -6723,19 +6807,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -6768,19 +6852,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -6813,7 +6897,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -6846,19 +6930,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/compiled.rs",
           "line": 120,
           "anchor": "pub(crate) fn source_context",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         }
       ],
       "tests": [
@@ -6891,19 +6975,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/compiled.rs",
           "line": 120,
           "anchor": "pub(crate) fn source_context",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         }
       ],
       "tests": [
@@ -6936,19 +7020,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/compiled.rs",
           "line": 120,
           "anchor": "pub(crate) fn source_context",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         }
       ],
       "tests": [
@@ -6981,13 +7065,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7026,13 +7110,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7071,13 +7155,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7116,13 +7200,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7161,19 +7245,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7206,19 +7290,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7251,19 +7335,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7296,19 +7380,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7341,19 +7425,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7386,19 +7470,19 @@
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 110,
           "anchor": "fn next(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7431,13 +7515,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7470,13 +7554,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7509,13 +7593,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7546,27 +7630,27 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7597,27 +7681,27 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7648,27 +7732,27 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7699,27 +7783,27 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 91,
           "anchor": "fn phase(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7752,13 +7836,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7797,13 +7881,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7840,21 +7924,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7885,21 +7969,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7930,21 +8014,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -7975,21 +8059,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8020,21 +8104,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8065,21 +8149,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8110,21 +8194,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8155,21 +8239,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8200,21 +8284,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8245,21 +8329,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8290,21 +8374,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8335,21 +8419,21 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 163,
           "anchor": "fn waypoints(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8382,7 +8466,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8415,7 +8499,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8446,15 +8530,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8485,15 +8569,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8524,15 +8608,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8563,15 +8647,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8602,15 +8686,15 @@
       "rust": [
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 189,
           "anchor": "fn process(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8643,13 +8727,13 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8657,13 +8741,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -8682,13 +8766,13 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8696,13 +8780,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -8721,13 +8805,13 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8735,13 +8819,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -8760,13 +8844,13 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8774,13 +8858,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -8799,7 +8883,7 @@
           "file": "src-rust/compiled.rs",
           "line": 22,
           "anchor": "pub enum Action",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         },
         {
           "file": "src-rust/diagnostics.rs",
@@ -8838,7 +8922,7 @@
           "file": "src-rust/compiled.rs",
           "line": 22,
           "anchor": "pub enum Action",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         },
         {
           "file": "src-rust/diagnostics.rs",
@@ -8877,7 +8961,7 @@
           "file": "src-rust/compiled.rs",
           "line": 22,
           "anchor": "pub enum Action",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         },
         {
           "file": "src-rust/diagnostics.rs",
@@ -8916,19 +9000,19 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8936,13 +9020,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "tests-rust/compiled.rs",
@@ -8967,19 +9051,19 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -8987,13 +9071,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "tests-rust/compiled.rs",
@@ -9018,19 +9102,19 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9038,13 +9122,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "tests-rust/compiled.rs",
@@ -9069,19 +9153,19 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9089,13 +9173,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "tests-rust/compiled.rs",
@@ -9120,19 +9204,19 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9140,13 +9224,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "tests-rust/compiled.rs",
@@ -9171,19 +9255,19 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9191,13 +9275,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "tests-rust/compiled.rs",
@@ -9222,19 +9306,19 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9242,13 +9326,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "tests-rust/compiled.rs",
@@ -9273,19 +9357,19 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/command_audit.rs",
-          "line": 393,
+          "line": 403,
           "anchor": "pub fn audit",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9293,13 +9377,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "tests-rust/compiled.rs",
@@ -9324,13 +9408,13 @@
           "file": "src-rust/bundle.rs",
           "line": 137,
           "anchor": "fn f64(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9357,13 +9441,13 @@
           "file": "src-rust/bundle.rs",
           "line": 137,
           "anchor": "fn f64(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9396,7 +9480,7 @@
           "file": "src-rust/command_audit.rs",
           "line": 249,
           "anchor": "fn motion(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         }
       ],
       "tests": [
@@ -9429,13 +9513,13 @@
           "file": "src-rust/bundle.rs",
           "line": 296,
           "anchor": "fn record(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ],
       "tests": [
@@ -9443,13 +9527,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -9468,13 +9552,13 @@
           "file": "src-rust/bundle.rs",
           "line": 296,
           "anchor": "fn record(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ],
       "tests": [
@@ -9482,13 +9566,13 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -9546,13 +9630,13 @@
           "file": "src-rust/command_audit.rs",
           "line": 33,
           "anchor": "fn fail(",
-          "sha256": "12fe64d4509bca62e8c75b5520dd4e4cf9ec87b0510fe9cb36ccfcebc5dbec15"
+          "sha256": "69e8739877bb17b8daa32f0ac37f09adf9963e59f6d311ccdbba1934e085e8c4"
         },
         {
           "file": "src-rust/compiled.rs",
-          "line": 452,
+          "line": 457,
           "anchor": "pub fn prepare",
-          "sha256": "98a6414be72bf3c1872725f2024eb9c8d8fa5985eab27ba29acce0ce2fb424ae"
+          "sha256": "183998faa1666b53b39d74c9aa98221734144782381f83098940c7a484038713"
         }
       ],
       "tests": [
@@ -9566,7 +9650,7 @@
           "file": "src-rust/bundle.rs",
           "line": 967,
           "anchor": "fn serialization_faults_are_rejected_by_semantics_not_just_checksums",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -9638,7 +9722,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -9683,7 +9767,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -9728,7 +9812,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         }
       ]
     },
@@ -9747,7 +9831,7 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/publication.rs",
@@ -9761,7 +9845,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/publication.rs",
@@ -9786,7 +9870,7 @@
           "file": "src-rust/bundle.rs",
           "line": 620,
           "anchor": "fn decode(",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/publication.rs",
@@ -9800,7 +9884,7 @@
           "file": "src-rust/bundle.rs",
           "line": 880,
           "anchor": "fn malformed_truncated_stale_and_resource_exhausting_bundles_never_load",
-          "sha256": "1299d86653a7c95f63e7916ab7a79d1835d31e7ad88ba45a9f3b2365c1a47829"
+          "sha256": "c1b1911cc140a738823a4971112a16e427e3747b43b7bacad27724baaabe76fe"
         },
         {
           "file": "src-rust/publication.rs",

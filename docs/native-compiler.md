@@ -46,7 +46,7 @@ task adapter must own a fresh selection and live binding. See
 
 Implemented modules include full revision-1/revision-2 source decoding,
 dimensional units, closed executable graphs and ordered source uses, independent
-analytic geometry, strict bounded JSON, setup-plan schemas 1–4, tool-table file
+analytic geometry, strict bounded JSON, setup-plan schemas 1–5, tool-table file
 checks and offline capability manifests. Exact ordered models and fingerprints
 match four legacy fixtures and all 130 captured native profiles. Decimal parsing
 and fingerprint formatting retain ECMAScript round trips; derived native radius
@@ -75,8 +75,10 @@ synchronized timing stays unknown; the report never claims native capacity.
 The migration inventory, ordered semantic equivalence, bounded negative corpus,
 exact-path budget accounting and matched large-job compiler benchmarks now have
 saved evidence. [Exact reductions](native-exact-reductions.md) preserve the
-unoptimized motion baseline; geometric combining and positive fit/blend budgets
-are not enabled.
+unoptimized source geometry; geometric combining and fitting remain disabled.
+Native plan schema 5 adds explicitly reviewed path control and additional blend
+allocation for simulator qualification. Full-stack boundary acceptance remains
+pending; see [error accounting](native-error-budget.md).
 
 No native task adapter, controller connection or execution capability is provided
 by this checkpoint. Passing compiler qualification does not authorize a job to run.
@@ -115,7 +117,8 @@ translator, actual commanded position supplies the next segment's start; the
 profile's numeric continuity allowance never creates an extra positioning move.
 The circular axis point is at that commanded start's normal coordinate. CAM
 tolerance remains provenance, and allocates no fitting or blending allowance;
-termination remains exact path for this baseline.
+schemas 1–4 retain exact path. Schema 5 can request exact stop or an explicit
+additional blend allowance without changing the source's geometry or CAM metadata.
 
 The separate audit checks the complete span sequence, all source vertices,
 reviewed moves, feeds, geometry, intent, gates, state events, tool/mapping order
@@ -143,9 +146,10 @@ JSON evidence; later success preserves the latest failure. Archiving failures ar
 reported separately and never conceal the original preparation error.
 
 Prepared, published and reloaded jobs also report [explicit error accounting](native-error-budget.md).
-The exact-path baseline spends zero fit/blend allowance. Source CAM tolerance
-is separate, and absent post/numeric/total bounds remain unknown. No positive
-approximation policy is enabled by this report.
+The exact-path baseline spends zero fit/blend allowance. Schema 5 blend requests
+report their separate allocation with unknown actual consumption. Source CAM
+tolerance and absent post/numeric/total bounds remain separate and unknown where
+unverified. The report does not authorize execution.
 
 The [benchmark harness](../tools/native-benchmark/README.md) measures fresh-process
 and warm preparation, complete bundle creation and independently validated reloads,

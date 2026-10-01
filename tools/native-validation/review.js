@@ -101,7 +101,7 @@ module.exports = {
     "src/plan.js": [
       r(13,13,"Closed object keys remain validated, including per-transition-mode allowed fields.",["src-rust/plan.rs#fn keys("],[plans,negative]),
       r(16,25,"Reviewed paths retain waypoint counts, single allowed axis, finite magnitude below 1e9, complete axes and exact order.",["src-rust/plan.rs#fn waypoints("],[plans,negative,ordered]),
-      r(31,37,"Schemas 1-4, machine/unit/fingerprint binding, explicit mapping objects and one transition per section remain mandatory.",["src-rust/plan.rs#pub fn validate"],[plans,negative]),
+      r(31,37,"Schemas 1-4 retain exact-path defaults and original binding rules. Native schema 5 adds explicit per-operation path control with separately reviewed additional blend allowance; machine/unit/fingerprint mappings and one transition per section remain mandatory.",["src-rust/plan.rs#pub fn validate","src-rust/plan.rs#fn path_control("],[plans,negative,"tests-rust/path_control.rs#fn missing_unknown_or_invalid_additional_allowances_fail_the_complete_plan"],"intentionally-changed"),
       r(42,42,"Rust Result replaces JS exception type discrimination; collected plan issues and dependent unchecked boundaries remain visible.",["src-rust/plan.rs#pub fn validate"],[planIssues],"intentionally-changed"),
       r(51,56,"Explicit T/H mappings retain positive integer 1..99999 bounds and WCS mapping retains G54..G59.3.",["src-rust/plan.rs#fn integer(","src-rust/plan.rs#pub fn validate"],[plans,negative]),
       r(67,89,"Schema-dependent transition modes, compatible continue/link state and exact reviewed link/approach endpoints remain required.",["src-rust/plan.rs#pub fn validate","src-rust/plan.rs#fn compatible("],[plans,negative,ordered]),

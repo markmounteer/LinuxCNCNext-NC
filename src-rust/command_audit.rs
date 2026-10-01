@@ -252,6 +252,7 @@ impl Audit<'_> {
         section: &Value,
         position: [f64; 3],
         ordinal: usize,
+        termination: Termination,
     ) -> Result<[f64; 3]> {
         let Action::Motion(m) = self.next(Site::Source, Some(ordinal))? else {
             return Err(fail("MOTION_USE", "Source motion missing/replaced"));
@@ -274,7 +275,13 @@ impl Audit<'_> {
             Feed::PerSecond(compiled::number(&path["feed"]["value"])? * self.unit / 60.0)
         };
         insist(
-            m.feed == expected_feed && m.termination == Termination::ExactPath,
+            m.feed == expected_feed
+                && m.termination
+                    == if expected_feed == Feed::Rapid {
+                        Termination::ExactPath
+                    } else {
+                        termination
+                    },
             "FEED_TERMINATION",
         )?;
         insist(
@@ -294,6 +301,9 @@ impl Audit<'_> {
         }
         if matches!(m.feed, Feed::PerRevolution { .. }) {
             self.required.insert("feed-per-revolution".into());
+        }
+        if matches!(m.termination, Termination::Blend { .. }) {
+            self.required.insert("blend".into());
         }
         let (start, end) = match m.geometry {
             Geometry::Line { start, end } | Geometry::Circular { start, end, .. } => (start, end),
@@ -490,10 +500,22 @@ pub fn audit(
                     a.report.source_uses += 1;
                 } else if let Some(points) = path["points"].as_array() {
                     for vertex in 1..points.len() {
-                        position = a.motion(path, section, position, vertex)?;
+                        position = a.motion(
+                            path,
+                            section,
+                            position,
+                            vertex,
+                            setup.path_controls()[si].termination(),
+                        )?;
                     }
                 } else {
-                    position = a.motion(path, section, position, 0)?;
+                    position = a.motion(
+                        path,
+                        section,
+                        position,
+                        0,
+                        setup.path_controls()[si].termination(),
+                    )?;
                 }
             }
         }
@@ -530,7 +552,8 @@ fn plan_binding(program: &Program, setup: &ValidatedPlan) -> Result<()> {
     insist(
         setup.source()["programFingerprint"] == program.report.fingerprint.value
             && setup.mappings().len() == sections.len()
-            && setup.transitions().len() == sections.len(),
+            && setup.transitions().len() == sections.len()
+            && setup.path_controls().len() == sections.len(),
         "PLAN_BINDING",
     )
 }

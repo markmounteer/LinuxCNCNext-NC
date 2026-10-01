@@ -70,6 +70,10 @@ name = "plan"
 path = "tests-rust/plan.rs"
 
 [[test]]
+name = "path_control"
+path = "tests-rust/path_control.rs"
+
+[[test]]
 name = "native_cli"
 path = "tests-rust/native_cli.rs"
 

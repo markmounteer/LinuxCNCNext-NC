@@ -8,7 +8,7 @@ use motion_command::{
 use serde_json::{json, Value};
 use std::{f64::consts::TAU, ops::Range};
 
-pub const POLICY: &str = "nextnc-native/unoptimized-exact-path/1";
+pub const POLICY: &str = "nextnc-native/unoptimized-reviewed-path-control/1";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Frame {
@@ -330,6 +330,7 @@ struct Builder<'a> {
     selected_tool: Option<u32>,
     gate_pending: bool,
     phase: Phase,
+    termination: Termination,
 }
 impl Builder<'_> {
     fn emit(&mut self, action: Action, site: Site, ordinal: Option<usize>) -> Result<()> {
@@ -436,7 +437,11 @@ impl Builder<'_> {
             Action::Motion(Motion {
                 geometry,
                 feed,
-                termination: Termination::ExactPath,
+                termination: if feed == Feed::Rapid {
+                    Termination::ExactPath
+                } else {
+                    self.termination
+                },
                 entry_gate,
                 movement: movement(&path["movement"])?,
                 tolerance,
@@ -463,12 +468,14 @@ pub fn prepare(text: &str, plan_text: &str, limits: &Limits) -> Result<PreparedP
         selected_tool: None,
         gate_pending: false,
         phase: Phase::Header,
+        termination: Termination::ExactPath,
     };
     b.policy(Action::ResetModes)?;
     b.policy(Action::ClearTemporaryOffsets)?;
     b.stop()?;
     b.span(Phase::Header, 0);
     for (si, section) in array(&program.model["sections"])?.iter().enumerate() {
+        b.termination = setup.path_controls()[si].termination();
         b.phase = Phase::Transition(si);
         let start = b.commands.len();
         match &setup.transitions()[si] {
@@ -630,6 +637,7 @@ mod tests {
     fn rounding_must_not_erase_a_source_spindle_event() -> Result<()> {
         let limits = Limits::default();
         let mut builder = Builder {
+            termination: Termination::ExactPath,
             limits: &limits,
             commands: Vec::new(),
             spans: Vec::new(),

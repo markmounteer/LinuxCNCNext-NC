@@ -1,0 +1,1452 @@
+{
+  "schema": "nextnc-task/path-control-fixtures/1",
+  "producer": "b31904b3d5ad9d56cc4cc16b8090e768b0e1958d",
+  "generatorSHA256": "1ab067675251e92069c296d97143d18927e6ef42f0f38afd60c9a860759de426",
+  "scope": "Synthetic explicit additional allowances for simulator qualification only",
+  "cases": [
+    {
+      "name": "mill-mm-path-control",
+      "machine": "mill",
+      "units": "mm",
+      "start": [
+        4,
+        4,
+        5
+      ],
+      "moves": [
+        {
+          "start": [
+            4,
+            4,
+            5
+          ],
+          "end": [
+            8,
+            4,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            8,
+            4,
+            5
+          ],
+          "end": [
+            8,
+            7,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            8,
+            7,
+            5
+          ],
+          "end": [
+            12,
+            7,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            12,
+            7,
+            5
+          ],
+          "end": [
+            16,
+            7,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.2
+        },
+        {
+          "start": [
+            16,
+            7,
+            5
+          ],
+          "end": [
+            16,
+            10,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.2
+        },
+        {
+          "start": [
+            16,
+            10,
+            5
+          ],
+          "end": [
+            20,
+            10,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.2
+        },
+        {
+          "start": [
+            20,
+            10,
+            5
+          ],
+          "end": [
+            24,
+            10,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            24,
+            10,
+            5
+          ],
+          "end": [
+            24,
+            13,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            24,
+            13,
+            5
+          ],
+          "end": [
+            28,
+            13,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            28,
+            13,
+            5
+          ],
+          "end": [
+            32,
+            13,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            32,
+            13,
+            5
+          ],
+          "end": [
+            32,
+            16,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            32,
+            16,
+            5
+          ],
+          "end": [
+            36,
+            16,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            36,
+            16,
+            5
+          ],
+          "end": [
+            40,
+            16,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        },
+        {
+          "start": [
+            40,
+            16,
+            5
+          ],
+          "end": [
+            40,
+            19,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        },
+        {
+          "start": [
+            40,
+            19,
+            5
+          ],
+          "end": [
+            44,
+            19,
+            5
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        }
+      ],
+      "sections": [
+        {
+          "start": [
+            4,
+            4,
+            5
+          ],
+          "end": [
+            12,
+            7,
+            5
+          ]
+        },
+        {
+          "start": [
+            12,
+            7,
+            5
+          ],
+          "end": [
+            20,
+            10,
+            5
+          ]
+        },
+        {
+          "start": [
+            20,
+            10,
+            5
+          ],
+          "end": [
+            28,
+            13,
+            5
+          ]
+        },
+        {
+          "start": [
+            28,
+            13,
+            5
+          ],
+          "end": [
+            36,
+            16,
+            5
+          ]
+        },
+        {
+          "start": [
+            36,
+            16,
+            5
+          ],
+          "end": [
+            44,
+            19,
+            5
+          ]
+        }
+      ],
+      "sourceSHA256": "f28857c9eb7a6d5ee0b0def9714d72751dd11aa8397a71dfa734352f7916f2cd",
+      "setupSHA256": "d97c581f4839950425b9d740ea315e451028d34d916dfea7d7bcef8249412c01"
+    },
+    {
+      "name": "mill-inch-path-control",
+      "machine": "mill",
+      "units": "inch",
+      "start": [
+        0.15748031496062992,
+        0.15748031496062992,
+        0.1968503937007874
+      ],
+      "moves": [
+        {
+          "start": [
+            0.15748031496062992,
+            0.15748031496062992,
+            0.1968503937007874
+          ],
+          "end": [
+            0.31496062992125984,
+            0.15748031496062992,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            0.31496062992125984,
+            0.15748031496062992,
+            0.1968503937007874
+          ],
+          "end": [
+            0.31496062992125984,
+            0.2755905511811024,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            0.31496062992125984,
+            0.2755905511811024,
+            0.1968503937007874
+          ],
+          "end": [
+            0.47244094488188976,
+            0.2755905511811024,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            0.47244094488188976,
+            0.2755905511811024,
+            0.1968503937007874
+          ],
+          "end": [
+            0.6299212598425197,
+            0.2755905511811024,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.20000000000000004
+        },
+        {
+          "start": [
+            0.6299212598425197,
+            0.2755905511811024,
+            0.1968503937007874
+          ],
+          "end": [
+            0.6299212598425197,
+            0.3937007874015748,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.20000000000000004
+        },
+        {
+          "start": [
+            0.6299212598425197,
+            0.3937007874015748,
+            0.1968503937007874
+          ],
+          "end": [
+            0.7874015748031495,
+            0.3937007874015748,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.20000000000000004
+        },
+        {
+          "start": [
+            0.7874015748031495,
+            0.3937007874015748,
+            0.1968503937007874
+          ],
+          "end": [
+            0.9448818897637794,
+            0.3937007874015748,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            0.9448818897637794,
+            0.3937007874015748,
+            0.1968503937007874
+          ],
+          "end": [
+            0.9448818897637794,
+            0.5118110236220472,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            0.9448818897637794,
+            0.5118110236220472,
+            0.1968503937007874
+          ],
+          "end": [
+            1.1023622047244093,
+            0.5118110236220472,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.1023622047244093,
+            0.5118110236220472,
+            0.1968503937007874
+          ],
+          "end": [
+            1.2598425196850391,
+            0.5118110236220472,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.2598425196850391,
+            0.5118110236220472,
+            0.1968503937007874
+          ],
+          "end": [
+            1.2598425196850391,
+            0.6299212598425197,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.2598425196850391,
+            0.6299212598425197,
+            0.1968503937007874
+          ],
+          "end": [
+            1.417322834645669,
+            0.6299212598425197,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.417322834645669,
+            0.6299212598425197,
+            0.1968503937007874
+          ],
+          "end": [
+            1.5748031496062989,
+            0.6299212598425197,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        },
+        {
+          "start": [
+            1.5748031496062989,
+            0.6299212598425197,
+            0.1968503937007874
+          ],
+          "end": [
+            1.5748031496062989,
+            0.7480314960629921,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        },
+        {
+          "start": [
+            1.5748031496062989,
+            0.7480314960629921,
+            0.1968503937007874
+          ],
+          "end": [
+            1.7322834645669287,
+            0.7480314960629921,
+            0.1968503937007874
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        }
+      ],
+      "sections": [
+        {
+          "start": [
+            0.15748031496062992,
+            0.15748031496062992,
+            0.1968503937007874
+          ],
+          "end": [
+            0.47244094488188976,
+            0.2755905511811024,
+            0.1968503937007874
+          ]
+        },
+        {
+          "start": [
+            0.47244094488188976,
+            0.2755905511811024,
+            0.1968503937007874
+          ],
+          "end": [
+            0.7874015748031495,
+            0.3937007874015748,
+            0.1968503937007874
+          ]
+        },
+        {
+          "start": [
+            0.7874015748031495,
+            0.3937007874015748,
+            0.1968503937007874
+          ],
+          "end": [
+            1.1023622047244093,
+            0.5118110236220472,
+            0.1968503937007874
+          ]
+        },
+        {
+          "start": [
+            1.1023622047244093,
+            0.5118110236220472,
+            0.1968503937007874
+          ],
+          "end": [
+            1.417322834645669,
+            0.6299212598425197,
+            0.1968503937007874
+          ]
+        },
+        {
+          "start": [
+            1.417322834645669,
+            0.6299212598425197,
+            0.1968503937007874
+          ],
+          "end": [
+            1.7322834645669287,
+            0.7480314960629921,
+            0.1968503937007874
+          ]
+        }
+      ],
+      "sourceSHA256": "b8039159585fe2d6ec8fc0a5de535281590275d17d4a81d2d54ed3f4edcdb19a",
+      "setupSHA256": "e83f4e9a6436f51d8c34a28d329edcb427165be1c8f7910b3e34a270a4249a9e"
+    },
+    {
+      "name": "lathe-mm-path-control",
+      "machine": "lathe",
+      "units": "mm",
+      "start": [
+        6,
+        0,
+        2
+      ],
+      "moves": [
+        {
+          "start": [
+            6,
+            0,
+            2
+          ],
+          "end": [
+            10,
+            0,
+            2
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            10,
+            0,
+            2
+          ],
+          "end": [
+            10,
+            0,
+            -1
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            10,
+            0,
+            -1
+          ],
+          "end": [
+            14,
+            0,
+            -1
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            14,
+            0,
+            -1
+          ],
+          "end": [
+            18,
+            0,
+            -1
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.2
+        },
+        {
+          "start": [
+            18,
+            0,
+            -1
+          ],
+          "end": [
+            18,
+            0,
+            -4
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.2
+        },
+        {
+          "start": [
+            18,
+            0,
+            -4
+          ],
+          "end": [
+            22,
+            0,
+            -4
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.2
+        },
+        {
+          "start": [
+            22,
+            0,
+            -4
+          ],
+          "end": [
+            26,
+            0,
+            -4
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            26,
+            0,
+            -4
+          ],
+          "end": [
+            26,
+            0,
+            -7
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            26,
+            0,
+            -7
+          ],
+          "end": [
+            30,
+            0,
+            -7
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            30,
+            0,
+            -7
+          ],
+          "end": [
+            34,
+            0,
+            -7
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            34,
+            0,
+            -7
+          ],
+          "end": [
+            34,
+            0,
+            -10
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            34,
+            0,
+            -10
+          ],
+          "end": [
+            38,
+            0,
+            -10
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            38,
+            0,
+            -10
+          ],
+          "end": [
+            42,
+            0,
+            -10
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        },
+        {
+          "start": [
+            42,
+            0,
+            -10
+          ],
+          "end": [
+            42,
+            0,
+            -13
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        },
+        {
+          "start": [
+            42,
+            0,
+            -13
+          ],
+          "end": [
+            46,
+            0,
+            -13
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 600,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        }
+      ],
+      "sections": [
+        {
+          "start": [
+            6,
+            0,
+            2
+          ],
+          "end": [
+            14,
+            0,
+            -1
+          ]
+        },
+        {
+          "start": [
+            14,
+            0,
+            -1
+          ],
+          "end": [
+            22,
+            0,
+            -4
+          ]
+        },
+        {
+          "start": [
+            22,
+            0,
+            -4
+          ],
+          "end": [
+            30,
+            0,
+            -7
+          ]
+        },
+        {
+          "start": [
+            30,
+            0,
+            -7
+          ],
+          "end": [
+            38,
+            0,
+            -10
+          ]
+        },
+        {
+          "start": [
+            38,
+            0,
+            -10
+          ],
+          "end": [
+            46,
+            0,
+            -13
+          ]
+        }
+      ],
+      "sourceSHA256": "e33d0f2c41c44ddfbe9418beeecb734f308546252008d6e0a543868972094129",
+      "setupSHA256": "690e0123244547789b8eae1ca639aefc5af6bb494be01a5b472075a4049a1d70"
+    },
+    {
+      "name": "lathe-inch-path-control",
+      "machine": "lathe",
+      "units": "inch",
+      "start": [
+        0.2362204724409449,
+        0,
+        0.07874015748031496
+      ],
+      "moves": [
+        {
+          "start": [
+            0.2362204724409449,
+            0,
+            0.07874015748031496
+          ],
+          "end": [
+            0.3937007874015748,
+            0,
+            0.07874015748031496
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            0.3937007874015748,
+            0,
+            0.07874015748031496
+          ],
+          "end": [
+            0.3937007874015748,
+            0,
+            -0.039370078740157494
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            0.3937007874015748,
+            0,
+            -0.039370078740157494
+          ],
+          "end": [
+            0.5511811023622047,
+            0,
+            -0.039370078740157494
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 1,
+          "condition": 2,
+          "tolerance": 0.02
+        },
+        {
+          "start": [
+            0.5511811023622047,
+            0,
+            -0.039370078740157494
+          ],
+          "end": [
+            0.7086614173228347,
+            0,
+            -0.039370078740157494
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.20000000000000004
+        },
+        {
+          "start": [
+            0.7086614173228347,
+            0,
+            -0.039370078740157494
+          ],
+          "end": [
+            0.7086614173228347,
+            0,
+            -0.15748031496062995
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.20000000000000004
+        },
+        {
+          "start": [
+            0.7086614173228347,
+            0,
+            -0.15748031496062995
+          ],
+          "end": [
+            0.8661417322834646,
+            0,
+            -0.15748031496062995
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 2,
+          "condition": 2,
+          "tolerance": 0.20000000000000004
+        },
+        {
+          "start": [
+            0.8661417322834646,
+            0,
+            -0.15748031496062995
+          ],
+          "end": [
+            1.0236220472440944,
+            0,
+            -0.15748031496062995
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.0236220472440944,
+            0,
+            -0.15748031496062995
+          ],
+          "end": [
+            1.0236220472440944,
+            0,
+            -0.27559055118110243
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.0236220472440944,
+            0,
+            -0.27559055118110243
+          ],
+          "end": [
+            1.1811023622047243,
+            0,
+            -0.27559055118110243
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 3,
+          "condition": 1,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.1811023622047243,
+            0,
+            -0.27559055118110243
+          ],
+          "end": [
+            1.3385826771653542,
+            0,
+            -0.27559055118110243
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.3385826771653542,
+            0,
+            -0.27559055118110243
+          ],
+          "end": [
+            1.3385826771653542,
+            0,
+            -0.3937007874015749
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.3385826771653542,
+            0,
+            -0.3937007874015749
+          ],
+          "end": [
+            1.496062992125984,
+            0,
+            -0.3937007874015749
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 4,
+          "condition": 0,
+          "tolerance": 0
+        },
+        {
+          "start": [
+            1.496062992125984,
+            0,
+            -0.3937007874015749
+          ],
+          "end": [
+            1.653543307086614,
+            0,
+            -0.3937007874015749
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        },
+        {
+          "start": [
+            1.653543307086614,
+            0,
+            -0.3937007874015749
+          ],
+          "end": [
+            1.653543307086614,
+            0,
+            -0.5118110236220473
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        },
+        {
+          "start": [
+            1.653543307086614,
+            0,
+            -0.5118110236220473
+          ],
+          "end": [
+            1.8110236220472438,
+            0,
+            -0.5118110236220473
+          ],
+          "center": null,
+          "plane": null,
+          "clockwise": false,
+          "feed": 23.62204724409449,
+          "operation": 5,
+          "condition": 2,
+          "tolerance": 0.01
+        }
+      ],
+      "sections": [
+        {
+          "start": [
+            0.2362204724409449,
+            0,
+            0.07874015748031496
+          ],
+          "end": [
+            0.5511811023622047,
+            0,
+            -0.039370078740157494
+          ]
+        },
+        {
+          "start": [
+            0.5511811023622047,
+            0,
+            -0.039370078740157494
+          ],
+          "end": [
+            0.8661417322834646,
+            0,
+            -0.15748031496062995
+          ]
+        },
+        {
+          "start": [
+            0.8661417322834646,
+            0,
+            -0.15748031496062995
+          ],
+          "end": [
+            1.1811023622047243,
+            0,
+            -0.27559055118110243
+          ]
+        },
+        {
+          "start": [
+            1.1811023622047243,
+            0,
+            -0.27559055118110243
+          ],
+          "end": [
+            1.496062992125984,
+            0,
+            -0.3937007874015749
+          ]
+        },
+        {
+          "start": [
+            1.496062992125984,
+            0,
+            -0.3937007874015749
+          ],
+          "end": [
+            1.8110236220472438,
+            0,
+            -0.5118110236220473
+          ]
+        }
+      ],
+      "sourceSHA256": "2c31819c5dd6fb9221f33d093966da727562e734cd4449ce0214b091e6700bf6",
+      "setupSHA256": "139a9808b2e71e4e1dd57beeadf3c46007075a5704ce561aead88da816333e7e"
+    }
+  ]
+}

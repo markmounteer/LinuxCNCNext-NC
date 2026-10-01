@@ -10,6 +10,12 @@ fn fixture(name: &str) -> Result<BoundPlan, Box<dyn std::error::Error>> {
         &std::fs::read_to_string(root.join(format!("{name}.plan.json")))?,
         &Limits::default(),
     )?;
+    bind_prepared(p, name)
+}
+fn bind_prepared(
+    p: compiled::PreparedPlan,
+    name: &str,
+) -> Result<BoundPlan, Box<dyn std::error::Error>> {
     Ok(bind(
         &p,
         &Snapshot {
@@ -38,6 +44,79 @@ fn fixture(name: &str) -> Result<BoundPlan, Box<dyn std::error::Error>> {
             mist: true,
         },
     )?)
+}
+
+#[test]
+fn reviewed_policy_changes_have_drain_barriers_without_per_vertex_modes() -> TestResult {
+    use motion_command::Termination;
+    for name in ["mill-mm", "lathe-mm", "mill-inch", "lathe-inch"] {
+        let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../tests-rust/fixtures/path-control");
+        let prepared = compiled::prepare(
+            &std::fs::read_to_string(root.join(format!("{name}-path-control.stpnc")))?,
+            &std::fs::read_to_string(root.join(format!("{name}-path-control.plan.json")))?,
+            &Limits::default(),
+        )?;
+        let bound = bind_prepared(prepared, name)?;
+        let plan = lower(&bound, dynamics(name.starts_with("lathe")))?;
+        let changes: Vec<_> = plan
+            .pieces()
+            .iter()
+            .filter_map(|p| {
+                if let Payload::Termination(t) = p.payload {
+                    Some((p.command, t))
+                } else {
+                    None
+                }
+            })
+            .collect();
+        assert_eq!(changes.len(), 7);
+        for ((_, actual), expected) in changes.iter().zip([
+            Termination::ExactPath,
+            Termination::Blend {
+                max_deviation_mm: 0.02,
+            },
+            Termination::Blend {
+                max_deviation_mm: 0.2,
+            },
+            Termination::ExactPath,
+            Termination::ExactStop,
+            Termination::Blend {
+                max_deviation_mm: 0.01,
+            },
+            Termination::ExactPath,
+        ]) {
+            match (actual, expected) {
+                (
+                    Termination::Blend {
+                        max_deviation_mm: a,
+                    },
+                    Termination::Blend {
+                        max_deviation_mm: b,
+                    },
+                ) => close(*a, b),
+                _ => assert_eq!(*actual, expected),
+            }
+        }
+        for (command, _) in changes.iter().skip(1) {
+            assert!(
+                plan.drains_before().contains(command),
+                "changed policy lacks drain at {command}"
+            );
+        }
+        assert_eq!(
+            plan.pieces()
+                .iter()
+                .filter(|p| matches!(p.payload, Payload::Motion { .. }))
+                .count(),
+            bound
+                .records()
+                .iter()
+                .filter(|r| matches!(r.action,BoundAction::Motion(m) if m.start_mm!=m.end_mm))
+                .count()
+        );
+    }
+    Ok(())
 }
 fn dynamics(lathe: bool) -> Dynamics {
     Dynamics {
