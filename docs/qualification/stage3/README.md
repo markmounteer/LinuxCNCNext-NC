@@ -4,6 +4,18 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
+The [full-capacity checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-capacity)
+qualifies fourteen selected sessions with all six production binaries unchanged
+from path-control qualification. Dense 80-move fixtures exercise real queue
+backpressure on both machines, with exact/blended completion, hold/resume,
+confirmed step, held/moving abort and subsequent MDI. The step proposal includes
+one command already accepted by the task but waiting for motion admission.
+Two initial harness failures confused those prefixes; their traces are retained
+alongside successful reruns. The compiler validation inventory is corrected at
+`dc1e7ad57258c1950dbc5f70a1775bd57a3a69be`; both hosted workflows passed.
+The immediate next checkpoint is actual HALUI/pendant start-entry routes,
+followed by full-stack braking across a boundary and the supported full-job corpus.
+
 The [operation path-control checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-path-control)
 qualifies fourteen selected sessions at compiler `1452b77ed2`: twelve with
 342,277 consecutive servo samples and two line/MDI regressions. Execution-plan/5
@@ -14,8 +26,9 @@ both machines. Only the Rust compiler/owner library changes; task, motmod, shim
 and RS274 binaries retain their earlier identities. The source/byte audit retains
 726 files, including failed builds and observation attempts. Samples do not
 establish a continuous or physical error bound; the error report keeps those
-terms unknown. Full-capacity retry, entry routes, braking across a boundary and
-the supported full-job corpus remain open.
+terms unknown. Full-capacity controls were pending at that checkpoint and are
+covered above. Entry routes, braking across a boundary and the supported
+full-job corpus remain open.
 
 The earlier [explicit recovery checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-explicit-recovery)
 passes six kill/freeze recovery sequences across **12 simulator sessions** on the
@@ -256,11 +269,11 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 | Pinned task executable | Native-bound task executes initial mill/lathe jobs in isolated simulation | Full execution acceptance matrix pending |
 | State capture/reconciliation and `on_abort` ordering | Typed updates, cached modes, executing tags, queued-state recovery, active zero-valued H, accepted/output receipt validation, motion-birth and kill/freeze restart evidence | Remaining offset/unit/modal and abort/procedure combinations, including full-stack braking across a mode boundary |
 | One start gate, drain/result/rebind | Central gate, actual drains and tool-result suffix rebind; changed H2 and invalid/replaced suffix tests | Full NML/HALUI/pendant and start/hold freshness coverage missing |
-| Semantic stepping and no arbitrary restart | Versioned groups, refused arbitrary restart, actual hold-to-step confirmation, queued blended prefix reaches its reported boundary | Full-capacity step/hold/abort controls remain |
+| Semantic stepping and no arbitrary restart | Versioned groups, refused arbitrary restart, actual hold-to-step confirmation, full-queue proposal includes accepted deferred work and drains at the confirmed endpoint | Combine covered controls with remaining entry-route and full-job gates |
 | Shaper mode and delayed completion | Bounded lane comparison fixes CW-to-Z fault; 15 execution/preflight/guard cases and two loading regressions pass, with cutting-arc tail hold/abort | Wider unit/state/fault combinations remain part of full qualification |
 | Same-table G7/G8/native coordinate matrix | Ten real native/unchanged-RS274 MDI pipelines across four mm/inch/rotation/T1-H2/G7/G8 cases | Complete coordinate and abort-state matrix missing; these sequential MDI references do not compare throughput |
-| Termination conditions and ordered state deltas | Explicit reviewed exact-path/stop/blend controls, mm/inch compiler audits, actual positive blends and 40 servo-observed operation drains; queued hold/step/abort | Covered synthetic boundary gate passes; combine with full-capacity and full-job gates |
-| Receipts, backpressure, identity, connection loss | Motion-owned progress/birth, exact receipt checks, controller-owned kill/freeze stop, shaped-tail stop and explicit full-restart recovery; undersized expansion refuses before selection | Full-capacity backpressure/retry matrix and recovery from remaining receipt/procedure faults |
+| Termination conditions and ordered state deltas | Explicit reviewed exact-path/stop/blend controls, mm/inch compiler audits, actual positive blends and 40 servo-observed operation drains; full-capacity hold/step/abort | Covered synthetic gates pass; combine with full-job gate |
+| Receipts, backpressure, identity, connection loss | Motion-owned progress/birth, exact receipt checks, controller-owned kill/freeze stop, shaped-tail stop and explicit full-restart recovery; undersized expansion refuses before selection; full-queue deferral and unique successful receipts | Recovery from remaining receipt/procedure faults; failed or uncertain motion is never blindly retried |
 | Lines, planes, full circles, helixes and events | Initial native synthetic jobs through real task/motmod/shim with a source/setup oracle | Full state/event/job corpus remains pending |
 
 Procedure checkpoint `ab7442e9ac469f86306d03e5d9ed6ffe7d47120a` passed 122
@@ -312,8 +325,8 @@ checkpoint `cd61bae17e42895e18c8b1bb226fc500a8c4dbf7` passes
 recorded in [freshness-ci.json](freshness-ci.json). An ARM64 workspace/all-targets
 compile check passes; ARM64 execution is untested.
 
-Next is actual full-capacity backpressure/retry with hold, step and abort,
-followed by entry-route probes, a braking-boundary crossing and the supported
+Next is actual HALUI/pendant start-entry probes, followed by a full-stack
+braking-boundary crossing and the supported
 full-job corpus. Audit remaining state/procedure requirements against their
 specific earlier evidence rather than treating a larger count as acceptance.
 Controller-owned kill/freeze stopping and explicit full-restart recovery now have
