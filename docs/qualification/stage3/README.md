@@ -4,7 +4,20 @@ Date: 2026-09-30. **IN PROGRESS. Native jobs now execute in the experimental
 LinuxCNC task simulator; full Stage 3 acceptance remains incomplete.** The completed Stage 0 simulator reference and
 [Stages 1–2](../stages12/README.md) remain distinct evidence.
 
-The latest [explicit recovery checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-explicit-recovery)
+The [operation path-control checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-path-control)
+qualifies fourteen selected sessions at compiler `1452b77ed2`: twelve with
+342,277 consecutive servo samples and two line/MDI regressions. Execution-plan/5
+adds explicit reviewed operation controls without spending CAM tolerance. Real
+PH blends, exact-path/stop operations and 40 ordered drains pass on mill/lathe
+mm/inch jobs. Queued hold/resume, confirmed semantic step and held abort pass on
+both machines. Only the Rust compiler/owner library changes; task, motmod, shim
+and RS274 binaries retain their earlier identities. The source/byte audit retains
+726 files, including failed builds and observation attempts. Samples do not
+establish a continuous or physical error bound; the error report keeps those
+terms unknown. Full-capacity retry, entry routes, braking across a boundary and
+the supported full-job corpus remain open.
+
+The earlier [explicit recovery checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-explicit-recovery)
 passes six kill/freeze recovery sequences across **12 simulator sessions** on the
 mill, lathe and input-shaped mill. All six runtime binaries remain unchanged.
 The task-only restart is refused by orphaned HAL registration, with that cause
@@ -15,8 +28,8 @@ then completes a newly selected job with tool confirmation and ordinary MDI
 handoff. Totals are 90 direct motion-command refusals, 18 unselected-start refusals
 and three late frozen-task returns. Earlier unsuccessful/weak-evidence runs are
 retained and excluded from acceptance. This qualifies the bounded simulator
-recovery scenario, not in-place latch reset or physical recovery. Next test
-termination/tolerance changes at queued and held geometry boundaries.
+recovery scenario, not in-place latch reset or physical recovery. The newer
+checkpoint above adds pending/held termination and tolerance evidence.
 
 The preceding [machine-event and shaped-loss checkpoint](https://github.com/markmounteer/linuxcnc/tree/wip/nextnc-motion-contract-20260929/controller/motion/motion/tests/nextnc-stage3/evidence/2026-09-30-machine-events-shaped-loss)
 passes **18 sessions** with this compiler unchanged at `1baf531dc1` and controller
@@ -243,10 +256,10 @@ ordered actual motion trace. Full Stage 3 qualification remains below.
 | Pinned task executable | Native-bound task executes initial mill/lathe jobs in isolated simulation | Full execution acceptance matrix pending |
 | State capture/reconciliation and `on_abort` ordering | Typed updates, cached modes, executing tags, queued-state recovery, active zero-valued H, accepted/output receipt validation, motion-birth and kill/freeze restart evidence | Remaining offset/unit/modal and abort/procedure combinations, including full-stack braking across a mode boundary |
 | One start gate, drain/result/rebind | Central gate, actual drains and tool-result suffix rebind; changed H2 and invalid/replaced suffix tests | Full NML/HALUI/pendant and start/hold freshness coverage missing |
-| Semantic stepping and no arbitrary restart | Versioned groups, actual hold-to-step proposal/confirmation and drain | Full held/read-ahead/corner behavior matrix pending |
+| Semantic stepping and no arbitrary restart | Versioned groups, refused arbitrary restart, actual hold-to-step confirmation, queued blended prefix reaches its reported boundary | Full-capacity step/hold/abort controls remain |
 | Shaper mode and delayed completion | Bounded lane comparison fixes CW-to-Z fault; 15 execution/preflight/guard cases and two loading regressions pass, with cutting-arc tail hold/abort | Wider unit/state/fault combinations remain part of full qualification |
 | Same-table G7/G8/native coordinate matrix | Ten real native/unchanged-RS274 MDI pipelines across four mm/inch/rotation/T1-H2/G7/G8 cases | Complete coordinate and abort-state matrix missing; these sequential MDI references do not compare throughput |
-| Termination conditions and ordered state deltas | Rust lowering retains ordered events and emits termination deltas with drain barriers | Actual pending-boundary behavior remains untested |
+| Termination conditions and ordered state deltas | Explicit reviewed exact-path/stop/blend controls, mm/inch compiler audits, actual positive blends and 40 servo-observed operation drains; queued hold/step/abort | Covered synthetic boundary gate passes; combine with full-capacity and full-job gates |
 | Receipts, backpressure, identity, connection loss | Motion-owned progress/birth, exact receipt checks, controller-owned kill/freeze stop, shaped-tail stop and explicit full-restart recovery; undersized expansion refuses before selection | Full-capacity backpressure/retry matrix and recovery from remaining receipt/procedure faults |
 | Lines, planes, full circles, helixes and events | Initial native synthetic jobs through real task/motmod/shim with a source/setup oracle | Full state/event/job corpus remains pending |
 
@@ -299,8 +312,10 @@ checkpoint `cd61bae17e42895e18c8b1bb226fc500a8c4dbf7` passes
 recorded in [freshness-ci.json](freshness-ci.json). An ARM64 workspace/all-targets
 compile check passes; ARM64 execution is untested.
 
-Next are actual pending/held termination boundaries, then remaining
-coordinate/modal, procedure, entry-route, backpressure/retry and fault combinations.
+Next is actual full-capacity backpressure/retry with hold, step and abort,
+followed by entry-route probes, a braking-boundary crossing and the supported
+full-job corpus. Audit remaining state/procedure requirements against their
+specific earlier evidence rather than treating a larger count as acceptance.
 Controller-owned kill/freeze stopping and explicit full-restart recovery now have
 the bounded evidence described above. This work
 must keep the existing task and motmod guards. Appending an

@@ -26,13 +26,15 @@ Example path-control entries (the array must match the job's operation count):
 This is additional reviewed execution intent, not a second use of Fusion's CAM
 tolerance. Rapid source paths and reviewed setup waypoints retain exact-path
 control. The Rust owner emits termination changes only when required and places
-a drain barrier before a changed policy can affect pending geometry. Full-stack
-pending/held boundary qualification is still in progress.
+a drain barrier before a changed policy can affect pending geometry. The
+[path-control simulator checkpoint](qualification/stage3/README.md) records
+positive blends, 40 operation drains and queued hold/step/abort behavior on mill
+and lathe fixtures. Full Stage 3 and physical acceptance remain incomplete.
 
 The version-2 error report exposes the allocation and selected control per
 operation. Positive blend requests report `blend_used_mm: null`: preparation
 has not measured the executed continuous path. Exact controls retain zero.
-Fitting remains disabled. A prepared candidate grants no execution permission;
+Compiler-side fitting remains disabled. A prepared candidate grants no execution permission;
 native Stage 3 and physical-machine acceptance remain incomplete.
 
 The intended accounting, only when compatible independently established bounds
