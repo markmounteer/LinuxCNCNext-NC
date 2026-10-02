@@ -1,0 +1,128 @@
+{
+  "schema": "nextnc-task/css-fixtures/1",
+  "producer": "b31904b3d5ad9d56cc4cc16b8090e768b0e1958d",
+  "generatorSHA256": "f486ce6a27cdfe45792cd04730c1f2e2191bdc17839eb63f81593eafebe8758b",
+  "scope": "Synthetic centerline/offset/CSS tests only; no real setup, clearance or encoder qualification",
+  "cases": [
+    {
+      "name": "lathe-mm-cw-css",
+      "units": "mm",
+      "clockwise": true,
+      "sections": [
+        {
+          "tool": 1,
+          "offset": 2,
+          "work": 1,
+          "surface": 8000,
+          "cap": 1800
+        },
+        {
+          "tool": 1,
+          "offset": 3,
+          "work": 1,
+          "surface": 6000,
+          "cap": 1200
+        },
+        {
+          "tool": 2,
+          "offset": 3,
+          "work": 2,
+          "surface": 10000,
+          "cap": 1600
+        }
+      ],
+      "sourceSHA256": "88457fb39d30dc7143b7a5c6f327265e5139b70eace8f80ef04c58807df5a32e",
+      "setupSHA256": "8b57b92ba949bf1611b49f78846be445fefde884338f18d07517abcac6b6806c"
+    },
+    {
+      "name": "lathe-mm-ccw-css",
+      "units": "mm",
+      "clockwise": false,
+      "sections": [
+        {
+          "tool": 1,
+          "offset": 2,
+          "work": 1,
+          "surface": 8000,
+          "cap": 1800
+        },
+        {
+          "tool": 1,
+          "offset": 3,
+          "work": 1,
+          "surface": 6000,
+          "cap": 1200
+        },
+        {
+          "tool": 2,
+          "offset": 3,
+          "work": 2,
+          "surface": 10000,
+          "cap": 1600
+        }
+      ],
+      "sourceSHA256": "e5234a0039c0b899b2d7f623718586049ebd9c3b81b6bbdff0f5d9d7195d7fb6",
+      "setupSHA256": "81a1fea0c9e57f8c847c0da8cd14031f0561081b9949f532a7c403be24b28323"
+    },
+    {
+      "name": "lathe-inch-cw-css",
+      "units": "inch",
+      "clockwise": true,
+      "sections": [
+        {
+          "tool": 1,
+          "offset": 2,
+          "work": 1,
+          "surface": 8000,
+          "cap": 1800
+        },
+        {
+          "tool": 1,
+          "offset": 3,
+          "work": 1,
+          "surface": 6000,
+          "cap": 1200
+        },
+        {
+          "tool": 2,
+          "offset": 3,
+          "work": 2,
+          "surface": 10000,
+          "cap": 1600
+        }
+      ],
+      "sourceSHA256": "a0524708c41e32bcadf72da57178205f093f439e6701f70519a4fb6d2337677b",
+      "setupSHA256": "e848869ea99976d614f9d410c88bbbdc3712af2297f78e2cc6ea9b989a9d9a2b"
+    },
+    {
+      "name": "lathe-inch-ccw-css",
+      "units": "inch",
+      "clockwise": false,
+      "sections": [
+        {
+          "tool": 1,
+          "offset": 2,
+          "work": 1,
+          "surface": 8000,
+          "cap": 1800
+        },
+        {
+          "tool": 1,
+          "offset": 3,
+          "work": 1,
+          "surface": 6000,
+          "cap": 1200
+        },
+        {
+          "tool": 2,
+          "offset": 3,
+          "work": 2,
+          "surface": 10000,
+          "cap": 1600
+        }
+      ],
+      "sourceSHA256": "03c4a3a7e526e75c51b01452ad78a443827db3f50b8e9d1c43bf58adc22933b3",
+      "setupSHA256": "ad53c31c0b39ae966f9eb88cb445a3d85fae024698a8ef05cf6cedd0cdb5d3d8"
+    }
+  ]
+}

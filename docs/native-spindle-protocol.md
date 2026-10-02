@@ -1,8 +1,8 @@
 # Stage 4 native spindle protocol
 
-Status: Rust protocol plus a matching fixed-rate native simulator checkpoint;
-**Stage 4's complete runtime qualification remains open**. The native fault,
-ramp/stop/override matrix and machine acceptance remain required. No
+Status: **Stage 4 accepted for its planned desktop-simulator scope** in the
+matching controller's [acceptance audit](https://github.com/markmounteer/linuxcnc/blob/wip/nextnc-stage4-spindle/controller/motion/motion/docs/nextnc-native-stage4-acceptance-audit.md).
+Physical machine acceptance, performance and delivery remain separate. No
 controller was contacted, enabled or modified by these changes.
 
 ## Explicit capability binding
@@ -118,9 +118,23 @@ Four invalid feedback bindings are refused before motion. Six G94 completion,
 abort and hold/resume regressions pass on the same host image. Controller PR
 [#1416](https://github.com/markmounteer/linuxcnc/pull/1416) retains raw evidence.
 
-The remaining full native gate includes measured-versus-commanded/PID
-channel independence, spindle ramps/stops/reversal, missing/stale/nonfinite
-feedback, feed/spindle overrides, CSS radius/offset/cap, mixed queues, and actual
-fault-stop/recovery behavior. The previous RS274 G95 checkpoint does not prove
-the remaining native fault and recovery cases. Stage 4 remains open until the
-complete independent motion oracle and rejection/fault matrix pass.
+The final controller matrix supersedes the fixed-rate checkpoint: 61 native
+cases pass on matching execution binaries, including continuous ramps, independent
+PID/at-speed feedback, reversal/stale/nonfinite/missing-update faults, overrides,
+resume/rebind freshness, G95 line/arc/rapid abort and explicit fresh-feed recovery.
+Independent saved-trace audits reject 56 corrupted native traces and reproduce
+the pre-fix spindle-left-running defect. No physical qualification is implied.
+
+`tools/native-css-fixtures/generate.cjs` adds four producer-pinned mm/inch and
+forward/reverse programs. Each crosses the centerline, dwells at zero radius,
+halves the active RPM cap, retains analytic negative-radius circles, changes H
+without changing the fitted tool/WCS, then changes WCS with H retained. The new
+Rust fixture test verifies source/setup hashes, actual bound CSS factor/cap/origin
+and the stopped offset-transition sequence. The four-test spindle fixture suite
+and targeted Clippy pass. Runtime evidence in controller PR #1416 independently
+checks 154,252 CSS servo samples and actual modal offsets.
+
+Supported source sections stop CSS before work/tool-offset changes. The binder's
+active-CSS offset-update primitive retains separate unit/NML-boundary tests; it
+is not presented as a source feature exercised by this runtime matrix. The native
+execution protocol and libraries are unchanged by these additional fixtures.

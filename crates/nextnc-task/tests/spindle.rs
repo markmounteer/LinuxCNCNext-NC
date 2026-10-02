@@ -276,3 +276,124 @@ fn g95_with_constant_rpm_still_requires_measured_feedback() -> TestResult {
     );
     Ok(())
 }
+
+#[test]
+fn producer_css_centerline_fixtures_stop_before_independent_offset_changes() -> TestResult {
+    use motion_command::{Command, Spindle};
+    use sha2::{Digest, Sha256};
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let manifest: serde_json::Value =
+        serde_json::from_str(include_str!("css-fixtures/manifest.json"))?;
+    assert_eq!(
+        manifest["producer"],
+        "b31904b3d5ad9d56cc4cc16b8090e768b0e1958d"
+    );
+    assert_eq!(
+        format!(
+            "{:x}",
+            Sha256::digest(std::fs::read(
+                root.join("../../tools/native-css-fixtures/generate.cjs")
+            )?)
+        ),
+        manifest["generatorSHA256"]
+    );
+    for case in manifest["cases"].as_array().ok_or("CSS cases")? {
+        let name = case["name"].as_str().ok_or("CSS name")?;
+        let dir = root.join("tests/css-fixtures");
+        for (suffix, key) in [("stpnc", "sourceSHA256"), ("plan.json", "setupSHA256")] {
+            assert_eq!(
+                format!(
+                    "{:x}",
+                    Sha256::digest(std::fs::read(dir.join(format!("{name}.{suffix}")))?)
+                ),
+                case[key]
+            );
+        }
+        let p = compiled::prepare(
+            &std::fs::read_to_string(dir.join(format!("{name}.stpnc")))?,
+            &std::fs::read_to_string(dir.join(format!("{name}.plan.json")))?,
+            &Limits::default(),
+        )?;
+        let b = bind(&p, &snapshot())?;
+        let l = lower(&b, dynamics())?;
+        nextnc_task::steps::Layout::from_lowered(&p, &b, &l)?;
+        let mut active_css = false;
+        let mut demands = Vec::new();
+        let mut changes = Vec::new();
+        let mut tool_changes = 0;
+        let mut cuts = 0;
+        let mut arcs = 0;
+        for record in b.records() {
+            // Source sections change offsets only after a stopped transition.
+            // The binder's independent active-CSS update API is tested elsewhere.
+            assert!(record.css_update.is_none());
+            match record.action {
+                BoundAction::Css(demand) => {
+                    active_css = true;
+                    demands.push((demand.x_offset_mm, demand.surface_mm_s, demand.maximum_rpm));
+                    assert_eq!(
+                        demand.clockwise,
+                        case["clockwise"].as_bool().ok_or("direction")?
+                    );
+                }
+                BoundAction::WorkOffset { index, .. } => {
+                    assert!(!active_css, "source work-offset transition must stop CSS");
+                    changes.push((index, 0));
+                }
+                BoundAction::ToolOffset { number, .. } => {
+                    assert!(!active_css, "source tool-offset transition must stop CSS");
+                    changes.push((0, number));
+                }
+                BoundAction::State(
+                    Action::ResetSpindleDemand | Action::Event(Command::Spindle(Spindle::Stop)),
+                ) => active_css = false,
+                BoundAction::State(Action::Event(Command::ChangeTool { .. })) => tool_changes += 1,
+                BoundAction::Motion(motion) => {
+                    if let Feed::PerRevolution {
+                        mm_per_rev,
+                        spindle,
+                    } = motion.feed
+                    {
+                        assert!(active_css);
+                        close(mm_per_rev, 0.18);
+                        assert_eq!(spindle, 0);
+                        cuts += 1;
+                        arcs += usize::from(motion.circular.is_some());
+                    }
+                }
+                _ => (),
+            }
+        }
+        let expected = [
+            (11.7, 8000.0, 1800.0),
+            (11.7, 8000.0, 900.0),
+            (12.2, 6000.0, 1200.0),
+            (12.2, 6000.0, 600.0),
+            (18.2, 10000.0, 1600.0),
+            (18.2, 10000.0, 800.0),
+        ];
+        assert_eq!(demands.len(), expected.len());
+        for (actual, wanted) in demands.iter().zip(expected) {
+            close(actual.0, wanted.0);
+            close(actual.1, wanted.1 / 60.0);
+            close(actual.2, wanted.2);
+        }
+        assert_eq!((tool_changes, cuts, arcs), (2, 15, 3));
+        assert_eq!(
+            changes,
+            vec![
+                (0, 0),
+                (1, 0),
+                (0, 2),
+                (1, 0),
+                (0, 3),
+                (0, 0),
+                (2, 0),
+                (0, 3),
+                (0, 0)
+            ]
+        );
+        assert!(!active_css, "normal completion must clear CSS");
+    }
+    Ok(())
+}
