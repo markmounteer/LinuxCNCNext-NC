@@ -8,10 +8,10 @@ description = "Task-owned Next-NC lifecycle; LinuxCNC host integration under qua
 [dependencies]
 nextnc-native = { path = "../.." }
 motion-command = { path = "../motion-command" }
+sha2 = "0.10"
 
 [dev-dependencies]
 serde_json = "1"
-sha2 = "0.10"
 
 [lints.rust]
 unsafe_code = "forbid"

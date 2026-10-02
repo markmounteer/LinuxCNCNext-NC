@@ -48,6 +48,10 @@ typedef struct {
     double feed_mm_rev, css_factor_rpm_mm, css_maximum_rpm, css_x_offset_mm;
 } nextnc_message;
 uint32_t nextnc_task_abi(void);
+/* Hash 1..16384 host-observed bytes into exactly 32 output bytes. This does not
+ * verify HAL or grant capability: the trusted host must validate the live
+ * graph, runtime instance and policy before hashing. Never use job data here. */
+int32_t nextnc_task_spindle_identity(const uint8_t *, uint64_t, uint8_t *, uint64_t);
 int32_t nextnc_task_prepare(const uint8_t *, uint64_t, const nextnc_snapshot *, const nextnc_tool *, uint64_t, uint64_t *);
 /* Worker-only rebind. Re-read the selected bundle; bytes must still match.
  * Previous candidate stays attached until owner_rebind adopts the result. */

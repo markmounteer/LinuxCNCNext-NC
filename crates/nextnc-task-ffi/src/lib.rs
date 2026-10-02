@@ -21,6 +21,38 @@ use std::{
 };
 
 const MAX_CANDIDATES: usize = 2;
+
+/// Hash live host evidence, never job-provided capability claims.
+///
+/// # Safety
+/// The non-null buffers must remain valid for their declared extents, must not
+/// overlap, and input storage must not change during this call. Output is 32 bytes.
+#[no_mangle]
+pub unsafe extern "C" fn nextnc_task_spindle_identity(
+    witness: *const u8,
+    length: u64,
+    output: *mut u8,
+    capacity: u64,
+) -> i32 {
+    boundary(|| {
+        address(output)?;
+        if capacity != 32 {
+            return Err("spindle identity output must be exactly 32 bytes".into());
+        }
+        // SAFETY: caller owns the checked output extent for this call.
+        unsafe { std::ptr::write_bytes(output, 0, 32) };
+        address(witness)?;
+        if !(1..=16_384).contains(&length) {
+            return Err("spindle host witness must contain 1..16384 bytes".into());
+        }
+        // SAFETY: caller guarantees this bounded input extent and no alias.
+        let bytes = unsafe { std::slice::from_raw_parts(witness, length as usize) };
+        let digest = nextnc_task::spindle::witness_identity(bytes)?;
+        // SAFETY: digest is local, separate from the checked caller output.
+        unsafe { std::ptr::copy_nonoverlapping(digest.as_ptr(), output, 32) };
+        Ok(())
+    })
+}
 struct Candidate {
     artifact: Arc<bundle::Artifact>,
     bound: binding::BoundPlan,

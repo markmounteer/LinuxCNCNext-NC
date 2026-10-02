@@ -4,13 +4,19 @@ use nextnc_native::{
     part21::Limits,
 };
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let output = std::env::args()
-        .nth(1)
-        .ok_or("usage: abi_fixtures NEW_OUTPUT_DIR")?;
+    let mut args = std::env::args().skip(1);
+    let output = args
+        .next()
+        .ok_or("usage: abi_fixtures NEW_OUTPUT_DIR [FIXTURE_DIR]")?;
+    let root = args.next().map_or_else(
+        || std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../nextnc-task/tests/fixtures"),
+        std::path::PathBuf::from,
+    );
+    if args.next().is_some() {
+        return Err("usage: abi_fixtures NEW_OUTPUT_DIR [FIXTURE_DIR]".into());
+    }
     let output = std::path::Path::new(&output);
     std::fs::create_dir(output)?;
-    let root =
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../nextnc-task/tests/fixtures");
     let mut paths = std::fs::read_dir(&root)?
         .map(|e| e.map(|e| e.path()))
         .collect::<Result<Vec<_>, _>>()?;

@@ -1,6 +1,21 @@
 //! Spindle-zero capability evidence supplied by the pinned controller host.
 //! This is a preparation contract, never permission to enable a machine.
 
+/// Hash a bounded, unambiguously encoded observation from the trusted host.
+/// Hashing does not authenticate that observation: the host must first verify
+/// the live HAL graph, runtime instance and policy. Never call this on job data.
+pub fn witness_identity(witness: &[u8]) -> Result<[u8; 32], &'static str> {
+    use sha2::{Digest, Sha256};
+    if witness.is_empty() || witness.len() > 16_384 {
+        return Err("spindle host witness must contain 1..16384 bytes");
+    }
+    let mut hash = Sha256::new();
+    hash.update(b"nextnc-spindle-host-witness-v1\0");
+    hash.update((witness.len() as u64).to_le_bytes());
+    hash.update(witness);
+    Ok(hash.finalize().into())
+}
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct FeedbackPolicy {
     pub maximum_rps: f64,

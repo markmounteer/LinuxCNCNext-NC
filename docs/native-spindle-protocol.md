@@ -1,8 +1,8 @@
 # Stage 4 native spindle protocol
 
-Status: Rust preparation/protocol checkpoint; **not native execution qualification**.
-The controller's measured-feedback planner checkpoint is separate. The matching
-task host, runtime fault matrix and machine acceptance remain required. No
+Status: Rust protocol plus a matching fixed-rate native simulator checkpoint;
+**Stage 4's complete runtime qualification remains open**. The native fault,
+ramp/stop/override matrix and machine acceptance remain required. No
 controller was contacted, enabled or modified by these changes.
 
 ## Explicit capability binding
@@ -86,6 +86,21 @@ new actual tool table. RPM/reset events clear the active CSS tracking.
 
 ## Verification and remaining work
 
+The matching controller host now observes the configured producer function and
+three actual HAL connections through LinuxCNC's public query API. It checks
+ownership, unique writers, types, servo execution order and the active shim
+policy. `nextnc_task_spindle_identity` hashes its bounded observation with a
+versioned SHA-256 domain. This helper does not authenticate supplied bytes or
+grant execution permission. The existing motion birth, capability flags and
+feedback limits remain part of binding/freshness checks. Runtime HAL rewiring or
+component unloading is outside this host contract and requires stopping and
+reloading the configuration.
+
+The compiler-side suite now has 139 passing tests, including bounded witness
+hashing/refusal. The development-only `abi_fixtures` example accepts an optional
+fixture-directory argument so the real LinuxCNC test image can compile the same
+four spindle programs with the exact FFI library in that image.
+
 The four pinned-producer fixtures cover mm/inch, forward/reverse spindle, G95
 lines and analytic circles, rapid/G94/G95 transitions, changed F, RPM/CSS changes,
 two work offsets and two physical tools with independent H offsets. Tests also
@@ -94,10 +109,18 @@ fingerprint drift, changed tool geometry, G95 with constant RPM, abort during a
 rapid, CSS offset-update ordering and arithmetic overflow. C11 and C++17 layout
 checks match the Rust ABI extents and field offsets.
 
-The simulator must still consume these messages through the pinned task host,
-custom motmod and motion shim. That gate includes measured-versus-commanded/PID
+Four fixed-rate native simulator jobs now pass through the pinned task host,
+custom motmod and motion shim: mm/inch and both spindle directions, with two tools,
+two work offsets, ten synchronized moves, two analytic circles and two G94 cuts
+per job. An independent servo oracle checks source F against measured speed and
+revolutions, and CSS against the coarse commanded X/radius, offset and RPM cap.
+Four invalid feedback bindings are refused before motion. Six G94 completion,
+abort and hold/resume regressions pass on the same host image. Controller PR
+[#1416](https://github.com/markmounteer/linuxcnc/pull/1416) retains raw evidence.
+
+The remaining full native gate includes measured-versus-commanded/PID
 channel independence, spindle ramps/stops/reversal, missing/stale/nonfinite
 feedback, feed/spindle overrides, CSS radius/offset/cap, mixed queues, and actual
 fault-stop/recovery behavior. The previous RS274 G95 checkpoint does not prove
-native G95/CSS execution. Stage 4 remains open until the independent motion oracle
-and rejection/fault matrix pass through the complete native stack.
+the remaining native fault and recovery cases. Stage 4 remains open until the
+complete independent motion oracle and rejection/fault matrix pass.
