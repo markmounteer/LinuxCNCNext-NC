@@ -9,6 +9,8 @@ use nextnc_task_ffi::{
 };
 use std::sync::Mutex;
 static SERIAL: Mutex<()> = Mutex::new(());
+#[path = "spindle/mod.rs"]
+mod spindle;
 type TestResult = Result<(), Box<dyn std::error::Error>>;
 #[test]
 fn start_resume_verification_checks_source_and_environment_without_new_authority() -> TestResult {
@@ -109,6 +111,7 @@ fn snapshot() -> Snapshot {
         acceleration: [100.0; 3],
         jerk: [1000.0; 3],
         maximum_rpm: 2000.0,
+        spindle: wire::SpindleEvidence::default(),
     }
 }
 fn artifact() -> Result<bundle::Artifact, Box<dyn std::error::Error>> {

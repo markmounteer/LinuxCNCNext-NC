@@ -1,5 +1,6 @@
 //! Resolve work/radius-mm intent against a fresh task snapshot, then validate
 //! the complete machine path before returning any executable candidate.
+use crate::spindle::{Capability as SpindleCapability, CssDemand};
 use motion_command::{v2::Geometry, Command, Feed, Machine, Plane, PointMm, Rotation, Spindle};
 use nextnc_native::{
     compiled::{Action, Frame, PreparedPlan, Record},
@@ -42,6 +43,7 @@ pub struct Snapshot {
     pub maximum_rpm: f64,
     pub flood: bool,
     pub mist: bool,
+    pub spindle: Option<SpindleCapability>,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -67,6 +69,7 @@ pub enum BoundAction {
     State(Action),
     WorkOffset { index: u8, value: WorkOffset },
     ToolOffset { number: u32, value_mm: Pose },
+    Css(CssDemand),
 }
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct BoundRecord {
@@ -76,6 +79,9 @@ pub struct BoundRecord {
     /// With shaping engaged, changing XY/bypass ownership requires a real
     /// planner/shaper drain. This is not permission to flatten mixed geometry.
     pub drain_before: bool,
+    /// Reissue the active CSS demand after a receipted offset change. Keeping
+    /// this separate preserves both source identity and recipient accounting.
+    pub css_update: Option<CssDemand>,
 }
 #[derive(Debug)]
 pub struct BoundPlan {
@@ -194,6 +200,20 @@ impl Snapshot {
             self.maximum_rpm.is_finite() && self.maximum_rpm > 0.0,
             "invalid spindle policy",
         )?;
+        if let Some(capability) = self.spindle {
+            require(
+                capability.valid(),
+                "invalid spindle feedback capability evidence",
+            )?;
+            require(
+                self.machine == Machine::LatheXz,
+                "synchronized spindle capability requires an XZ lathe",
+            )?;
+            require(
+                self.shaping == Shaping::Disabled,
+                "synchronized spindle capability is incompatible with input shaping",
+            )?;
+        }
         for pose in std::iter::once(&self.commanded_pose_mm)
             .chain(std::iter::once(&self.temporary_offset_mm))
             .chain(std::iter::once(&self.active_tool_offset_mm))
@@ -240,10 +260,20 @@ impl Snapshot {
                 .all(f64::is_finite),
             "coordinate transform overflow",
         )?;
-        require(
-            !matches!(motion.feed, Feed::PerRevolution { .. }),
-            "spindle synchronization is not qualified in Stage 3",
-        )?;
+        if let Feed::PerRevolution {
+            mm_per_rev,
+            spindle,
+        } = motion.feed
+        {
+            require(
+                self.spindle.is_some(),
+                "spindle synchronization requires qualified feedback capability",
+            )?;
+            require(
+                spindle == 0 && mm_per_rev.is_finite() && mm_per_rev > 0.0,
+                "invalid spindle-zero feed per revolution",
+            )?;
+        }
         let geometry = if let Some(c) = motion.circular {
             Geometry::Circular {
                 start: xyz(motion.start_mm),
@@ -351,6 +381,16 @@ fn bind_from(
     let mut records = Vec::with_capacity(plan.commands().len());
     records.extend_from_slice(prefix);
     let mut shaper_lane = None;
+    let mut css = None;
+    for record in prefix {
+        match record.action {
+            BoundAction::Css(demand) => css = Some(demand),
+            BoundAction::State(Action::ResetSpindleDemand | Action::Event(Command::Spindle(_))) => {
+                css = None
+            }
+            _ => (),
+        }
+    }
     for (command, source) in plan
         .commands()
         .iter()
@@ -427,7 +467,15 @@ fn bind_from(
                 }
                 Action::Event(Command::Spindle(spindle))=>{
                     match spindle {
-                        Spindle::Css {..}=>return Err(error("CSS is not qualified in Stage 3")),
+                        Spindle::Css {surface_mm_per_second,maximum_rpm,clockwise}=>{
+                            require(snapshot.spindle.is_some_and(|c|c.css),"CSS requires qualified spindle capability")?;
+                            require(clockwise || snapshot.reverse_spindle,"reverse spindle is not supported by this machine policy")?;
+                            require(maximum_rpm<=snapshot.maximum_rpm,"CSS RPM cap exceeds machine policy")?;
+                            let demand=CssDemand {surface_mm_s:surface_mm_per_second,maximum_rpm,clockwise,
+                                x_offset_mm:transform.source(PointMm {x:0.0,y:0.0,z:0.0})[0]};
+                            require(demand.valid(),"invalid bound CSS demand")?;
+                            return Ok(BoundAction::Css(demand));
+                        },
                         Spindle::Rpm {rpm,clockwise}=>{
                             require(clockwise || snapshot.reverse_spindle,"reverse spindle is not supported by this machine policy")?;
                             require(rpm<=snapshot.maximum_rpm,"source spindle demand exceeds machine policy")?;
@@ -443,6 +491,10 @@ fn bind_from(
                 _=>Ok(BoundAction::State(source.action)),
             }
         })().map_err(|e|Error {command:Some(command),..e})?;
+        let css_update = update_css(&mut css, action, transform).map_err(|e| Error {
+            command: Some(command),
+            ..e
+        })?;
         let mut drain_before = false;
         if snapshot.shaping == Shaping::EngagedXy {
             if let BoundAction::Motion(m) = action {
@@ -467,6 +519,7 @@ fn bind_from(
             source,
             action,
             drain_before,
+            css_update,
         });
     }
     Ok(BoundPlan {
@@ -474,4 +527,157 @@ fn bind_from(
         initial: snapshot.commanded_pose_mm,
         final_pose: position,
     })
+}
+
+/// Update only the radius origin; an offset change does not restart a spindle.
+fn update_css(
+    css: &mut Option<CssDemand>,
+    action: BoundAction,
+    transform: Transform,
+) -> Result<Option<CssDemand>> {
+    match action {
+        BoundAction::Css(demand) => {
+            *css = Some(demand);
+            Ok(None)
+        }
+        BoundAction::State(Action::ResetSpindleDemand | Action::Event(Command::Spindle(_))) => {
+            *css = None;
+            Ok(None)
+        }
+        BoundAction::WorkOffset { .. }
+        | BoundAction::ToolOffset { .. }
+        | BoundAction::State(Action::ClearTemporaryOffsets) => {
+            if let Some(demand) = css {
+                demand.x_offset_mm = transform.source(PointMm {
+                    x: 0.0,
+                    y: 0.0,
+                    z: 0.0,
+                })[0];
+                require(demand.valid(), "invalid updated CSS offset")?;
+            }
+            Ok(*css)
+        }
+        _ => Ok(None),
+    }
+}
+
+#[cfg(test)]
+mod spindle_offset_tests {
+    use super::*;
+    #[test]
+    fn offset_changes_keep_css_rate_cap_direction_and_order(
+    ) -> std::result::Result<(), Box<dyn std::error::Error>> {
+        use crate::lowering::{self, AxisDynamics, Dynamics, Payload};
+        let mut transform = Transform {
+            work: WorkOffset {
+                translation_mm: [0.0; 9],
+                rotation_degrees: 0.0,
+            },
+            temporary: [0.0; 9],
+            tool: [0.0; 9],
+        };
+        transform.temporary[0] = 2.0;
+        let demand = CssDemand {
+            surface_mm_s: 1000.0,
+            maximum_rpm: 1800.0,
+            clockwise: false,
+            x_offset_mm: 2.0,
+        };
+        let mut css = None;
+        assert_eq!(
+            update_css(&mut css, BoundAction::Css(demand), transform)?,
+            None
+        );
+        for kind in 0..3 {
+            let (action, source) = match kind {
+                0 => {
+                    transform.work.translation_mm[0] = 7.0;
+                    (
+                        BoundAction::WorkOffset {
+                            index: 2,
+                            value: transform.work,
+                        },
+                        Action::SelectWorkOffset(2),
+                    )
+                }
+                1 => {
+                    transform.tool[0] = 0.5;
+                    (
+                        BoundAction::ToolOffset {
+                            number: 2,
+                            value_mm: transform.tool,
+                        },
+                        Action::Event(Command::ToolOffset { offset: 2 }),
+                    )
+                }
+                _ => {
+                    transform.temporary[0] = 0.0;
+                    (
+                        BoundAction::State(Action::ClearTemporaryOffsets),
+                        Action::ClearTemporaryOffsets,
+                    )
+                }
+            };
+            let update = update_css(&mut css, action, transform)?.ok_or("missing CSS update")?;
+            assert_eq!(
+                update,
+                CssDemand {
+                    x_offset_mm: match kind {
+                        0 => 9.0,
+                        1 => 9.5,
+                        _ => 7.5,
+                    },
+                    ..demand
+                }
+            );
+            let bound = BoundPlan {
+                records: vec![BoundRecord {
+                    command: 0,
+                    source: Record {
+                        action: source,
+                        site: nextnc_native::compiled::Site::Policy,
+                        ordinal: None,
+                    },
+                    action,
+                    drain_before: false,
+                    css_update: Some(update),
+                }],
+                initial: [0.0; 9],
+                final_pose: [0.0; 9],
+            };
+            let lowered = lowering::lower(
+                &bound,
+                Dynamics {
+                    axis_mask: 5,
+                    axes: [AxisDynamics {
+                        velocity_mm_s: 1.0,
+                        acceleration_mm_s2: 1.0,
+                        jerk_mm_s3: 1.0,
+                    }; 3],
+                },
+            )?;
+            assert_eq!(lowered.pieces().len(), 2);
+            assert_eq!(lowered.pieces()[0].payload, Payload::State(action));
+            assert_eq!(lowered.pieces()[1].payload, Payload::CssUpdate(update));
+            assert_eq!(lowered.pieces()[1].ordinal, 1);
+        }
+        transform.tool[0] = f64::MAX;
+        transform.work.translation_mm[0] = f64::MAX;
+        assert!(update_css(
+            &mut css,
+            BoundAction::State(Action::ClearTemporaryOffsets),
+            transform
+        )
+        .is_err());
+        assert_eq!(
+            update_css(
+                &mut css,
+                BoundAction::State(Action::ResetSpindleDemand),
+                transform
+            )?,
+            None
+        );
+        assert_eq!(css, None);
+        Ok(())
+    }
 }

@@ -1,0 +1,3 @@
+    Checking nextnc-task v0.1.0 (C:\dev\wt-nextnc-compiler-stage4\crates\nextnc-task)
+    Checking nextnc-task-ffi v0.1.0 (C:\dev\wt-nextnc-compiler-stage4\crates\nextnc-task-ffi)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.73s

@@ -84,6 +84,7 @@ fn snapshot(machine: Machine) -> Snapshot {
         maximum_rpm: 2000.0,
         flood: true,
         mist: true,
+        spindle: None,
     }
 }
 fn close(a: f64, b: f64) {
@@ -377,7 +378,7 @@ fn g95_css_remain_explicit_stage4_requirements() -> TestResult {
     let e = bind(&plan, &snapshot(Machine::LatheXz))
         .err()
         .ok_or("unsupported synchronization accepted")?;
-    assert_eq!(e.reason, "CSS is not qualified in Stage 3");
+    assert_eq!(e.reason, "CSS requires qualified spindle capability");
     assert!(e.command.is_some());
     Ok(())
 }

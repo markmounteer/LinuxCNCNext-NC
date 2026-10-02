@@ -155,6 +155,18 @@ impl Layout {
                         BoundAction::State(Action::ResetModes),
                     ) => true,
                     (Payload::Termination(t), BoundAction::Motion(m)) => t == m.termination,
+                    (Payload::SpindleSync { mm_per_rev }, BoundAction::Motion(m)) => {
+                        mm_per_rev
+                            == match m.feed {
+                                motion_command::Feed::PerRevolution { mm_per_rev, .. } => {
+                                    mm_per_rev
+                                }
+                                _ => 0.0,
+                            }
+                    }
+                    (Payload::CssUpdate(demand), _) => {
+                        bound.records()[i].css_update == Some(demand)
+                    }
                     (
                         Payload::Motion { motion, .. } | Payload::Stationary(motion),
                         BoundAction::Motion(m),

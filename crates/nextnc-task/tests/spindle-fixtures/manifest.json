@@ -1,0 +1,36 @@
+{
+  "schema": "nextnc-task/spindle-fixtures/1",
+  "producer": "b31904b3d5ad9d56cc4cc16b8090e768b0e1958d",
+  "generatorSHA256": "efdc99520587b7583afbcfa6479bf8e899147fba7da6c1cce04304785af03135",
+  "scope": "Synthetic tests only; not physical setup, encoder qualification or clearance approval",
+  "cases": [
+    {
+      "name": "lathe-mm-cw-mixed",
+      "units": "mm",
+      "clockwise": true,
+      "sourceSHA256": "934daf56592dd7da2ca628ec00706f520d0135a23075552e276a682395840fd8",
+      "setupSHA256": "98d2df8449a1157db3427e293b7fdf93ab4407bbe5fe791867c96ee808b8e706"
+    },
+    {
+      "name": "lathe-mm-ccw-mixed",
+      "units": "mm",
+      "clockwise": false,
+      "sourceSHA256": "a6f7edcaff620b1e1ed7aa82491d0e7a8af735f3ead69b8e7264cedeeb2bd688",
+      "setupSHA256": "468102369c9acafa9afc94efd24a41d0585501901e2c7be681ffcb71f9984b1d"
+    },
+    {
+      "name": "lathe-inch-cw-mixed",
+      "units": "inch",
+      "clockwise": true,
+      "sourceSHA256": "ec4b5d2d84dddcc18c85a52ac0d64b9b569c9c52321d1fdc26abde843a553a87",
+      "setupSHA256": "5916f666b4133da2daacd45fd767258927aed109e943e196a199a03da316142a"
+    },
+    {
+      "name": "lathe-inch-ccw-mixed",
+      "units": "inch",
+      "clockwise": false,
+      "sourceSHA256": "dffdd895152e38c41b671816127fdbb90d1e18efc663c951f0f74a8a61059fc7",
+      "setupSHA256": "99cdaabbd73a482c06a433d6ad31f7e3f7f34bdf78b469b44198097b41a578a8"
+    }
+  ]
+}

@@ -30,6 +30,12 @@ pub struct ScalarDynamics {
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Payload {
     Termination(Termination),
+    /// Hardware velocity synchronization; zero clears it for rapid/G94.
+    /// This does not replace the interpreter's modal feed retained over G0.
+    SpindleSync {
+        mm_per_rev: f64,
+    },
+    CssUpdate(crate::spindle::CssDemand),
     Motion {
         motion: Motion,
         dynamics: ScalarDynamics,
@@ -187,7 +193,9 @@ impl Dynamics {
         let velocity_mm_s = match motion.feed {
             Feed::Rapid => maximum_velocity_mm_s,
             Feed::PerSecond(rate) => rate.min(maximum_velocity_mm_s),
-            Feed::PerRevolution { .. } => return Err(fail("synchronized feed requires Stage 4")),
+            // The actual demand is evaluated from measured spindle motion on
+            // every servo tick. Only the geometric/axis ceiling belongs here.
+            Feed::PerRevolution { .. } => maximum_velocity_mm_s,
         };
         let dynamics = ScalarDynamics {
             velocity_mm_s,
@@ -218,16 +226,29 @@ pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
         drains_before: Vec::new(),
     };
     let mut termination = None;
+    let mut sync = 0.0;
     for record in bound.records() {
         let start = plan.pieces.len();
         let mut drain = record.drain_before;
         match record.action {
             BoundAction::Motion(motion) => {
+                let rate = match motion.feed {
+                    Feed::PerRevolution { mm_per_rev, .. } => mm_per_rev,
+                    _ => 0.0,
+                };
+                if sync != rate {
+                    plan.pieces.push(Piece {
+                        command: record.command,
+                        ordinal: 0,
+                        payload: Payload::SpindleSync { mm_per_rev: rate },
+                    });
+                    sync = rate;
+                }
                 if termination != Some(motion.termination) {
                     drain |= termination.is_some();
                     plan.pieces.push(Piece {
                         command: record.command,
-                        ordinal: 0,
+                        ordinal: plan.pieces.len() - start,
                         payload: Payload::Termination(motion.termination),
                     });
                     termination = Some(motion.termination);
@@ -252,6 +273,11 @@ pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
                 });
             }
             action => {
+                if action == BoundAction::State(Action::ResetModes)
+                    || action == BoundAction::State(Action::RestoreFeedPerMinute)
+                {
+                    sync = 0.0;
+                }
                 // ResetModes has exact-path semantics. Account for that real
                 // controller change here, or a later motion matching the old
                 // cached blend mode would silently execute in exact path.
@@ -281,6 +307,13 @@ pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
                     payload: Payload::State(action),
                 });
             }
+        }
+        if let Some(demand) = record.css_update {
+            plan.pieces.push(Piece {
+                command: record.command,
+                ordinal: plan.pieces.len() - start,
+                payload: Payload::CssUpdate(demand),
+            });
         }
         if drain {
             plan.drains_before.push(record.command);

@@ -9,16 +9,28 @@ pub(crate) struct Modes {
     pub plane: u32,
     /// None inherits the launch feed. Native G94 explicitly sets Some(0).
     pub feed_mm_s: Option<f64>,
+    /// Exclusive with feed_mm_s; a rapid or hardware sync piece preserves the
+    /// last modal feed's units and value, including over an aborted rapid.
+    pub feed_mm_rev: Option<f64>,
 }
 
 impl Modes {
     pub fn apply(&mut self, message: &Message) -> Result<Option<Self>> {
         let rapid = message.flags & 1 != 0;
         match message.kind {
-            15 => self.feed_mm_s = Some(0.0),
+            15 => {
+                self.feed_mm_s = Some(0.0);
+                self.feed_mm_rev = None;
+            }
             1..=3 => {
                 if !rapid {
-                    self.feed_mm_s = Some(message.feed_mm_s);
+                    if message.flags & crate::wire::FEED_PER_REV != 0 {
+                        self.feed_mm_s = None;
+                        self.feed_mm_rev = Some(message.feed_mm_rev);
+                    } else {
+                        self.feed_mm_s = Some(message.feed_mm_s);
+                        self.feed_mm_rev = None;
+                    }
                 }
                 if message.kind == 2 {
                     self.motion = if message.turn < 0 { 3 } else { 4 };
@@ -71,6 +83,7 @@ mod tests {
             motion: 3,
             plane: 2,
             feed_mm_s: Some(2.0),
+            feed_mm_rev: None,
         };
         assert_eq!(modes.apply(&message)?, Some(arc));
         message.kind = 1;
@@ -88,7 +101,8 @@ mod tests {
             Some(Modes {
                 motion: 1,
                 plane: 2,
-                feed_mm_s: Some(4.0)
+                feed_mm_s: Some(4.0),
+                feed_mm_rev: None,
             })
         );
         message.kind = 15;

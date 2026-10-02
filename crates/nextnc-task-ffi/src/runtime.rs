@@ -41,16 +41,18 @@ fn unhex(text: &str) -> Result<[u8; 32]> {
 /// supported capability is; signed zero is deliberately exact, not a tolerance.
 pub(crate) fn fingerprint(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<Fingerprint> {
     s.decode(tools)?;
-    let mut bytes = b"nextnc-live-snapshot-v1\0".to_vec();
+    let mut bytes = b"nextnc-live-snapshot-v2\0".to_vec();
     for n in [
         s.machine,
         s.axis_mask,
         s.work_offset,
         s.shaping,
         s.capabilities,
+        s.spindle.flags,
     ] {
         bytes.extend_from_slice(&n.to_le_bytes());
     }
+    bytes.extend_from_slice(&s.spindle.identity);
     let floats = |bytes: &mut Vec<u8>, values: &[f64]| -> Result<()> {
         for v in values {
             if !v.is_finite() {
@@ -73,6 +75,13 @@ pub(crate) fn fingerprint(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<Fi
         s.acceleration.as_slice(),
         s.jerk.as_slice(),
         std::slice::from_ref(&s.maximum_rpm),
+        &[
+            s.spindle.maximum_rps,
+            s.spindle.heartbeat_timeout_s,
+            s.spindle.comparison_window_s,
+            s.spindle.position_error_revs,
+            s.spindle.relative_error,
+        ],
     ] {
         floats(&mut bytes, values)?;
     }
@@ -184,7 +193,10 @@ pub struct MotionReceipt {
     pub motion: u32,
     pub plane: u32,
     pub feed_known: u32,
+    pub feed_per_rev: u32,
+    pub reserved: u32,
     pub feed_mm_s: f64,
+    pub feed_mm_rev: f64,
 }
 
 /// Look up immutable expected modes only inside the actual accepted piece
@@ -245,8 +257,11 @@ pub unsafe extern "C" fn nextnc_owner_motion_receipt(
                 piece: piece.ordinal as u32,
                 motion: modes.motion,
                 plane: modes.plane,
-                feed_known: u32::from(modes.feed_mm_s.is_some()),
+                feed_known: u32::from(modes.feed_mm_s.is_some() || modes.feed_mm_rev.is_some()),
+                feed_per_rev: u32::from(modes.feed_mm_rev.is_some()),
+                reserved: 0,
                 feed_mm_s: modes.feed_mm_s.unwrap_or(0.0),
+                feed_mm_rev: modes.feed_mm_rev.unwrap_or(0.0),
             })
         })?;
         // SAFETY: the same checked writable extent remains valid.
@@ -326,7 +341,7 @@ fn phase(p: Phase) -> u32 {
 }
 fn recipient(kind: u32) -> Result<Recipient> {
     match kind {
-        1 | 2 | 4 | 12 | 14 | 15 | 17 => Ok(Recipient::Motion),
+        1 | 2 | 4 | 5 | 12 | 14 | 15 | 17 | 22 => Ok(Recipient::Motion),
         16 | 18 => Ok(Recipient::Io),
         3 | 10 | 11 | 13 | 19 | 20 | 21 => Ok(Recipient::Task),
         _ => Err("unsupported task recipient".into()),

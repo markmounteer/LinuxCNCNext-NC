@@ -4,8 +4,52 @@ use nextnc_native::compiled::Action;
 use nextnc_task::{binding, lowering};
 use std::collections::BTreeMap;
 
-pub const ABI: u32 = 1;
+pub const ABI: u32 = 2;
 pub const MAX_TOOLS: usize = 4096;
+pub const FEED_PER_REV: u32 = 16;
+pub const CSS: u32 = 32;
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct SpindleEvidence {
+    /// 1 spindle-zero measured velocity feed, 2 CSS; CSS also requires bit 1.
+    pub flags: u32,
+    pub reserved: u32,
+    pub identity: [u8; 32],
+    pub maximum_rps: f64,
+    pub heartbeat_timeout_s: f64,
+    pub comparison_window_s: f64,
+    pub position_error_revs: f64,
+    pub relative_error: f64,
+}
+impl SpindleEvidence {
+    fn decode(self) -> Result<Option<nextnc_task::spindle::Capability>, String> {
+        if self.flags == 0 {
+            if self != Self::default() {
+                return Err("disabled spindle evidence must be empty".into());
+            }
+            return Ok(None);
+        }
+        if self.flags & !3 != 0 || self.flags & 1 == 0 || self.reserved != 0 {
+            return Err("unsupported spindle capability flags".into());
+        }
+        let capability = nextnc_task::spindle::Capability {
+            identity: self.identity,
+            css: self.flags & 2 != 0,
+            feedback: nextnc_task::spindle::FeedbackPolicy {
+                maximum_rps: self.maximum_rps,
+                heartbeat_timeout_s: self.heartbeat_timeout_s,
+                comparison_window_s: self.comparison_window_s,
+                position_error_revs: self.position_error_revs,
+                relative_error: self.relative_error,
+            },
+        };
+        if !capability.valid() {
+            return Err("invalid spindle feedback capability evidence".into());
+        }
+        Ok(Some(capability))
+    }
+}
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug)]
@@ -30,6 +74,7 @@ pub struct Snapshot {
     pub acceleration: [f64; 3],
     pub jerk: [f64; 3],
     pub maximum_rpm: f64,
+    pub spindle: SpindleEvidence,
 }
 
 #[repr(C)]
@@ -46,7 +91,7 @@ pub struct Message {
     pub abi: u32,
     pub bytes: u32,
     pub kind: u32,
-    /// 1 rapid, 2 at-speed entry, 4 drain before command, 8 last piece.
+    /// 1 rapid, 2 at-speed entry, 4 drain, 8 last piece, 16 feed/rev, 32 CSS.
     pub flags: u32,
     pub command: u64,
     pub piece: u32,
@@ -63,6 +108,10 @@ pub struct Message {
     pub jerk: f64,
     pub value: f64,
     pub feed_mm_s: f64,
+    pub feed_mm_rev: f64,
+    pub css_factor_rpm_mm: f64,
+    pub css_maximum_rpm: f64,
+    pub css_x_offset_mm: f64,
 }
 
 impl Snapshot {
@@ -81,6 +130,10 @@ impl Snapshot {
             (2, 5) => Machine::LatheXz,
             _ => return Err("machine/axis mask must be XYZ mill or XZ lathe".into()),
         };
+        let spindle = self.spindle.decode()?;
+        if spindle.is_some() && (machine != Machine::LatheXz || self.shaping != 0) {
+            return Err("spindle feedback capability requires an unshaped XZ lathe".into());
+        }
         if !(1..=9).contains(&self.work_offset) {
             return Err("invalid active work offset".into());
         }
@@ -121,6 +174,7 @@ impl Snapshot {
                 maximum_rpm: self.maximum_rpm,
                 flood: self.capabilities & 2 != 0,
                 mist: self.capabilities & 4 != 0,
+                spindle,
             },
             lowering::Dynamics {
                 axis_mask: self.axis_mask,
@@ -147,6 +201,17 @@ pub fn encode(piece: &lowering::Piece, pieces: usize, drain: bool) -> Result<Mes
     let integer =
         |n: u32| i32::try_from(n).map_err(|_| "identifier exceeds C ABI range".to_string());
     match piece.payload {
+        lowering::Payload::SpindleSync { mm_per_rev } => {
+            if !mm_per_rev.is_finite() || mm_per_rev < 0.0 {
+                return Err("invalid velocity synchronization demand".into());
+            }
+            out.kind = 5;
+            out.feed_mm_rev = mm_per_rev;
+        }
+        lowering::Payload::CssUpdate(demand) => {
+            css_fields(&mut out, demand)?;
+            out.kind = 22;
+        }
         lowering::Payload::Termination(mode) => {
             out.kind = 4;
             match mode {
@@ -176,6 +241,10 @@ pub fn encode(piece: &lowering::Piece, pieces: usize, drain: bool) -> Result<Mes
             out.kind = 3;
         }
         lowering::Payload::State(state) => match state {
+            binding::BoundAction::Css(demand) => {
+                css_fields(&mut out, demand)?;
+                out.kind = 17;
+            }
             binding::BoundAction::WorkOffset { index, value } => {
                 out.kind = 13;
                 out.argument = i32::from(index);
@@ -205,7 +274,7 @@ pub fn encode(piece: &lowering::Piece, pieces: usize, drain: bool) -> Result<Mes
                                 out.value = rpm;
                                 out.argument = if clockwise { 1 } else { -1 };
                             }
-                            Spindle::Css { .. } => return Err("CSS requires Stage 4".into()),
+                            Spindle::Css { .. } => return Err("unbound CSS reached ABI".into()),
                         }
                     }
                     Command::Coolant(coolant) => {
@@ -238,7 +307,16 @@ fn motion_fields(out: &mut Message, motion: binding::Motion) -> Result<(), Strin
     match motion.feed {
         Feed::Rapid => out.flags |= 1,
         Feed::PerSecond(rate) => out.feed_mm_s = rate,
-        _ => return Err("synchronized feed requires Stage 4".into()),
+        Feed::PerRevolution {
+            mm_per_rev,
+            spindle,
+        } => {
+            if spindle != 0 || !mm_per_rev.is_finite() || mm_per_rev <= 0.0 {
+                return Err("invalid spindle-zero feed per revolution".into());
+            }
+            out.flags |= FEED_PER_REV;
+            out.feed_mm_rev = mm_per_rev;
+        }
     }
     if motion.entry_gate == EntryGate::SpindlesAtSpeed {
         out.flags |= 2;
@@ -251,5 +329,18 @@ fn motion_fields(out: &mut Message, motion: binding::Motion) -> Result<(), Strin
             Plane::Yz => 0,
         }] = 1.0;
     }
+    Ok(())
+}
+
+fn css_fields(out: &mut Message, demand: nextnc_task::spindle::CssDemand) -> Result<(), String> {
+    if !demand.valid() {
+        return Err("invalid CSS demand reached ABI".into());
+    }
+    out.flags |= CSS;
+    out.argument = if demand.clockwise { 1 } else { -1 };
+    out.value = demand.surface_mm_s;
+    out.css_factor_rpm_mm = demand.factor_rpm_mm();
+    out.css_maximum_rpm = demand.maximum_rpm;
+    out.css_x_offset_mm = demand.x_offset_mm;
     Ok(())
 }

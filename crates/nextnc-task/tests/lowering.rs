@@ -42,6 +42,7 @@ fn bind_prepared(
             maximum_rpm: 2000.0,
             flood: true,
             mist: true,
+            spindle: None,
         },
     )?)
 }

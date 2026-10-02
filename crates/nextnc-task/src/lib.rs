@@ -9,4 +9,5 @@ pub mod binding;
 pub mod lifecycle;
 pub mod lowering;
 pub mod receipts;
+pub mod spindle;
 pub mod steps;

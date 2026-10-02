@@ -1,11 +1,17 @@
 # Checked native task ABI
 
 This is the small unsafe boundary around the safe Rust compiler, coordinate
-binder and task-message lowering. ABI revision 1 exposes immutable prepared
+binder and task-message lowering. ABI revision 2 exposes immutable prepared
 candidates to C/C++. **A candidate handle is not permission to execute.** The
 task-owner API now joins this candidate to the safe lifecycle and dispatch
 ledger. Live snapshot acquisition, state reconciliation and actual queue dispatch
 still require the pinned LinuxCNC host integration.
+
+Revision 2 adds [native spindle feed and CSS](../../docs/native-spindle-protocol.md).
+Its Rust protocol tests pass; the matching controller host and full native
+G95/CSS simulator qualification are still pending. Revision-1 hosts and bodies
+must not be mixed with this interface. No installed controller capability is
+claimed by this development checkpoint.
 
 `include/nextnc_task.h` defines fixed-width, versioned structures. Inputs use
 canonical millimetres, radius X and explicitly dimensioned dynamics. Machine,

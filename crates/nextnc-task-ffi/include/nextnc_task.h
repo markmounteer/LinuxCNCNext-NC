@@ -4,29 +4,40 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define NEXTNC_TASK_ABI 1u
+#define NEXTNC_TASK_ABI 2u
 #define NEXTNC_MAX_TOOLS 4096u
 /* All dimensional values are mm, mm/s, mm/s^2, mm/s^3; X is lathe radius.
  * Native candidates are not execution permits. Preparation belongs on a worker.
  * Every pointer must remain valid for its declared extent; no input/output alias.
  * Functions return 0 on success, -1 on refusal, -2 on contained Rust panic. */
+/* Observed by the trusted host, not read as execution permission from a job.
+ * flags: 1 measured velocity feed on spindle zero, 2 CSS (requires 1).
+ * An absent capability has all fields zero; there are no default allowances. */
+typedef struct {
+    uint32_t flags, reserved;
+    uint8_t identity[32];
+    double maximum_rps, heartbeat_timeout_s, comparison_window_s, position_error_revs, relative_error;
+} nextnc_spindle_evidence;
 typedef struct {
     uint32_t abi, bytes, machine, axis_mask, work_offset, shaping, capabilities, reserved;
     double pose[9], work[9][9], rotation[9], temporary[9], tool_offset[9];
     double minimum[3], maximum[3], velocity[3], acceleration[3], jerk[3], maximum_rpm;
+    nextnc_spindle_evidence spindle;
 } nextnc_snapshot;
 typedef struct { uint32_t number, reserved; double offset[9]; } nextnc_tool;
 enum nextnc_kind {
-    NEXTNC_LINE=1, NEXTNC_CIRCLE=2, NEXTNC_STATIONARY=3, NEXTNC_TERMINATION=4,
+    NEXTNC_LINE=1, NEXTNC_CIRCLE=2, NEXTNC_STATIONARY=3, NEXTNC_TERMINATION=4, NEXTNC_SPINDLE_SYNC=5,
     NEXTNC_RESET_MODES=10, NEXTNC_CLEAR_TEMPORARY=11, NEXTNC_RESET_SPINDLE=12,
     NEXTNC_WORK_OFFSET=13, NEXTNC_TOOL_OFFSET=14, NEXTNC_FEED_PER_MINUTE=15,
     NEXTNC_CHANGE_TOOL=16, NEXTNC_SPINDLE=17, NEXTNC_COOLANT=18,
-    NEXTNC_DWELL=19, NEXTNC_FENCE=20, NEXTNC_END=21
+    NEXTNC_DWELL=19, NEXTNC_FENCE=20, NEXTNC_END=21, NEXTNC_CSS_UPDATE=22
 };
 #define NEXTNC_RAPID 1u
 #define NEXTNC_AT_SPEED 2u
 #define NEXTNC_DRAIN_BEFORE 4u
 #define NEXTNC_LAST_PIECE 8u
+#define NEXTNC_FEED_PER_REV 16u
+#define NEXTNC_CSS 32u
 typedef struct {
     uint32_t abi, bytes, kind, flags;
     uint64_t command;
@@ -34,6 +45,7 @@ typedef struct {
     int32_t argument, turn;
     double start[9], end[9], center[3], normal[3];
     double velocity, maximum_velocity, acceleration, jerk, value, feed_mm_s;
+    double feed_mm_rev, css_factor_rpm_mm, css_maximum_rpm, css_x_offset_mm;
 } nextnc_message;
 uint32_t nextnc_task_abi(void);
 int32_t nextnc_task_prepare(const uint8_t *, uint64_t, const nextnc_snapshot *, const nextnc_tool *, uint64_t, uint64_t *);
@@ -134,12 +146,14 @@ int32_t nextnc_owner_result(uint64_t, uint64_t selection, uint64_t serial, uint3
  * This is NOT evidence of execution or permission to release task ownership.
  * motion: 1 rapid, 2 line, 3 clockwise arc, 4 counterclockwise arc.
  * plane: 0 inherit launch plane, 1 XY, 2 XZ, 3 YZ.
- * feed_known=0 inherits launch feed; otherwise feed_mm_s is authoritative. */
+ * feed_known=0 inherits launch feed and mode; otherwise feed_per_rev selects
+ * feed_mm_rev (1) or feed_mm_s (0). Rapid preserves the prior modal feed. */
 typedef struct {
     uint32_t abi, bytes;
     uint64_t selection, serial, command;
     uint32_t piece, motion, plane, feed_known;
-    double feed_mm_s;
+    uint32_t feed_per_rev, reserved;
+    double feed_mm_s, feed_mm_rev;
 } nextnc_motion_receipt;
 int32_t nextnc_owner_motion_receipt(uint64_t, uint64_t selection, uint64_t serial,
     nextnc_motion_receipt *, uint64_t);
