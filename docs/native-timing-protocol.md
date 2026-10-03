@@ -1,5 +1,9 @@
 # Native timing binding (task ABI 3)
 
+Historical ABI-3 checkpoint. Current ABI 4 retains this timing record and adds
+[observed trajectory limits and numerical headroom](native-numerical-budget.md).
+The snapshot size and test counts below describe the earlier binding.
+
 The live snapshot appends `nextnc_timing_evidence`: model, nominal servo interval,
 trajectory interval, interpolation ratio, cubic segment interval, motion instance
 and four motion-birth words. Intervals use integer nanoseconds. The record is

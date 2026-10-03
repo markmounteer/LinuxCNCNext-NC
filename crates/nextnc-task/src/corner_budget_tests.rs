@@ -7,6 +7,12 @@ fn machine() -> Dynamics {
     Dynamics {
         axis_mask: 7,
         interpolation_period_ns: 1_000_000,
+        trajectory: AxisDynamics {
+            velocity_mm_s: 10000.0,
+            acceleration_mm_s2: 10000.0,
+            jerk_mm_s3: 10000.0,
+        },
+        scalar_origin_mm: 0.0,
         axes: [AxisDynamics {
             velocity_mm_s: 30.,
             acceleration_mm_s2: 100.,
@@ -61,6 +67,15 @@ fn plan(records: &[BoundRecord]) -> Result<Plan> {
         commands: Vec::new(),
         drains_before: Vec::new(),
         corner_budgets: Vec::new(),
+        numerical_budget: crate::lowering::NumericalBudget {
+            interpolation_period_ns: 1_000_000,
+            maximum_coordinate_mm: 0.0,
+            scalar_horizon_mm: 0.0,
+            position_reserve_mm: 0.0,
+            velocity_reserve_mm_s: 0.0,
+            acceleration_reserve_mm_s2: 0.0,
+            jerk_reserve_mm_s3: 0.0,
+        },
     };
     for record in records {
         let payload = match record.action {

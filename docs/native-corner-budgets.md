@@ -1,5 +1,10 @@
 # Native source-corner budgets
 
+The current compiler first applies [numerical headroom](native-numerical-budget.md)
+below observed axis and trajectory limits. The formulas below then use those
+reduced ceilings. Numerical values and runtime counts below describe the earlier
+corner-budget checkpoint and do not qualify a newer runtime automatically.
+
 Status: development checkpoint, with unshaped and shaped desktop simulator captures.
 Full Stage 5 qualification remains open. No controller deployment or physical
 machine acceptance is established by this work.

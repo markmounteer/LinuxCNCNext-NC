@@ -41,7 +41,7 @@ fn unhex(text: &str) -> Result<[u8; 32]> {
 /// supported capability is; signed zero is deliberately exact, not a tolerance.
 pub(crate) fn fingerprint(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<Fingerprint> {
     s.decode(tools)?;
-    let mut bytes = b"nextnc-live-snapshot-v3\0".to_vec();
+    let mut bytes = b"nextnc-live-snapshot-v4\0".to_vec();
     for n in [
         s.machine,
         s.axis_mask,
@@ -83,6 +83,7 @@ pub(crate) fn fingerprint(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<Fi
         s.velocity.as_slice(),
         s.acceleration.as_slice(),
         s.jerk.as_slice(),
+        s.trajectory.as_slice(),
         std::slice::from_ref(&s.maximum_rpm),
         &[
             s.spindle.maximum_rps,
@@ -103,6 +104,9 @@ pub(crate) fn fingerprint(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<Fi
     }
     let configuration = hash(&bytes)?;
     floats(&mut bytes, &s.pose)?;
+    // The scalar origin evolves with motion like pose; it belongs to the
+    // initial-state identity, not the stable running configuration identity.
+    floats(&mut bytes, &[s.scalar_origin_mm])?;
     Ok(Fingerprint {
         abi: wire::ABI,
         bytes: std::mem::size_of::<Fingerprint>() as u32,

@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define NEXTNC_TASK_ABI 3u
+#define NEXTNC_TASK_ABI 4u
 #define NEXTNC_MAX_TOOLS 4096u
 /* All dimensional values are mm, mm/s, mm/s^2, mm/s^3; X is lathe radius.
  * Native candidates are not execution permits. Preparation belongs on a worker.
@@ -30,6 +30,7 @@ typedef struct {
     double minimum[3], maximum[3], velocity[3], acceleration[3], jerk[3], maximum_rpm;
     nextnc_spindle_evidence spindle;
     nextnc_timing_evidence timing;
+    double trajectory[3], scalar_origin_mm;
 } nextnc_snapshot;
 typedef struct { uint32_t number, reserved; double offset[9]; } nextnc_tool;
 enum nextnc_kind {

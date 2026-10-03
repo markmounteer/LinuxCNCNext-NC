@@ -123,6 +123,12 @@ fn dynamics(lathe: bool) -> Dynamics {
     Dynamics {
         axis_mask: if lathe { 5 } else { 7 },
         interpolation_period_ns: 1_000_000,
+        trajectory: AxisDynamics {
+            velocity_mm_s: 10000.0,
+            acceleration_mm_s2: 10000.0,
+            jerk_mm_s3: 10000.0,
+        },
+        scalar_origin_mm: 0.0,
         axes: std::array::from_fn(|i| AxisDynamics {
             velocity_mm_s: [10.0, 12.0, 20.0][i],
             acceleration_mm_s2: [100.0, 200.0, 300.0][i],
@@ -153,9 +159,86 @@ fn directional_line_dynamics_preserve_feed_and_controller_limits() -> TestResult
         .collect();
     assert_eq!(pieces.len(), 1);
     close(pieces[0].velocity_mm_s, 2.0);
-    close(pieces[0].maximum_velocity_mm_s, 10.0 * 2f64.sqrt());
-    close(pieces[0].acceleration_mm_s2, 100.0 * 2f64.sqrt());
-    close(pieces[0].jerk_mm_s3, 1000.0 * 2f64.sqrt());
+    for (actual, physical) in [
+        (pieces[0].maximum_velocity_mm_s, 10.0 * 2f64.sqrt()),
+        (pieces[0].acceleration_mm_s2, 100.0 * 2f64.sqrt()),
+        (pieces[0].jerk_mm_s3, 1000.0 * 2f64.sqrt()),
+    ] {
+        assert!(
+            actual < physical && actual > 0.99 * physical,
+            "reserve must preserve useful directional capacity: {actual}/{physical}"
+        );
+    }
+    Ok(())
+}
+
+#[test]
+fn numerical_budget_tracks_observed_frame_and_period_without_changing_geometry() -> TestResult {
+    let bound = fixture("mill-mm-line")?;
+    let mut d = dynamics(false);
+    let first = lower(&bound, d)?;
+    let b = first.numerical_budget();
+    assert!(b.position_reserve_mm > 0.0);
+    d.interpolation_period_ns *= 2;
+    let slower = lower(&bound, d)?;
+    close(
+        b.jerk_reserve_mm_s3,
+        8.0 * slower.numerical_budget().jerk_reserve_mm_s3,
+    );
+    close(
+        b.acceleration_reserve_mm_s2,
+        4.0 * slower.numerical_budget().acceleration_reserve_mm_s2,
+    );
+    close(
+        b.velocity_reserve_mm_s,
+        2.0 * slower.numerical_budget().velocity_reserve_mm_s,
+    );
+    d.scalar_origin_mm = 5000.0;
+    let far = lower(&bound, d)?;
+    assert!(far.numerical_budget().scalar_horizon_mm > 5000.0);
+    assert!(far.numerical_budget().jerk_reserve_mm_s3 > b.jerk_reserve_mm_s3);
+    let motions = |p: &Plan| {
+        p.pieces()
+            .iter()
+            .filter_map(|p| match p.payload {
+                Payload::Motion { motion, .. } => Some(motion),
+                _ => None,
+            })
+            .collect::<Vec<_>>()
+    };
+    assert_eq!(motions(&first), motions(&slower));
+    assert_eq!(motions(&first), motions(&far));
+    Ok(())
+}
+
+#[test]
+fn trajectory_ceiling_keeps_its_reserve_when_below_directional_axis_limits() -> TestResult {
+    let bound = fixture("mill-mm-line")?;
+    let mut d = dynamics(false);
+    d.trajectory = AxisDynamics {
+        velocity_mm_s: 1.0,
+        acceleration_mm_s2: 2.0,
+        jerk_mm_s3: 3.0,
+    };
+    let plan = lower(&bound, d)?;
+    let b = plan.numerical_budget();
+    for piece in plan.pieces() {
+        if let Payload::Motion { dynamics, .. } = piece.payload {
+            assert!(dynamics.maximum_velocity_mm_s + b.velocity_reserve_mm_s <= 1.0);
+            assert!(dynamics.acceleration_mm_s2 + b.acceleration_reserve_mm_s2 <= 2.0);
+            assert!(dynamics.jerk_mm_s3 + b.jerk_reserve_mm_s3 <= 3.0);
+        }
+    }
+    for invalid in [0.0, -1.0, f64::NAN, f64::INFINITY] {
+        d.trajectory.jerk_mm_s3 = invalid;
+        assert!(lower(&bound, d).is_err());
+    }
+    d = dynamics(false);
+    d.interpolation_period_ns = 1;
+    assert!(
+        lower(&bound, d).is_err(),
+        "unrepresentable reserve must refuse, not disappear"
+    );
     Ok(())
 }
 

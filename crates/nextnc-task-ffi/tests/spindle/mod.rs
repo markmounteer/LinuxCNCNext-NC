@@ -146,7 +146,7 @@ fn spindle_evidence_is_strict_and_every_policy_field_is_bound_for_resume() -> Te
         assert_eq!(out, 0);
     }
     // ABI-1 callers supply only their old common header here. Rejection must
-    // happen before any attempted read of the enlarged ABI-3 body.
+    // happen before any attempted read of the enlarged ABI-4 body.
     let old = [1_u32, 1096];
     let mut out = 9;
     // SAFETY: incompatible header is a complete input for the early-reject path;
@@ -166,7 +166,7 @@ fn spindle_evidence_is_strict_and_every_policy_field_is_bound_for_resume() -> Te
         -1
     );
     assert_eq!(out, 0);
-    assert_eq!(std::mem::size_of::<Snapshot>(), 1216);
+    assert_eq!(std::mem::size_of::<Snapshot>(), 1248);
     assert_eq!(std::mem::size_of::<Message>(), 312);
     assert_eq!(std::mem::size_of::<MotionReceipt>(), 72);
     assert_eq!(std::mem::offset_of!(Snapshot, spindle), 1096);

@@ -4,7 +4,7 @@ use nextnc_native::compiled::Action;
 use nextnc_task::{binding, lowering};
 use std::collections::BTreeMap;
 
-pub const ABI: u32 = 3;
+pub const ABI: u32 = 4;
 pub const MAX_TOOLS: usize = 4096;
 pub const FEED_PER_REV: u32 = 16;
 pub const CSS: u32 = 32;
@@ -104,6 +104,9 @@ pub struct Snapshot {
     pub maximum_rpm: f64,
     pub spindle: SpindleEvidence,
     pub timing: TimingEvidence,
+    /// Observed scalar trajectory velocity, acceleration and jerk ceilings.
+    pub trajectory: [f64; 3],
+    pub scalar_origin_mm: f64,
 }
 
 #[repr(C)]
@@ -155,6 +158,12 @@ impl Snapshot {
             return Err("unknown snapshot flags".into());
         }
         self.timing.validate()?;
+        if self.trajectory.iter().any(|v| !v.is_finite() || *v <= 0.0)
+            || !self.scalar_origin_mm.is_finite()
+            || self.scalar_origin_mm < 0.0
+        {
+            return Err("missing or invalid observed trajectory dynamics/scalar origin".into());
+        }
         let machine = match (self.machine, self.axis_mask) {
             (1, 7) => Machine::MillXyz,
             (2, 5) => Machine::LatheXz,
@@ -209,6 +218,12 @@ impl Snapshot {
             lowering::Dynamics {
                 axis_mask: self.axis_mask,
                 interpolation_period_ns: self.timing.servo_period_ns,
+                trajectory: lowering::AxisDynamics {
+                    velocity_mm_s: self.trajectory[0],
+                    acceleration_mm_s2: self.trajectory[1],
+                    jerk_mm_s3: self.trajectory[2],
+                },
+                scalar_origin_mm: self.scalar_origin_mm,
                 axes: std::array::from_fn(|i| lowering::AxisDynamics {
                     velocity_mm_s: self.velocity[i],
                     acceleration_mm_s2: self.acceleration[i],

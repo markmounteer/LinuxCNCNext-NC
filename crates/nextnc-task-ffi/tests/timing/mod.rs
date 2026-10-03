@@ -110,7 +110,7 @@ fn both_old_snapshot_abis_refuse_before_reading_the_extended_body() -> TestResul
         assert_eq!(result, -1);
         assert_eq!(h, 0);
     }
-    assert_eq!(wire::ABI, 3);
+    assert_eq!(wire::ABI, 4);
     assert_eq!(std::mem::size_of::<wire::TimingEvidence>(), 40);
     assert_eq!(std::mem::offset_of!(Snapshot, timing), 1176);
     Ok(())

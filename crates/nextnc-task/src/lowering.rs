@@ -8,6 +8,9 @@ use std::{f64::consts::TAU, ops::Range};
 #[path = "corner_budget.rs"]
 mod corner_budget;
 pub use corner_budget::CornerBudget;
+#[path = "numerical_budget.rs"]
+mod numerical_budget;
+pub use numerical_budget::NumericalBudget;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AxisDynamics {
@@ -24,6 +27,10 @@ pub struct Dynamics {
     /// execution; offline tests must provide explicit synthetic evidence.
     pub interpolation_period_ns: u32,
     pub axes: [AxisDynamics; 3],
+    /// Observed trajectory ceilings, separate from directional axis limits.
+    pub trajectory: AxisDynamics,
+    /// Absolute scalar frame already accumulated before this prepared job.
+    pub scalar_origin_mm: f64,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -67,6 +74,7 @@ pub struct Plan {
     commands: Vec<Range<usize>>,
     drains_before: Vec<usize>,
     corner_budgets: Vec<CornerBudget>,
+    numerical_budget: NumericalBudget,
 }
 impl Plan {
     pub fn pieces(&self) -> &[Piece] {
@@ -83,6 +91,9 @@ impl Plan {
     /// additional geometric tolerance are created by this calculation.
     pub fn corner_budgets(&self) -> &[CornerBudget] {
         &self.corner_budgets
+    }
+    pub fn numerical_budget(&self) -> &NumericalBudget {
+        &self.numerical_budget
     }
 }
 
@@ -107,6 +118,20 @@ fn fail(reason: &'static str) -> Error {
 
 impl Dynamics {
     fn validate(self) -> Result<()> {
+        if !self.scalar_origin_mm.is_finite()
+            || self.scalar_origin_mm < 0.0
+            || [
+                self.trajectory.velocity_mm_s,
+                self.trajectory.acceleration_mm_s2,
+                self.trajectory.jerk_mm_s3,
+            ]
+            .iter()
+            .any(|v| !v.is_finite() || *v <= 0.0)
+        {
+            return Err(fail(
+                "missing or invalid observed trajectory dynamics/scalar origin",
+            ));
+        }
         if self.interpolation_period_ns == 0 {
             return Err(fail(
                 "native dynamics require an observed interpolation period",
@@ -207,7 +232,7 @@ impl Dynamics {
             let length = delta[0].hypot(delta[1]).hypot(delta[2]);
             (length, length / jerk_ratio, None)
         };
-        let maximum_velocity_mm_s = length / velocity_time;
+        let maximum_velocity_mm_s = (length / velocity_time).min(self.trajectory.velocity_mm_s);
         let velocity_mm_s = match motion.feed {
             Feed::Rapid => maximum_velocity_mm_s,
             Feed::PerSecond(rate) => rate.min(maximum_velocity_mm_s),
@@ -218,8 +243,8 @@ impl Dynamics {
         let dynamics = ScalarDynamics {
             velocity_mm_s,
             maximum_velocity_mm_s,
-            acceleration_mm_s2: length / accel_ratio,
-            jerk_mm_s3: jerk,
+            acceleration_mm_s2: (length / accel_ratio).min(self.trajectory.acceleration_mm_s2),
+            jerk_mm_s3: jerk.min(self.trajectory.jerk_mm_s3),
         };
         if [
             dynamics.velocity_mm_s,
@@ -238,11 +263,14 @@ impl Dynamics {
 
 pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
     dynamics.validate()?;
+    let numerical_budget = NumericalBudget::for_job(bound, dynamics)?;
+    let dynamics = numerical_budget.reserve(dynamics)?;
     let mut plan = Plan {
         pieces: Vec::new(),
         commands: Vec::new(),
         drains_before: Vec::new(),
         corner_budgets: Vec::new(),
+        numerical_budget,
     };
     let mut termination = None;
     let mut sync = 0.0;

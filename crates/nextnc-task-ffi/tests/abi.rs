@@ -46,13 +46,16 @@ fn start_resume_verification_checks_source_and_environment_without_new_authority
     assert_ne!(check(0, a.bytes(), &moved, &t, &mut out), 0);
     assert_eq!(out, Fingerprint::default());
     assert_eq!(check(1, a.bytes(), &moved, &t, &mut out), 0);
+    moved.scalar_origin_mm = 7.0;
+    assert_ne!(check(0, a.bytes(), &moved, &t, &mut out), 0);
+    assert_eq!(check(1, a.bytes(), &moved, &t, &mut out), 0);
     // Receipted native events may select WCS and clear/activate G92/H. The
     // trusted host checks these against its canonical state independently.
     moved.work_offset = 2;
     moved.temporary[0] = 1.0;
     moved.tool_offset[2] = 0.3;
     assert_eq!(check(1, a.bytes(), &moved, &t, &mut out), 0);
-    for variant in 0..8 {
+    for variant in 0..11 {
         let mut changed = moved;
         match variant {
             0 => changed.maximum[0] += 1.0,
@@ -62,7 +65,8 @@ fn start_resume_verification_checks_source_and_environment_without_new_authority
             4 => changed.maximum_rpm += 1.0,
             5 => changed.capabilities = 7,
             6 => changed.work[3][0] = 2.0,
-            _ => changed.rotation[3] = 2.0,
+            7 => changed.rotation[3] = 2.0,
+            _ => changed.trajectory[variant - 8] *= 0.9,
         }
         assert_ne!(check(1, a.bytes(), &changed, &t, &mut out), 0);
         assert_eq!(out, Fingerprint::default());
@@ -112,6 +116,8 @@ fn snapshot() -> Snapshot {
         velocity: [30.0; 3],
         acceleration: [100.0; 3],
         jerk: [1000.0; 3],
+        trajectory: [30.0, 100.0, 1000.0],
+        scalar_origin_mm: 0.0,
         maximum_rpm: 2000.0,
         spindle: wire::SpindleEvidence::default(),
         timing: wire::TimingEvidence {
@@ -124,6 +130,50 @@ fn snapshot() -> Snapshot {
             motion_birth: [1, 2, 3, 4],
         },
     }
+}
+
+#[test]
+fn trajectory_snapshot_is_required_and_old_short_headers_are_rejected() -> TestResult {
+    let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
+    let a = artifact()?;
+    let t = tools();
+    for field in 0..4 {
+        for value in [-1.0, f64::NAN, f64::INFINITY] {
+            let mut s = snapshot();
+            if field == 3 {
+                s.scalar_origin_mm = value;
+            } else {
+                s.trajectory[field] = value;
+            }
+            let mut h = 9;
+            assert_eq!(prepare(&a, &s, &t, &mut h), -1);
+            assert_eq!(h, 0);
+        }
+    }
+    for field in 0..3 {
+        let mut s = snapshot();
+        s.trajectory[field] = 0.0;
+        assert!(s.decode(&t).is_err());
+    }
+    let old = [3_u32, 1216];
+    let mut h = 9;
+    // SAFETY: the common header is valid; an incompatible ABI must reject
+    // before reading any body. Other inputs and output extents are valid.
+    let result = unsafe {
+        nextnc_task_prepare(
+            a.bytes().as_ptr(),
+            a.bytes().len() as u64,
+            old.as_ptr().cast(),
+            t.as_ptr(),
+            t.len() as u64,
+            &mut h,
+        )
+    };
+    assert_eq!(result, -1);
+    assert_eq!(h, 0);
+    assert_eq!(std::mem::offset_of!(Snapshot, trajectory), 1216);
+    assert_eq!(std::mem::offset_of!(Snapshot, scalar_origin_mm), 1240);
+    Ok(())
 }
 fn artifact() -> Result<bundle::Artifact, Box<dyn std::error::Error>> {
     let root =
