@@ -384,6 +384,51 @@ fn g95_css_remain_explicit_stage4_requirements() -> TestResult {
 }
 
 #[test]
+fn shaped_xy_rapid_waypoints_keep_individual_drain_boundaries() -> TestResult {
+    use motion_command::Feed;
+    let name = "mill-mm-arc-xy";
+    for rotation in [0.0, 90.0] {
+        let plan = fixture(name)?;
+        let mut live = snapshot(Machine::MillXyz);
+        live.work_offsets[0].rotation_degrees = rotation;
+        let unshaped = bind(&plan, &live)?;
+        live.shaping = Shaping::EngagedXy;
+        let shaped = bind(&plan, &live)?;
+        assert_eq!(shaped.records().len(), unshaped.records().len());
+        for (a, b) in shaped.records().iter().zip(unshaped.records()) {
+            assert_eq!(a.command, b.command);
+            assert_eq!(
+                a.action, b.action,
+                "drain must not rewrite motion or events"
+            );
+        }
+        let mut corners = 0;
+        for pair in shaped.records().windows(2) {
+            let (BoundAction::Motion(a), BoundAction::Motion(b)) = (pair[0].action, pair[1].action)
+            else {
+                continue;
+            };
+            let moving_xy =
+                |m: Motion| m.start_mm[0] != m.end_mm[0] || m.start_mm[1] != m.end_mm[1];
+            if a.feed == Feed::Rapid && b.feed == Feed::Rapid && moving_xy(a) && moving_xy(b) {
+                corners += 1;
+                assert!(
+                    pair[1].drain_before,
+                    "{name}: rapid waypoint {} can round through its corner",
+                    pair[1].command
+                );
+                assert!(!unshaped.records()[pair[1].command].drain_before);
+            }
+        }
+        assert!(
+            corners >= 2,
+            "fixture must cover approach and return rapid corners"
+        );
+    }
+    Ok(())
+}
+
+#[test]
 fn xy_z_lane_changes_wait_for_real_drain_even_with_available_capacity() -> TestResult {
     use nextnc_task::{lifecycle::*, steps::Layout};
 

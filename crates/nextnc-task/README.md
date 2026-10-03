@@ -30,8 +30,10 @@ full-stack acceptance is pending. The compiler CLI reports `executable:false`.
   remains in the source record and is limit-checked before normalization. Source
   cutting geometry is unchanged; CAM/blending tolerances are not used here.
 - Shaper compatibility: shaped XY or pure-Z bypass; mixed XY/Z and incompatible
-  circles/helixes are refused. Switching lanes inserts a drain requirement without
-  adding synthetic motion or altering semantic step groups.
+  circles/helixes are refused. Switching lanes and crossing moving XY rapid
+  boundaries require a real planner/shaper drain, preserving reviewed rapid
+  waypoints against filter corner rounding. These requirements add no synthetic
+  motion and do not alter semantic step groups. Shaping disabled is unchanged.
 - `receipts`: bounded expanded-message accounting, one issue per ticket, actual
   task/I/O/guarded-motion results, command admission only after all pieces, and
   observation ticks newer than dispatch. Uncertain delivery closes admission;

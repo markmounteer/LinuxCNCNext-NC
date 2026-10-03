@@ -76,8 +76,9 @@ pub struct BoundRecord {
     pub command: usize,
     pub source: Record,
     pub action: BoundAction,
-    /// With shaping engaged, changing XY/bypass ownership requires a real
-    /// planner/shaper drain. This is not permission to flatten mixed geometry.
+    /// With shaping engaged, changing XY/bypass ownership or crossing an XY
+    /// rapid boundary requires a real planner/shaper drain. Reviewed traverses
+    /// have no cutting-tolerance allowance for rounding through a waypoint.
     pub drain_before: bool,
     /// Reissue the active CSS demand after a receipted offset change. Keeping
     /// this separate preserves both source identity and recipient accounting.
@@ -381,6 +382,7 @@ fn bind_from(
     let mut records = Vec::with_capacity(plan.commands().len());
     records.extend_from_slice(prefix);
     let mut shaper_lane = None;
+    let mut previous_shaped_rapid = false;
     let mut css = None;
     for record in prefix {
         match record.action {
@@ -509,8 +511,13 @@ fn bind_from(
                     None
                 };
                 if let Some(lane) = lane {
-                    drain_before = shaper_lane.is_some_and(|previous| previous != lane);
+                    let rapid = matches!(m.feed, Feed::Rapid);
+                    drain_before = shaper_lane.is_some_and(|previous| previous != lane)
+                        || (shaper_lane == Some(0)
+                            && lane == 0
+                            && (previous_shaped_rapid || rapid));
                     shaper_lane = Some(lane);
+                    previous_shaped_rapid = rapid;
                 }
             }
         }
