@@ -11,6 +11,8 @@ use std::sync::Mutex;
 static SERIAL: Mutex<()> = Mutex::new(());
 #[path = "spindle/mod.rs"]
 mod spindle;
+#[path = "timing/mod.rs"]
+mod timing;
 type TestResult = Result<(), Box<dyn std::error::Error>>;
 #[test]
 fn start_resume_verification_checks_source_and_environment_without_new_authority() -> TestResult {
@@ -112,6 +114,15 @@ fn snapshot() -> Snapshot {
         jerk: [1000.0; 3],
         maximum_rpm: 2000.0,
         spindle: wire::SpindleEvidence::default(),
+        timing: wire::TimingEvidence {
+            model: 1,
+            servo_period_ns: 1_000_000,
+            trajectory_period_ns: 1_000_000,
+            interpolation_rate: 1,
+            cubic_segment_ns: 1_000_000,
+            motion_instance: 1,
+            motion_birth: [1, 2, 3, 4],
+        },
     }
 }
 fn artifact() -> Result<bundle::Artifact, Box<dyn std::error::Error>> {
@@ -363,6 +374,17 @@ fn owner_dispatch_uses_actual_results_and_complete_drains_before_mdi() -> TestRe
                 assert_eq!(rebound(p, a.bytes(), &live, &outside, &mut replacement), -1);
                 assert_eq!(replacement, 0); // complete suffix limit check, not just T validity
                 table[1].offset[2] = 0.3; // physical T1 and independent H2 stay distinct
+                for case in 0..6 {
+                    let changed = timing::changed_timing(live, case);
+                    replacement = 99;
+                    assert_eq!(
+                        rebound(p, a.bytes(), &changed, &table, &mut replacement),
+                        -1
+                    );
+                    assert_eq!(replacement, 0);
+                    assert_eq!(state(owner).candidate, candidate);
+                    assert_eq!(next(owner).serial, 0);
+                }
                 assert_eq!(rebound(p, a.bytes(), &live, &table, &mut replacement), 0);
                 assert_eq!(
                     adopt(owner, p, replacement, &fresh(&live, &table), p.tool, tick),

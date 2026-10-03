@@ -60,6 +60,7 @@ struct Candidate {
     layout: Arc<nextnc_task::steps::Layout>,
     fingerprint: runtime::Fingerprint,
     environment: [u8; 32],
+    timing: wire::TimingEvidence,
     maximum_pieces: usize,
     rebind: Option<(u64, usize)>,
     recovery: Vec<Option<recovery::Modes>>,
@@ -71,6 +72,7 @@ fn candidate(
     dynamics: lowering::Dynamics,
     fingerprint: runtime::Fingerprint,
     environment: [u8; 32],
+    timing: wire::TimingEvidence,
     rebind: Option<(u64, usize)>,
 ) -> Result<u64> {
     let lowered = lowering::lower(&bound, dynamics).map_err(|e| e.to_string())?;
@@ -109,6 +111,7 @@ fn candidate(
             layout: Arc::new(layout),
             fingerprint,
             environment,
+            timing,
             maximum_pieces,
             rebind,
             recovery,
@@ -230,6 +233,7 @@ pub unsafe extern "C" fn nextnc_task_prepare(
         };
         let fingerprint = runtime::fingerprint(&snapshot, &tools)?;
         let environment = runtime::environment(&snapshot, &tools)?;
+        let timing = snapshot.timing;
         let (snapshot, dynamics) = snapshot.decode(&tools)?;
         let artifact = bundle::load(bytes, &limits).map_err(|e| e.to_string())?;
         let bound = binding::bind(artifact.prepared(), &snapshot).map_err(|e| e.to_string())?;
@@ -239,6 +243,7 @@ pub unsafe extern "C" fn nextnc_task_prepare(
             dynamics,
             fingerprint,
             environment,
+            timing,
             None,
         )?;
         drop(reservation);
@@ -311,6 +316,11 @@ pub unsafe extern "C" fn nextnc_task_rebind(
         if data != parent.artifact.bytes() {
             return Err("selected bundle changed before procedure rebind".into());
         }
+        if s.timing != parent.timing {
+            return Err(
+                "motion instance or interpolation timing changed before procedure rebind".into(),
+            );
+        }
         let fingerprint = runtime::fingerprint(&s, &t)?;
         let environment = runtime::environment(&s, &t)?;
         let (snapshot, dynamics) = s.decode(&t)?;
@@ -327,6 +337,7 @@ pub unsafe extern "C" fn nextnc_task_rebind(
             dynamics,
             fingerprint,
             environment,
+            s.timing,
             Some((previous, completed)),
         )?;
         drop(reservation);
@@ -344,6 +355,7 @@ pub unsafe extern "C" fn nextnc_task_rebind(
 /// Modes: 0 initial start, 1 held resume, 2 tool confirmation. Tool confirmation
 /// checks source identity but permits table changes because its mandatory
 /// result/rebind barrier revalidates the whole suffix before further motion.
+/// Every mode retains the prepared motion instance and interpolation timing.
 /// # Safety
 /// Inputs are valid immutable nonoverlapping extents as in prepare. Output is
 /// a disjoint writable Fingerprint. Once its size/address checks pass, output
@@ -407,6 +419,9 @@ pub unsafe extern "C" fn nextnc_task_check_current(
         };
         if data != candidate.artifact.bytes() {
             return Err("selected bundle changed before start/resume".into());
+        }
+        if s.timing != candidate.timing {
+            return Err("motion instance or interpolation timing changed before start/resume/tool confirmation".into());
         }
         let fresh = runtime::fingerprint(&s, t)?;
         if mode == 0 && fresh != candidate.fingerprint {

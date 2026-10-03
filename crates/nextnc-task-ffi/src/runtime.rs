@@ -41,7 +41,7 @@ fn unhex(text: &str) -> Result<[u8; 32]> {
 /// supported capability is; signed zero is deliberately exact, not a tolerance.
 pub(crate) fn fingerprint(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<Fingerprint> {
     s.decode(tools)?;
-    let mut bytes = b"nextnc-live-snapshot-v2\0".to_vec();
+    let mut bytes = b"nextnc-live-snapshot-v3\0".to_vec();
     for n in [
         s.machine,
         s.axis_mask,
@@ -49,10 +49,19 @@ pub(crate) fn fingerprint(s: &wire::Snapshot, tools: &[wire::Tool]) -> Result<Fi
         s.shaping,
         s.capabilities,
         s.spindle.flags,
+        s.timing.model,
+        s.timing.servo_period_ns,
+        s.timing.trajectory_period_ns,
+        s.timing.interpolation_rate,
+        s.timing.cubic_segment_ns,
+        s.timing.motion_instance,
     ] {
         bytes.extend_from_slice(&n.to_le_bytes());
     }
     bytes.extend_from_slice(&s.spindle.identity);
+    for word in s.timing.motion_birth {
+        bytes.extend_from_slice(&word.to_le_bytes());
+    }
     let floats = |bytes: &mut Vec<u8>, values: &[f64]| -> Result<()> {
         for v in values {
             if !v.is_finite() {

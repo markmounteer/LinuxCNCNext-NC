@@ -63,6 +63,7 @@ fn fixture(name: &str) -> Result<compiled::PreparedPlan, Box<dyn std::error::Err
 fn dynamics() -> Dynamics {
     Dynamics {
         axis_mask: 5,
+        interpolation_period_ns: 1_000_000,
         axes: [AxisDynamics {
             velocity_mm_s: 20.0,
             acceleration_mm_s2: 300.0,

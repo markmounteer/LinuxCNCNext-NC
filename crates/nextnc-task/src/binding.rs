@@ -656,6 +656,7 @@ mod spindle_offset_tests {
                 &bound,
                 Dynamics {
                     axis_mask: 5,
+                    interpolation_period_ns: 1_000_000,
                     axes: [AxisDynamics {
                         velocity_mm_s: 1.0,
                         acceleration_mm_s2: 1.0,

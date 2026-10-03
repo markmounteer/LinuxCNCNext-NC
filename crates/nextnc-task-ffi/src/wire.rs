@@ -4,7 +4,7 @@ use nextnc_native::compiled::Action;
 use nextnc_task::{binding, lowering};
 use std::collections::BTreeMap;
 
-pub const ABI: u32 = 2;
+pub const ABI: u32 = 3;
 pub const MAX_TOOLS: usize = 4096;
 pub const FEED_PER_REV: u32 = 16;
 pub const CSS: u32 = 32;
@@ -52,6 +52,34 @@ impl SpindleEvidence {
 }
 
 #[repr(C)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct TimingEvidence {
+    pub model: u32,
+    pub servo_period_ns: u32,
+    pub trajectory_period_ns: u32,
+    pub interpolation_rate: u32,
+    pub cubic_segment_ns: u32,
+    pub motion_instance: u32,
+    pub motion_birth: [u32; 4],
+}
+
+impl TimingEvidence {
+    fn validate(&self) -> Result<(), String> {
+        if self.model != 1
+            || self.servo_period_ns == 0
+            || self.trajectory_period_ns != self.servo_period_ns
+            || self.interpolation_rate != 1
+            || self.cubic_segment_ns != self.servo_period_ns
+            || self.motion_instance == 0
+            || self.motion_birth == [0; 4]
+        {
+            return Err("missing or incompatible observed native interpolation timing".into());
+        }
+        Ok(())
+    }
+}
+
+#[repr(C)]
 #[derive(Clone, Copy, Debug)]
 pub struct Snapshot {
     pub abi: u32,
@@ -75,6 +103,7 @@ pub struct Snapshot {
     pub jerk: [f64; 3],
     pub maximum_rpm: f64,
     pub spindle: SpindleEvidence,
+    pub timing: TimingEvidence,
 }
 
 #[repr(C)]
@@ -125,6 +154,7 @@ impl Snapshot {
         if self.reserved != 0 || self.capabilities & !7 != 0 || self.shaping > 1 {
             return Err("unknown snapshot flags".into());
         }
+        self.timing.validate()?;
         let machine = match (self.machine, self.axis_mask) {
             (1, 7) => Machine::MillXyz,
             (2, 5) => Machine::LatheXz,
@@ -178,6 +208,7 @@ impl Snapshot {
             },
             lowering::Dynamics {
                 axis_mask: self.axis_mask,
+                interpolation_period_ns: self.timing.servo_period_ns,
                 axes: std::array::from_fn(|i| lowering::AxisDynamics {
                     velocity_mm_s: self.velocity[i],
                     acceleration_mm_s2: self.acceleration[i],

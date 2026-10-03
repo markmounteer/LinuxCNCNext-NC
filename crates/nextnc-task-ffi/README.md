@@ -1,7 +1,7 @@
 # Checked native task ABI
 
 This is the small unsafe boundary around the safe Rust compiler, coordinate
-binder and task-message lowering. ABI revision 2 exposes immutable prepared
+binder and task-message lowering. ABI revision 3 exposes immutable prepared
 candidates to C/C++. **A candidate handle is not permission to execute.** The
 task-owner API now joins this candidate to the safe lifecycle and dispatch
 ledger. Live snapshot acquisition, state reconciliation and actual queue dispatch
@@ -12,6 +12,13 @@ Its Rust protocol tests pass; the matching controller host and full native
 G95/CSS simulator qualification are still pending. Revision-1 hosts and bodies
 must not be mixed with this interface. No installed controller capability is
 claimed by this development checkpoint.
+
+Revision 3 adds [observed motion timing](../../../docs/native-timing-protocol.md).
+The 1,216-byte snapshot requires rate-one cubic evidence and a motion instance
+and birth identity. The matching controller provides this from actual motion
+state; there is no implicit 1 ms default. Revisions 1 and 2 are refused before
+reading their shorter bodies. Start, resume, tool confirmation and suffix rebind
+must retain the prepared timing identity even when tool-table changes are allowed.
 
 `include/nextnc_task.h` defines fixed-width, versioned structures. Inputs use
 canonical millimetres, radius X and explicitly dimensioned dynamics. Machine,

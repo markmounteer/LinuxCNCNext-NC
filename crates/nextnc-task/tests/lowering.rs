@@ -122,6 +122,7 @@ fn reviewed_policy_changes_have_drain_barriers_without_per_vertex_modes() -> Tes
 fn dynamics(lathe: bool) -> Dynamics {
     Dynamics {
         axis_mask: if lathe { 5 } else { 7 },
+        interpolation_period_ns: 1_000_000,
         axes: std::array::from_fn(|i| AxisDynamics {
             velocity_mm_s: [10.0, 12.0, 20.0][i],
             acceleration_mm_s2: [100.0, 200.0, 300.0][i],

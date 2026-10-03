@@ -120,6 +120,7 @@ fn repeated_job_waypoints_treat_only_roundoff_as_stationary() -> TestResult {
         let repeated = bind(&plan, &live)?;
         let dynamics = Dynamics {
             axis_mask: if machine == Machine::MillXyz { 7 } else { 5 },
+            interpolation_period_ns: 1_000_000,
             axes: [AxisDynamics {
                 velocity_mm_s: 200.0,
                 acceleration_mm_s2: 1000.0,

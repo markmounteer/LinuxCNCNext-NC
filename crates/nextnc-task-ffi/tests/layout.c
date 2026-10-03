@@ -8,12 +8,15 @@
 #else
 #define CHECK _Static_assert
 #endif
-CHECK(NEXTNC_TASK_ABI == 2, "ABI version");
+CHECK(NEXTNC_TASK_ABI == 3, "ABI version");
 CHECK(sizeof(nextnc_spindle_evidence) == 80, "spindle evidence extent");
 CHECK(offsetof(nextnc_spindle_evidence, identity) == 8, "spindle identity");
 CHECK(offsetof(nextnc_spindle_evidence, maximum_rps) == 40, "spindle policy");
-CHECK(sizeof(nextnc_snapshot) == 1176, "snapshot extent");
+CHECK(sizeof(nextnc_timing_evidence) == 40, "timing evidence extent");
+CHECK(offsetof(nextnc_timing_evidence, motion_birth) == 24, "timing birth");
+CHECK(sizeof(nextnc_snapshot) == 1216, "snapshot extent");
 CHECK(offsetof(nextnc_snapshot, spindle) == 1096, "spindle evidence");
+CHECK(offsetof(nextnc_snapshot, timing) == 1176, "timing evidence");
 CHECK(sizeof(nextnc_message) == 312, "message extent");
 CHECK(offsetof(nextnc_message, feed_mm_s) == 272, "G94 feed");
 CHECK(offsetof(nextnc_message, feed_mm_rev) == 280, "G95 feed");

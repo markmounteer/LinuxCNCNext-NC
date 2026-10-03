@@ -16,6 +16,9 @@ pub struct AxisDynamics {
 pub struct Dynamics {
     /// XYZ or XZ only; an absent axis is not assigned invented limits.
     pub axis_mask: u32,
+    /// Observed rate-one cubic/servo interval. Supplied by the live host for
+    /// execution; offline tests must provide explicit synthetic evidence.
+    pub interpolation_period_ns: u32,
     pub axes: [AxisDynamics; 3],
 }
 
@@ -94,6 +97,11 @@ fn fail(reason: &'static str) -> Error {
 
 impl Dynamics {
     fn validate(self) -> Result<()> {
+        if self.interpolation_period_ns == 0 {
+            return Err(fail(
+                "native dynamics require an observed interpolation period",
+            ));
+        }
         if self.axis_mask != 7 && self.axis_mask != 5 {
             return Err(fail("only XYZ/XZ dynamics are supported"));
         }
