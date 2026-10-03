@@ -8,6 +8,11 @@ use motion_command::{v2, EntryGate, Feed, Termination};
 use nextnc_native::compiled::{Action, Site};
 use std::ops::Range;
 
+// The qualified planner preserves junctions below this cosine as separate
+// scalar moves. Match its rate-one line-coalescing boundary: such a corner
+// must not impose one reduced speed on both otherwise independent runs.
+const JUNCTION_COS_MERGE: f64 = 1.0 - 1e-6;
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct CornerBudget {
     /// Original command interval; no commands are merged or renumbered.
@@ -49,6 +54,15 @@ fn adjacent(previous: &BoundRecord, current: &BoundRecord) -> bool {
         && a.feed == b.feed
         && source_a.movement == source_b.movement
         && source_a.tolerance == source_b.tolerance
+        && coalescing_corner(a, b)
+}
+
+fn coalescing_corner(a: Motion, b: Motion) -> bool {
+    let (Ok((left, _)), Ok((right, _))) = (direction(a), direction(b)) else {
+        return false;
+    };
+    let cosine: f64 = left.iter().zip(right).map(|(x, y)| x * y).sum();
+    cosine >= JUNCTION_COS_MERGE
 }
 
 fn direction(motion: Motion) -> Result<([f64; 3], f64)> {

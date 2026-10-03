@@ -18,7 +18,7 @@ fn machine() -> Dynamics {
 fn records() -> Vec<BoundRecord> {
     (0..6)
         .map(|i| {
-            let point = |n: usize| [n as f64, 0.001 * (n * n) as f64, 0.];
+            let point = |n: usize| [n as f64, 0.0005 * (n * n) as f64, 0.];
             let [x, y, z] = point(i);
             let start = PointMm { x, y, z };
             let [x, y, z] = point(i + 1);
@@ -196,5 +196,41 @@ fn budgets_are_per_source_polyline_and_do_not_slow_a_later_straight() -> Result<
     assert_eq!(p.corner_budgets.len(), 1);
     assert_eq!(p.corner_budgets[0].commands, 0..3);
     assert_eq!(&p.pieces[3..], unchanged);
+    Ok(())
+}
+
+#[test]
+fn a_noncoalescing_corner_does_not_cap_both_adjacent_straights() -> Result<()> {
+    let mut r = records();
+    let point = |n: usize| {
+        if n <= 3 {
+            [n as f64, 0., 0.]
+        } else {
+            [3., (n - 3) as f64, 0.]
+        }
+    };
+    for (i, record) in r.iter_mut().enumerate() {
+        if let BoundAction::Motion(ref mut motion) = record.action {
+            motion.start_mm[..3].copy_from_slice(&point(i));
+            motion.end_mm[..3].copy_from_slice(&point(i + 1));
+        }
+        if let Action::Motion(ref mut source) = record.source.action {
+            let [x, y, z] = point(i);
+            let start = PointMm { x, y, z };
+            let [x, y, z] = point(i + 1);
+            source.geometry = v2::Geometry::Line {
+                start,
+                end: PointMm { x, y, z },
+            };
+        }
+    }
+    let mut p = plan(&r)?;
+    let original = p.pieces.clone();
+    apply(&r, machine(), &mut p)?;
+    assert!(
+        p.corner_budgets.is_empty(),
+        "the planner already retains this sharp junction"
+    );
+    assert_eq!(p.pieces, original);
     Ok(())
 }
