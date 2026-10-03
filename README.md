@@ -9,13 +9,21 @@ It reads the `next-nc/turning-toolpath/0.1` and `next-nc/milling-toolpath/0.1` p
 The development branch also includes a [Rust native job compiler](docs/native-compiler.md)
 for revision-1/revision-2 source profiles. It prepares audited motion/event plans
 and [immutable native bundles](docs/native-publication.md), without Node or G-code
-in that path. Controller execution is a later stage; these commands report
-`executable:false` and do not move a machine.
+in that path. The native controller integration is implemented in the separate
+LinuxCNC repository and is undergoing Stage 5 simulator qualification. Standalone
+compiler commands still report `executable:false` and do not move a machine.
 Every native invocation also saves [detailed diagnostics](docs/native-diagnostics.md)
 in the standard translator state directory, including `latest-error.txt`.
 The [Stage 1–2 acceptance review](docs/qualification/stages12/README.md) records
-the qualified source contract, offline compiler and large-job evidence. Native
-task execution is the next stage.
+the qualified source contract, offline compiler and large-job evidence. The
+[native corner-budget checkpoint](docs/native-corner-budgets.md) describes the
+current compiler integration and its remaining qualification limits.
+
+**Format scope:** Next-NC is this project's versioned Fusion toolpath profile
+and execution pipeline. Its `.stpnc` files use a restricted STEP-NC/AP238-derived
+representation. This is not a complete STEP-NC implementation or a promise to
+accept arbitrary AP238 files. Fusion continues to calculate the toolpaths;
+native execution does not add general feature-based CAM or standards conformance.
 
 ## Quick start
 

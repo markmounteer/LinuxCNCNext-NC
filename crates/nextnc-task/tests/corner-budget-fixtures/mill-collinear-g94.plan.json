@@ -1,0 +1,61 @@
+{
+  "schema": "linuxcnc-next-nc/execution-plan/5",
+  "machine": "mill",
+  "units": "mm",
+  "programFingerprint": "286c1c1b1d7274eff2a7d275c78c9958b64a014e5bccfc577d0e7016797fa0fe",
+  "tools": {
+    "1:2": {
+      "tool": 1,
+      "offset": 2
+    }
+  },
+  "workOffsets": {
+    "1": "G54"
+  },
+  "sections": [
+    {
+      "mode": "retract",
+      "retract": [
+        {
+          "z": 10
+        },
+        {
+          "x": 0
+        },
+        {
+          "y": 0
+        }
+      ],
+      "approach": [
+        {
+          "z": 10
+        },
+        {
+          "x": 5
+        },
+        {
+          "y": 0
+        },
+        {
+          "z": 2
+        }
+      ]
+    }
+  ],
+  "pathControl": [
+    {
+      "mode": "exactPath"
+    }
+  ],
+  "end": [
+    {
+      "z": 10
+    },
+    {
+      "x": 0
+    },
+    {
+      "y": 0
+    }
+  ]
+}

@@ -5,6 +5,10 @@ use motion_command::{Feed, Rotation, Termination};
 use nextnc_native::compiled::Action;
 use std::{f64::consts::TAU, ops::Range};
 
+#[path = "corner_budget.rs"]
+mod corner_budget;
+pub use corner_budget::CornerBudget;
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AxisDynamics {
     pub velocity_mm_s: f64,
@@ -62,6 +66,7 @@ pub struct Plan {
     pieces: Vec<Piece>,
     commands: Vec<Range<usize>>,
     drains_before: Vec<usize>,
+    corner_budgets: Vec<CornerBudget>,
 }
 impl Plan {
     pub fn pieces(&self) -> &[Piece] {
@@ -73,6 +78,11 @@ impl Plan {
     /// Includes bound shaper lane changes and termination-policy changes.
     pub fn drains_before(&self) -> &[usize] {
         &self.drains_before
+    }
+    /// Derived limits for compatible source polylines. No motor samples or
+    /// additional geometric tolerance are created by this calculation.
+    pub fn corner_budgets(&self) -> &[CornerBudget] {
+        &self.corner_budgets
     }
 }
 
@@ -232,6 +242,7 @@ pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
         pieces: Vec::new(),
         commands: Vec::new(),
         drains_before: Vec::new(),
+        corner_budgets: Vec::new(),
     };
     let mut termination = None;
     let mut sync = 0.0;
@@ -328,5 +339,6 @@ pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
         }
         plan.commands.push(start..plan.pieces.len());
     }
+    corner_budget::apply(bound.records(), dynamics, &mut plan)?;
     Ok(plan)
 }
