@@ -10,14 +10,16 @@ Full Stage 5 qualification remains open. No controller deployment or physical
 machine acceptance is established by this work.
 
 After live binding, Rust lowering derives reduced velocity, acceleration and
-jerk limits within each compatible source polyline. It uses the observed
+jerk limits within each compatible executable line run. It uses the observed
 interpolation period from the immutable timing contract. The planner still
 generates motion profiles and owns braking, overrides and spindle feedback.
 The compiler does not generate servo samples or motor pulses.
 
 Budgets preserve every original motion, coordinate, feed, source identifier and
-event. A group ends at rapids, arcs, zero-length moves, path-ordinal resets,
-feed/movement/tolerance changes, gates, drains and state/process events. A group
+event. Source polyline boundaries, restarted or absent ordinals, descriptive
+movement labels and CAM tolerance metadata do not end a group: those fields do
+not request a stop in the planner. A group ends at rapids, arcs, zero-length
+moves, feed changes, gates, drains, disconnected geometry and state/process events. A group
 also ends when the adjacent direction cosine falls below the qualified planner's
 `1 - 1e-6` line-coalescing threshold. This prevents a sharp corner from reducing
 otherwise independent straight runs; a pre-fix failing regression is retained.
@@ -26,6 +28,28 @@ stop and blend modes are excluded from this algebra. Exactly collinear groups
 retain their original limits; a corner elsewhere does not cap unrelated groups.
 Requested G94 feed remains separate from the hard geometric velocity ceiling.
 G95 retains its feed-per-revolution value and measured-spindle demand.
+
+The source-partition correction retains the independent audit's exact joined
+and split fixtures. Both now produce identical bound actions, lowered pieces,
+command ranges, drain flags and limits while preserving their original source
+ordinals. The new integration test fails against the old grouping code and
+passes after the correction. Additional unit cases cover singletons, missing or
+zero ordinals, restarted ordinals and changes in movement/tolerance metadata.
+Execution-boundary tests still preserve feed, gate, drain and event boundaries.
+
+The frozen correction passes 159 Windows and 160 Linux workspace tests, with
+Clippy on both platforms. Twelve fresh complete simulator jobs cover mill G94,
+lathe G94 and lathe G95, each with joined, split, singleton and relabelled source
+paths. The corrected commands and limits are identical across partitions;
+103,004 actual downstream cubic intervals satisfy the reviewed source corridors
+and physical acceleration/jerk ceilings. Cutting jerk is bounded below 500 mm/s³.
+The twelve preceding-runtime captures retain 86,343 intervals. They show the
+different limits, but do not reproduce the earlier component-level jerk excess;
+their different velocity limits also prevent an equivalent-limit speed claim.
+The frozen controller evidence is `corner-partition-r1` under
+`controller/motion/motion/tests/nextnc-stage5/evidence` in the LinuxCNC repository.
+This finite unshaped check does not qualify arbitrary geometry, changing
+controls, shaped output, tiny accepted tails, WCET or Stage 5 as a whole.
 
 For maximum unit-direction jump `D`, minimum segment length `L`, observed period
 `dt` and conservative configured acceleration/jerk budgets `A,J`:
