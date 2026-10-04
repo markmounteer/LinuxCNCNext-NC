@@ -1,6 +1,6 @@
 use super::*;
 use crate::lowering::{AxisDynamics, Piece};
-use motion_command::{Command, PointMm};
+use motion_command::{v2, Command, PointMm};
 use nextnc_native::compiled::Record;
 
 fn machine() -> Dynamics {
@@ -106,8 +106,8 @@ fn plan(records: &[BoundRecord]) -> Result<Plan> {
 }
 
 #[test]
-fn semantic_boundaries_end_budgets_without_rewriting_any_source_piece() -> Result<()> {
-    for variant in 0..10 {
+fn execution_boundaries_end_budgets_without_rewriting_any_source_piece() -> Result<()> {
+    for variant in 0..8 {
         let mut r = records();
         let mut middle = match r[3].action {
             BoundAction::Motion(m) => m,
@@ -130,9 +130,7 @@ fn semantic_boundaries_end_budgets_without_rewriting_any_source_piece() -> Resul
                 }
             }
             6 => middle.entry_gate = EntryGate::SpindlesAtSpeed,
-            7 => middle.end_mm = middle.start_mm,
-            8 => r[3].source.ordinal = Some(1),
-            _ => r[3].source.ordinal = None,
+            _ => middle.end_mm = middle.start_mm,
         }
         r[3].action = BoundAction::Motion(middle);
         let mut p = plan(&r)?;
@@ -160,19 +158,13 @@ fn semantic_boundaries_end_budgets_without_rewriting_any_source_piece() -> Resul
 }
 
 #[test]
-fn events_and_source_intent_never_join_independent_corner_budgets() -> Result<()> {
-    for variant in 0..6 {
+fn state_events_never_join_independent_corner_budgets() -> Result<()> {
+    for variant in 0..4 {
         let mut r = records();
-        let source = match &mut r[3].source.action {
-            Action::Motion(m) => m,
-            _ => return Err(fail("test source missing")),
-        };
         match variant {
-            0 => source.movement = v2::Movement::LeadOut,
-            1 => source.tolerance = v2::Tolerance::Missing,
-            2 => r[3].action = BoundAction::State(Action::Event(Command::Dwell { seconds: 0.1 })),
-            3 => r[3].action = BoundAction::State(Action::Event(Command::ChangeTool { tool: 2 })),
-            4 => {
+            0 => r[3].action = BoundAction::State(Action::Event(Command::Dwell { seconds: 0.1 })),
+            1 => r[3].action = BoundAction::State(Action::Event(Command::ChangeTool { tool: 2 })),
+            2 => {
                 r[3].action = BoundAction::State(Action::Event(Command::Spindle(
                     motion_command::Spindle::Stop,
                 )))
@@ -196,7 +188,7 @@ fn events_and_source_intent_never_join_independent_corner_budgets() -> Result<()
 }
 
 #[test]
-fn budgets_are_per_source_polyline_and_do_not_slow_a_later_straight() -> Result<()> {
+fn a_disconnected_straight_does_not_join_the_preceding_corner_budget() -> Result<()> {
     let mut r = records();
     for (i, record) in r.iter_mut().enumerate().skip(3) {
         record.source.ordinal = Some(i - 2);
@@ -211,6 +203,52 @@ fn budgets_are_per_source_polyline_and_do_not_slow_a_later_straight() -> Result<
     assert_eq!(p.corner_budgets.len(), 1);
     assert_eq!(p.corner_budgets[0].commands, 0..3);
     assert_eq!(&p.pieces[3..], unchanged);
+    Ok(())
+}
+
+#[test]
+fn source_partition_and_descriptive_labels_cannot_remove_physical_corner_limits() -> Result<()> {
+    let original = records();
+    let mut baseline = plan(&original)?;
+    apply(&original, machine(), &mut baseline)?;
+    assert_eq!(baseline.corner_budgets.len(), 1);
+    assert_eq!(baseline.corner_budgets[0].commands, 0..original.len());
+    for variant in 0..8 {
+        let mut changed = original.clone();
+        for (i, record) in changed.iter_mut().enumerate() {
+            match variant {
+                0 => record.source.ordinal = Some(1),
+                1 => record.source.ordinal = Some(i % 2 + 1),
+                2 => record.source.ordinal = None,
+                3 => record.source.ordinal = Some(0),
+                4 => record.source.ordinal = Some(usize::MAX),
+                _ => {
+                    let Action::Motion(ref mut source) = record.source.action else {
+                        return Err(fail("test source motion missing"));
+                    };
+                    if i % 2 == 1 {
+                        if variant != 6 {
+                            source.movement = v2::Movement::LeadOut;
+                        }
+                        if variant != 5 {
+                            source.tolerance = v2::Tolerance::Missing;
+                        }
+                    }
+                }
+            }
+        }
+        let retained = changed.clone();
+        let mut candidate = plan(&changed)?;
+        apply(&changed, machine(), &mut candidate)?;
+        assert_eq!(
+            candidate.corner_budgets, baseline.corner_budgets,
+            "variant {variant}"
+        );
+        assert_eq!(candidate.pieces, baseline.pieces, "variant {variant}");
+        assert_eq!(candidate.commands, baseline.commands);
+        assert_eq!(candidate.drains_before, baseline.drains_before);
+        assert_eq!(changed, retained, "source provenance must remain exact");
+    }
     Ok(())
 }
 

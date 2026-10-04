@@ -144,3 +144,73 @@ fn original_dense_sources_keep_every_move_and_feed_with_period_derived_limits() 
     }
     Ok(())
 }
+
+#[test]
+fn original_split_join_counterexample_has_identical_limits_and_preserved_provenance() -> TestResult
+{
+    // Exact source/setup bytes from the independent configured-shim counterexample.
+    // Only source polyline grouping differs; inspect every prepared/bound action
+    // rather than feeding fabricated BoundRecords straight into the allocator.
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/corner-partition-fixtures");
+    let mut results = Vec::new();
+    let machine = Dynamics {
+        axis_mask: 7,
+        interpolation_period_ns: 1_000_000,
+        trajectory: AxisDynamics {
+            velocity_mm_s: 30.,
+            acceleration_mm_s2: 100.,
+            jerk_mm_s3: 1000.,
+        },
+        scalar_origin_mm: 0.,
+        axes: [AxisDynamics {
+            velocity_mm_s: 30.,
+            acceleration_mm_s2: 100.,
+            jerk_mm_s3: 1000.,
+        }; 3],
+    };
+    for name in ["joined", "split"] {
+        let source = std::fs::read_to_string(root.join(format!("{name}.stpnc")))?;
+        let setup = std::fs::read_to_string(root.join(format!("{name}.plan.json")))?;
+        let prepared = compiled::prepare(&source, &setup, &Limits::default())?;
+        let bound = bind(&prepared, &snapshot(false))?;
+        let lowered = lower(&bound, machine)?;
+        let cuts: Vec<_> = bound
+            .records()
+            .iter()
+            .filter(|r| matches!(r.action, BoundAction::Motion(m) if m.feed != Feed::Rapid))
+            .collect();
+        assert_eq!(cuts.len(), 3);
+        assert_eq!(
+            cuts.iter().map(|r| r.source.ordinal).collect::<Vec<_>>(),
+            [Some(1), Some(2), Some(if name == "split" { 1 } else { 3 })]
+        );
+        let points = [[5., 4., 5.], [5.5, 4., 4.5], [6., 4., 4.], [7., 4.001, 3.]];
+        for (i, record) in cuts.iter().enumerate() {
+            let BoundAction::Motion(m) = record.action else {
+                return Err("missing cut".into());
+            };
+            assert_eq!(&m.start_mm[..3], &points[i]);
+            assert_eq!(&m.end_mm[..3], &points[i + 1]);
+            assert_eq!(m.feed, Feed::PerSecond(2.));
+        }
+        assert_eq!(lowered.corner_budgets().len(), 1);
+        assert_eq!(lowered.corner_budgets()[0].commands.len(), 3);
+        assert!(lowered.corner_budgets()[0].maximum_velocity_mm_s < 0.67);
+        results.push((bound, lowered));
+    }
+    let (joined, a) = &results[0];
+    let (split, b) = &results[1];
+    assert_eq!(
+        joined
+            .records()
+            .iter()
+            .map(|r| r.action)
+            .collect::<Vec<_>>(),
+        split.records().iter().map(|r| r.action).collect::<Vec<_>>()
+    );
+    assert_eq!(a.pieces(), b.pieces());
+    assert_eq!(a.commands(), b.commands());
+    assert_eq!(a.drains_before(), b.drains_before());
+    assert_eq!(a.corner_budgets(), b.corner_budgets());
+    Ok(())
+}

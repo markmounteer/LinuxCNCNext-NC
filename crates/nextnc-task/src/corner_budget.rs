@@ -1,10 +1,10 @@
-//! Off-thread source-polyline limits for the observed rate-one cubic model.
+//! Off-thread executable line-run limits for the observed rate-one cubic model.
 //! The planner still owns profiles, override/feed synchronization and braking.
 //! These algebraic budgets require independent full-stack path qualification;
 //! they do not certify arbitrary controls or the shaped continuous trajectory.
 use super::{fail, Dynamics, Error, Payload, Plan, Result};
 use crate::binding::{BoundAction, BoundRecord, Motion};
-use motion_command::{v2, EntryGate, Feed, Termination};
+use motion_command::{EntryGate, Feed, Termination};
 use nextnc_native::compiled::{Action, Site};
 use std::ops::Range;
 
@@ -25,35 +25,32 @@ pub struct CornerBudget {
     pub jerk_mm_s3: f64,
 }
 
-fn eligible(record: &BoundRecord) -> Option<(Motion, v2::Motion)> {
-    let (BoundAction::Motion(motion), Action::Motion(source)) =
-        (record.action, record.source.action)
+fn eligible(record: &BoundRecord) -> Option<Motion> {
+    let (BoundAction::Motion(motion), Action::Motion(_)) = (record.action, record.source.action)
     else {
         return None;
     };
     (record.source.site == Site::Source
-        && record.source.ordinal.is_some_and(|n| n > 0)
         && motion.circular.is_none()
         && motion.start_mm != motion.end_mm
         && motion.feed != Feed::Rapid
         && motion.termination == Termination::ExactPath
         && record.css_update.is_none())
-    .then_some((motion, source))
+    .then_some(motion)
 }
 
 fn adjacent(previous: &BoundRecord, current: &BoundRecord) -> bool {
-    let (Some((a, source_a)), Some((b, source_b))) = (eligible(previous), eligible(current)) else {
+    let (Some(a), Some(b)) = (eligible(previous), eligible(current)) else {
         return false;
     };
-    // Every polyline starts its one-based vertex ordinal again. This prevents
-    // a budget from crossing source paths/operations even without modal events.
+    // Source ordinals, movement labels and CAM tolerances do not reach the
+    // planner as stop/merge barriers. A restarted ordinal or separate source
+    // line therefore cannot remove a physical corner from this budget. Keep
+    // provenance in the unchanged records; group by executable motion instead.
     !current.drain_before
         && b.entry_gate == EntryGate::None
-        && previous.source.ordinal.and_then(|n| n.checked_add(1)) == current.source.ordinal
         && a.end_mm == b.start_mm
         && a.feed == b.feed
-        && source_a.movement == source_b.movement
-        && source_a.tolerance == source_b.tolerance
         && coalescing_corner(a, b)
 }
 
@@ -96,7 +93,7 @@ fn finish(
         }
     }
     for record in &records[range.clone()] {
-        let Some((motion, _)) = eligible(record) else {
+        let Some(motion) = eligible(record) else {
             return Err(fail("incompatible source in corner budget"));
         };
         let (unit, length) = direction(motion)?;
