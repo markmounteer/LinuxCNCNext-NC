@@ -67,6 +67,9 @@ typedef struct {
     double feed_mm_rev, css_factor_rpm_mm, css_maximum_rpm, css_x_offset_mm;
 } nextnc_message;
 uint32_t nextnc_task_abi(void);
+/* Offline delivery probe, not authority: exactly 192 ASCII bytes, no NUL:
+ * compiler SHA256, bundle-schema SHA256, compilation-policy SHA256. */
+int32_t nextnc_task_compiler_identity(uint8_t *output, uint64_t length);
 /* Hash 1..16384 host-observed bytes into exactly 32 output bytes. This does not
  * verify HAL or grant capability: the trusted host must validate the live
  * graph, runtime instance and policy before hashing. Never use job data here. */

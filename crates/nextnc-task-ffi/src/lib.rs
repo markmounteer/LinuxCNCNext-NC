@@ -193,6 +193,32 @@ pub extern "C" fn nextnc_task_abi() -> u32 {
     wire::ABI
 }
 
+/// Offline delivery probe: three consecutive lowercase ASCII SHA-256 strings
+/// (compiler, bundle schema, compilation policy), without a trailing NUL.
+/// This identifies the compiler embedded in this library, not execution authority.
+/// # Safety
+/// `output` must be writable for exactly 192 bytes. No concurrent access is allowed.
+#[no_mangle]
+pub unsafe extern "C" fn nextnc_task_compiler_identity(output: *mut u8, length: u64) -> i32 {
+    boundary(|| {
+        if length != 192 || output.is_null() {
+            return Err("compiler identity requires exactly 192 writable bytes".into());
+        }
+        let text = format!(
+            "{}{}{}",
+            bundle::COMPILER_SHA256,
+            bundle::schema_sha256(),
+            bundle::policy_sha256()
+        );
+        if text.len() != 192 {
+            return Err("invalid compiled identity".into());
+        }
+        // SAFETY: the caller guarantees the checked non-null 192-byte output extent.
+        unsafe { std::ptr::copy_nonoverlapping(text.as_ptr(), output, 192) };
+        Ok(())
+    })
+}
+
 /// Independently decode the entire immutable bundle, bind the whole path, and
 /// lower every task message before publishing a handle. Output is zero on error.
 /// # Safety

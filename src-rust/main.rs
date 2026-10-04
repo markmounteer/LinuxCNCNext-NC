@@ -10,6 +10,12 @@ use std::path::Path;
 
 const OPTION_LIMIT: usize = 1024 * 1024;
 fn run(args: &[String], trace: &mut Trace) -> Result<Value> {
+    if args.len() == 2 && args[1] == "identity" {
+        return Ok(json!({"schema":"nextnc/compiler-identity/v1",
+            "compiler_sha256":bundle::COMPILER_SHA256,
+            "schema_sha256":bundle::schema_sha256(),
+            "policy_sha256":bundle::policy_sha256(), "executable":false}));
+    }
     let limits = Limits::default();
     let parsed = trace.stage("arguments", |t| {
         // Protect named input paths before argument validation can fail. A

@@ -17,6 +17,41 @@ mod spindle;
 mod timing;
 type TestResult = Result<(), Box<dyn std::error::Error>>;
 #[test]
+fn delivery_identity_has_exact_extent_and_matches_embedded_compiler() -> TestResult {
+    let mut bytes = [0xa5u8; 194];
+    assert_eq!(
+        // SAFETY: the middle 192 bytes are live writable storage, with guard bytes.
+        unsafe { nextnc_task_compiler_identity(bytes.as_mut_ptr().add(1), 192) },
+        0
+    );
+    assert_eq!(bytes[0], 0xa5);
+    assert_eq!(bytes[193], 0xa5);
+    assert_eq!(
+        std::str::from_utf8(&bytes[1..193])?,
+        format!(
+            "{}{}{}",
+            bundle::COMPILER_SHA256,
+            bundle::schema_sha256(),
+            bundle::policy_sha256()
+        )
+    );
+    let before = bytes;
+    for length in [0, 191, 193, u64::MAX] {
+        assert_ne!(
+            // SAFETY: every incorrect extent is rejected before any dereference.
+            unsafe { nextnc_task_compiler_identity(bytes.as_mut_ptr(), length) },
+            0
+        );
+        assert_eq!(bytes, before);
+    }
+    assert_ne!(
+        // SAFETY: null is explicitly rejected without dereference.
+        unsafe { nextnc_task_compiler_identity(std::ptr::null_mut(), 192) },
+        0
+    );
+    Ok(())
+}
+#[test]
 fn start_resume_verification_checks_source_and_environment_without_new_authority() -> TestResult {
     let _lock = SERIAL.lock().unwrap_or_else(|p| p.into_inner());
     let a = artifact()?;
