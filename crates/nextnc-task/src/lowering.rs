@@ -13,6 +13,9 @@ mod numerical_budget;
 pub use numerical_budget::NumericalBudget;
 #[path = "curve_budget.rs"]
 mod curve_budget;
+#[path = "shaping_lowering.rs"]
+mod shaping_lowering;
+pub use shaping_lowering::ShapingBudget;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AxisDynamics {
@@ -77,6 +80,7 @@ pub struct Plan {
     drains_before: Vec<usize>,
     corner_budgets: Vec<CornerBudget>,
     numerical_budget: NumericalBudget,
+    shaping_budgets: Vec<ShapingBudget>,
 }
 impl Plan {
     pub fn pieces(&self) -> &[Piece] {
@@ -96,6 +100,42 @@ impl Plan {
     }
     pub fn numerical_budget(&self) -> &NumericalBudget {
         &self.numerical_budget
+    }
+    pub fn shaping_budgets(&self) -> &[ShapingBudget] {
+        &self.shaping_budgets
+    }
+    /// The only source-policy rewrite currently allowed: use the reviewed
+    /// execution allowance for shaping, disabling the planner's separate fit.
+    /// Check its immutable ledger against the bound source and actual kernel.
+    pub(crate) fn execution_motion(
+        &self,
+        bound: &BoundPlan,
+        command: usize,
+        mut motion: Motion,
+    ) -> std::result::Result<Motion, &'static str> {
+        let index = self
+            .shaping_budgets
+            .partition_point(|b| b.commands.end <= command);
+        if let Some(budget) = self
+            .shaping_budgets
+            .get(index)
+            .filter(|b| b.commands.contains(&command))
+        {
+            let certificate = &budget.certificate;
+            if bound
+                .shaping_kernel()
+                .is_none_or(|k| k.identity() != certificate.kernel_identity)
+                || motion.termination
+                    != (Termination::Blend {
+                        max_deviation_mm: certificate.allowance.source_corridor_mm,
+                    })
+                || certificate.total_error_upper_mm > certificate.allowance.source_corridor_mm
+            {
+                return Err("shaping ledger differs from bound source or kernel");
+            }
+            motion.termination = Termination::ExactPath;
+        }
+        Ok(motion)
     }
 }
 
@@ -278,16 +318,18 @@ pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
     }
     let numerical_budget = NumericalBudget::for_job(bound, dynamics)?;
     let dynamics = numerical_budget.reserve(dynamics)?;
+    let (records, shaping_budgets) = shaping_lowering::prepare(bound, dynamics, numerical_budget)?;
     let mut plan = Plan {
         pieces: Vec::new(),
         commands: Vec::new(),
         drains_before: Vec::new(),
         corner_budgets: Vec::new(),
         numerical_budget,
+        shaping_budgets,
     };
     let mut termination = None;
     let mut sync = 0.0;
-    for record in bound.records() {
+    for record in &records {
         let start = plan.pieces.len();
         let mut drain = record.drain_before;
         match record.action {
@@ -380,6 +422,7 @@ pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
         }
         plan.commands.push(start..plan.pieces.len());
     }
-    corner_budget::apply(bound.records(), dynamics, &mut plan)?;
+    corner_budget::apply(&records, dynamics, &mut plan)?;
+    shaping_lowering::apply(&mut plan);
     Ok(plan)
 }

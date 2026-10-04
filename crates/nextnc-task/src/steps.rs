@@ -154,7 +154,9 @@ impl Layout {
                         Payload::State(BoundAction::State(Action::RestoreFeedPerMinute)),
                         BoundAction::State(Action::ResetModes),
                     ) => true,
-                    (Payload::Termination(t), BoundAction::Motion(m)) => t == m.termination,
+                    (Payload::Termination(t), BoundAction::Motion(m)) => {
+                        t == lowered.execution_motion(bound, i, m)?.termination
+                    }
                     (Payload::SpindleSync { mm_per_rev }, BoundAction::Motion(m)) => {
                         mm_per_rev
                             == match m.feed {
@@ -170,7 +172,7 @@ impl Layout {
                     (
                         Payload::Motion { motion, .. } | Payload::Stationary(motion),
                         BoundAction::Motion(m),
-                    ) => motion == m,
+                    ) => motion == lowered.execution_motion(bound, i, m)?,
                     (Payload::State(a), b) => a == b,
                     _ => false,
                 };

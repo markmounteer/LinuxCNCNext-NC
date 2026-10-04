@@ -1,19 +1,25 @@
 # Native shaping error budget
 
 `nextnc_task::shaping` implements an off-thread geometric allocation component
-for a common positive FIR followed by the pinned rate-one LinuxCNC cubic. It is
-not yet used to cap native motion. Task ABI 5 now requires actual common-FIR
+for a common positive FIR followed by the pinned rate-one LinuxCNC cubic. Rust
+lowering now applies it to planar XY source charts with a positive reviewed
+execution allowance. Task ABI 5 requires actual common-FIR
 coefficients for an enabled filter, preserves the validated kernel in the bound
 plan, and fingerprints its exact data with the observed motion birth/timing.
 Changed kernels are refused at start, resume, tool confirmation and suffix
-rebind. The retained shaped-arc runtime failure remains unresolved until source
-windows, lowering and full-stack path qualification use the allocation.
+rebind. Full-stack geometric, arithmetic, recovery and timing qualification
+remains required; a lowering certificate alone does not complete Stage 5.
 
 The component was motivated by the controller's
 [shaped-arc failure](https://github.com/markmounteer/linuxcnc/pull/1506): the raw
 analytic path stayed on the source but a commanded joint point after filtering
-was more than 0.013736 mm from it, against a 0.002 mm allowance. Satisfying
-velocity, acceleration and jerk limits alone did not preserve that allowance.
+was more than 0.013736 mm from it, exceeding even the old diagnostic's 0.002 mm
+comparison. That fixture's reviewed execution policy is exact-path: its
+0.002 mm **CAM tolerance is not additional execution permission**. It now
+refuses before a candidate is returned. A positive-allowance experiment must
+use a separately reviewed plan and must not be presented as an equivalent-policy
+performance comparison with the original. Satisfying velocity, acceleration and
+jerk limits alone does not establish geometric accuracy.
 
 ## Conditional geometric bound
 
@@ -91,7 +97,49 @@ Allocation returns the physical ceiling unchanged if it fits. Otherwise a
 fixed 64-step search returns a checked lower speed ceiling. Every returned
 certificate is rechecked against the total allowance. Numerical domains in
 which no positive candidate can be represented are refused rather than widened.
-All work is off-thread: at most 496 pair contributions and 64 search iterations.
+All work is off-thread: at most 496 pair contributions and 64 search iterations
+per component allocation. The source-window integration has its own bounds below.
+
+## Source windows and executable lowering
+
+The allowance comes only from schema-5 `pathControl.additionalDeviation`, in
+canonical millimetres after unit conversion. CAM tolerance remains untouched.
+An exact-path curve or polyline with a nonzero enclosed corner jump is refused
+when shaping is enabled. Straight coordinate-axis runs remain exact in the
+ideal positive-average model. General diagonal collinearity is conservatively
+enclosed; floating-point direction equality is not treated as proof of zero
+curvature. Numerical and coefficient-mass errors still need qualification even
+for ideal straight motion.
+
+Contiguous arcs with the same center and Z form a circle chart, including feed
+changes and direction reversals. The minimum enclosed radius gives curvature;
+twice the enclosed radius range reserves raw radius variation and projection
+back to a source arc. Lines form arclength charts with outward interval bounds
+on segment length, normalized tangent and tangent jumps. Unsupported or
+unrepresentable domains refuse; square-root bounds use elementary operations,
+not an assumed accuracy bound for `hypot`.
+
+The retained history span is bounded by `V * (last_delay + 3) * period` plus
+the positional reserve. A two-pointer scan bounds corner jumps only within
+that span. A fixed 64-step search couples the span to the proposed speed, so
+corners outside retained history do not penalize the whole job. Each predicate
+currently calls the component allocator (at most 64 inner iterations); overall
+work is bounded by 64 linear scans and fixed scalar searches per chart, with
+linear off-thread storage. No new work or allocation is added to the servo.
+
+The approved allowance is spent once, on downstream shaping. Executable
+termination is exact-path within those charts, disabling a separate planner
+fit/blend expenditure. Original bound source records retain their reviewed
+termination, geometry, feed and provenance. The task layout accepts this one
+mode rewrite only when the immutable certificate matches the source allowance
+and bound kernel. Existing dynamic ceilings and numerical headroom still apply;
+the shaping cap can only lower them.
+
+Chart, allowance, lane and discontinuity transfers require a real owner drain
+of planner, filter and cubic history before the next chart. Same-circle arc
+boundaries do not add per-arc drains. State events retain existing lifecycle
+barriers. The pending recovery qualification must verify these conditions
+under abort, hold, restart and changing controls, not only ordinary completion.
 
 ## Verification
 
@@ -123,7 +171,7 @@ snapshot versions are rejected before their body is read. This deliberately
 requires the matching task host and engine to be rebuilt together.
 
 Binding also requires explicit kernel evidence through the safe Rust API.
-Lowering checks its period but does not yet apply the geometric speed cap.
+Lowering checks its period and applies the geometric speed cap above.
 Kernel identity establishes numerical configuration, not machine approval.
 
 1. Publish actual immutable runtime kernel coefficients, period and model from
@@ -146,4 +194,9 @@ Kernel identity establishes numerical configuration, not machine approval.
    Verify whole output curves, not only endpoint or sampled error. Preserve
    reference guard failures until a separate correction is verified.
 
-These steps remain necessary. The component alone does not complete Stage 5.
+Kernel publication and ABI transport have separate retained simulator evidence.
+Source-window construction and payload lowering are implemented and have Rust
+integration tests. Steps 3–5 still require independent full-stack qualification,
+including continuous output curves and the numerical operation domain. The
+existing 256-epsilon positional reserve is explicit headroom, not a universal
+proof of all profile/filter arithmetic. This work does not complete Stage 5.

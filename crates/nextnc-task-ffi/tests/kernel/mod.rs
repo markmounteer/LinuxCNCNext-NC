@@ -16,6 +16,32 @@ pub(super) fn shaped() -> Snapshot {
 }
 
 #[test]
+fn exact_curve_preparation_refuses_without_returning_a_candidate() -> TestResult {
+    let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
+    let root =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../nextnc-task/tests/fixtures");
+    let source = std::fs::read_to_string(root.join("mill-mm-arc-xy.stpnc"))?;
+    let setup = std::fs::read_to_string(root.join("mill-mm-arc-xy.plan.json"))?;
+    let artifact = bundle::compile(
+        Inputs {
+            source: &source,
+            setup: &setup,
+            tool_table: None,
+            target: None,
+        },
+        &Limits::default(),
+    )?;
+    let mut candidate = 0;
+    assert_eq!(prepare(&artifact, &shaped(), &tools(), &mut candidate), -1);
+    assert_eq!(candidate, 0);
+    let mut diagnostic = [0u8; 2048];
+    // SAFETY: the diagnostic buffer supplies the declared writable extent.
+    unsafe { nextnc_task_error(diagnostic.as_mut_ptr(), diagnostic.len() as u64) };
+    assert!(String::from_utf8_lossy(&diagnostic).contains("CAM tolerance cannot be spent again"));
+    Ok(())
+}
+
+#[test]
 fn live_kernel_is_required_and_copied_without_normalization() -> TestResult {
     let s = shaped();
     let (decoded, _) = s.decode(&tools())?;
@@ -54,6 +80,10 @@ fn start_and_resume_refuse_a_different_valid_kernel() -> TestResult {
         std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../nextnc-task/tests/fixtures");
     let source = std::fs::read_to_string(root.join("mill-mm-arc-xy.stpnc"))?;
     let setup = std::fs::read_to_string(root.join("mill-mm-arc-xy.plan.json"))?;
+    let mut setup: serde_json::Value = serde_json::from_str(&setup)?;
+    setup["schema"] = "linuxcnc-next-nc/execution-plan/5".into();
+    setup["pathControl"] = serde_json::json!([{"mode":"blend","additionalDeviation":0.002}]);
+    let setup = serde_json::to_string(&setup)?;
     let a = bundle::compile(
         Inputs {
             source: &source,
@@ -66,7 +96,16 @@ fn start_and_resume_refuse_a_different_valid_kernel() -> TestResult {
     let s = shaped();
     let t = tools();
     let mut h = 0;
-    assert_eq!(prepare(&a, &s, &t, &mut h), 0);
+    let rc = prepare(&a, &s, &t, &mut h);
+    let mut diagnostic = [0u8; 2048];
+    // SAFETY: the diagnostic buffer supplies the declared writable extent.
+    unsafe { nextnc_task_error(diagnostic.as_mut_ptr(), diagnostic.len() as u64) };
+    assert_eq!(
+        rc,
+        0,
+        "{}",
+        String::from_utf8_lossy(&diagnostic).trim_end_matches('\0')
+    );
     for case in 0..4 {
         let mut changed = s;
         match case {
