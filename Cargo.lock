@@ -129,6 +129,7 @@ dependencies = [
  "motion-command",
  "nextnc-native",
  "nextnc-task",
+ "serde_json",
 ]
 
 [[package]]

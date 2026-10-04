@@ -67,6 +67,7 @@ fn plan(records: &[BoundRecord]) -> Result<Plan> {
         commands: Vec::new(),
         drains_before: Vec::new(),
         corner_budgets: Vec::new(),
+        shaping_budgets: Vec::new(),
         numerical_budget: crate::lowering::NumericalBudget {
             interpolation_period_ns: 1_000_000,
             maximum_coordinate_mm: 0.0,

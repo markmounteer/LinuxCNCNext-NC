@@ -180,6 +180,10 @@ impl Kernel {
     pub fn period_ns(&self) -> u32 {
         self.period_ns
     }
+    /// Last retained FIR delay plus the three preceding rate-one cubic knots.
+    pub fn history_ticks(&self) -> u32 {
+        self.terms.last().map_or(0, |t| t.delay_ticks) + 3
+    }
     pub fn variance_upper_s2(&self) -> f64 {
         self.variance_upper_s2
     }
@@ -278,7 +282,7 @@ impl Kernel {
         Ok(Certificate {
             kernel_identity: self.identity,
             period_ns: self.period_ns,
-            history_ticks: self.terms.last().map_or(0, |t| t.delay_ticks) + 3,
+            history_ticks: self.history_ticks(),
             geometry,
             allowance,
             variance_upper_s2: self.variance_upper_s2,
