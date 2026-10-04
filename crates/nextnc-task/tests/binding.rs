@@ -80,6 +80,7 @@ fn snapshot(machine: Machine) -> Snapshot {
             maximum_mm: 2000.0,
         }; 3],
         shaping: Shaping::Disabled,
+        shaping_kernel: None,
         reverse_spindle: false,
         maximum_rpm: 2000.0,
         flood: true,
@@ -291,6 +292,13 @@ fn shaper_modes_allow_xy_or_pure_z_but_refuse_mixed_and_helical_jobs_before_outp
     for name in ["mill-mm-arc-xy", "mill-mm-full-xy", "mill-mm-pure-z"] {
         let mut s = snapshot(Machine::MillXyz);
         s.shaping = Shaping::EngagedXy;
+        s.shaping_kernel = Some(nextnc_task::shaping::Kernel::from_terms(
+            1_000_000,
+            &[nextnc_task::shaping::Term {
+                delay_ticks: 0,
+                weight: 1.0,
+            }],
+        )?);
         assert!(bind(&fixture(name)?, &s).is_ok(), "{name}");
     }
     for name in [
@@ -302,8 +310,16 @@ fn shaper_modes_allow_xy_or_pure_z_but_refuse_mixed_and_helical_jobs_before_outp
     ] {
         let mut s = snapshot(Machine::MillXyz);
         s.shaping = Shaping::EngagedXy;
+        s.shaping_kernel = Some(nextnc_task::shaping::Kernel::from_terms(
+            1_000_000,
+            &[nextnc_task::shaping::Term {
+                delay_ticks: 0,
+                weight: 1.0,
+            }],
+        )?);
         assert!(bind(&fixture(name)?, &s).is_err(), "{name}");
         s.shaping = Shaping::Disabled;
+        s.shaping_kernel = None;
         assert!(bind(&fixture(name)?, &s).is_ok(), "{name}");
     }
     Ok(())
@@ -400,6 +416,13 @@ fn shaped_xy_rapid_waypoints_keep_individual_drain_boundaries() -> TestResult {
         live.work_offsets[0].rotation_degrees = rotation;
         let unshaped = bind(&plan, &live)?;
         live.shaping = Shaping::EngagedXy;
+        live.shaping_kernel = Some(nextnc_task::shaping::Kernel::from_terms(
+            1_000_000,
+            &[nextnc_task::shaping::Term {
+                delay_ticks: 0,
+                weight: 1.0,
+            }],
+        )?);
         let shaped = bind(&plan, &live)?;
         assert_eq!(shaped.records().len(), unshaped.records().len());
         for (a, b) in shaped.records().iter().zip(unshaped.records()) {
@@ -442,6 +465,13 @@ fn xy_z_lane_changes_wait_for_real_drain_even_with_available_capacity() -> TestR
     let plan = fixture("mill-mm-arc-xy")?;
     let mut s = snapshot(Machine::MillXyz);
     s.shaping = Shaping::EngagedXy;
+    s.shaping_kernel = Some(nextnc_task::shaping::Kernel::from_terms(
+        1_000_000,
+        &[nextnc_task::shaping::Term {
+            delay_ticks: 0,
+            weight: 1.0,
+        }],
+    )?);
     let bound = bind(&plan, &s)?;
     let points: Vec<_> = bound
         .records()

@@ -9,6 +9,8 @@ use nextnc_task_ffi::{
 };
 use std::sync::Mutex;
 static SERIAL: Mutex<()> = Mutex::new(());
+#[path = "kernel/mod.rs"]
+mod kernel;
 #[path = "spindle/mod.rs"]
 mod spindle;
 #[path = "timing/mod.rs"]
@@ -104,6 +106,7 @@ fn snapshot() -> Snapshot {
         axis_mask: 7,
         work_offset: 1,
         shaping: 0,
+        kernel: wire::KernelEvidence::default(),
         capabilities: 6,
         reserved: 0,
         pose: [0.0; 9],
@@ -658,7 +661,10 @@ fn live_fingerprint_stale_workers_and_competing_threads_cannot_start_old_work() 
             2 => changed.tool_offset[2] = 0.1,
             3 => changed.temporary[2] = 0.1,
             4 => changed.velocity[0] *= 0.5,
-            5 => changed.shaping = 1,
+            5 => {
+                changed.shaping = 1;
+                changed.kernel = kernel::shaped().kernel;
+            }
             6 => changed_tools[1].offset[2] = 0.1,
             _ => changed.rotation[0] = 90.0,
         }

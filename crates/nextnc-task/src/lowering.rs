@@ -268,6 +268,14 @@ impl Dynamics {
 
 pub fn lower(bound: &BoundPlan, dynamics: Dynamics) -> Result<Plan> {
     dynamics.validate()?;
+    if bound
+        .shaping_kernel()
+        .is_some_and(|kernel| kernel.period_ns() != dynamics.interpolation_period_ns)
+    {
+        return Err(fail(
+            "shaping kernel period differs from observed interpolation timing",
+        ));
+    }
     let numerical_budget = NumericalBudget::for_job(bound, dynamics)?;
     let dynamics = numerical_budget.reserve(dynamics)?;
     let mut plan = Plan {

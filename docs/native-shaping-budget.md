@@ -2,9 +2,12 @@
 
 `nextnc_task::shaping` implements an off-thread geometric allocation component
 for a common positive FIR followed by the pinned rate-one LinuxCNC cubic. It is
-not yet called by native lowering or the host. The retained shaped-arc runtime
-failure remains unresolved until live kernel capture, preparation, admission and
-full-stack path qualification use this component.
+not yet used to cap native motion. Task ABI 5 now requires actual common-FIR
+coefficients for an enabled filter, preserves the validated kernel in the bound
+plan, and fingerprints its exact data with the observed motion birth/timing.
+Changed kernels are refused at start, resume, tool confirmation and suffix
+rebind. The retained shaped-arc runtime failure remains unresolved until source
+windows, lowering and full-stack path qualification use the allocation.
 
 The component was motivated by the controller's
 [shaped-arc failure](https://github.com/markmounteer/linuxcnc/pull/1506): the raw
@@ -111,6 +114,17 @@ rejects altered kernels, missing cubic variance, increased speed, understated
 error, missing history and promotion of component results to live qualification.
 
 ## Required integration
+
+The ABI 5 snapshot appends a 400-byte kernel record (1,648 bytes total). Model 1
+means a common positive XY FIR, axis mask 3, at the observed interpolation
+period. It carries up to 32 exact binary64 weights and sample delays; unused
+slots are canonical zero. Disabled shaping must supply an empty record. Old
+snapshot versions are rejected before their body is read. This deliberately
+requires the matching task host and engine to be rebuilt together.
+
+Binding also requires explicit kernel evidence through the safe Rust API.
+Lowering checks its period but does not yet apply the geometric speed cap.
+Kernel identity establishes numerical configuration, not machine approval.
 
 1. Publish actual immutable runtime kernel coefficients, period and model from
    the motion-owned filter; bind them to the motion instance/birth. Keep machine

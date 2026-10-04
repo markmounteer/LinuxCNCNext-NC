@@ -35,6 +35,7 @@ fn snapshot() -> Snapshot {
             maximum_mm: 2000.0,
         }; 3],
         shaping: Shaping::Disabled,
+        shaping_kernel: None,
         reverse_spindle: true,
         maximum_rpm: 2000.0,
         flood: false,

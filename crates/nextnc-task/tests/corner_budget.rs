@@ -30,6 +30,7 @@ fn snapshot(lathe: bool) -> Snapshot {
             maximum_mm: 2000.,
         }; 3],
         shaping: Shaping::Disabled,
+        shaping_kernel: None,
         reverse_spindle: true,
         maximum_rpm: 2000.,
         flood: true,

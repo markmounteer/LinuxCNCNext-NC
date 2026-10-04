@@ -8,13 +8,13 @@
 #else
 #define CHECK _Static_assert
 #endif
-CHECK(NEXTNC_TASK_ABI == 4, "ABI version");
+CHECK(NEXTNC_TASK_ABI == 5, "ABI version");
 CHECK(sizeof(nextnc_spindle_evidence) == 80, "spindle evidence extent");
 CHECK(offsetof(nextnc_spindle_evidence, identity) == 8, "spindle identity");
 CHECK(offsetof(nextnc_spindle_evidence, maximum_rps) == 40, "spindle policy");
 CHECK(sizeof(nextnc_timing_evidence) == 40, "timing evidence extent");
 CHECK(offsetof(nextnc_timing_evidence, motion_birth) == 24, "timing birth");
-CHECK(sizeof(nextnc_snapshot) == 1248, "snapshot extent");
+CHECK(sizeof(nextnc_snapshot) == 1648, "snapshot extent");
 CHECK(offsetof(nextnc_snapshot, trajectory) == 1216, "trajectory dynamics");
 CHECK(offsetof(nextnc_snapshot, scalar_origin_mm) == 1240, "scalar origin");
 CHECK(offsetof(nextnc_snapshot, spindle) == 1096, "spindle evidence");
@@ -34,3 +34,6 @@ int main(void) {
         NEXTNC_TASK_ABI, sizeof(nextnc_snapshot),sizeof(nextnc_message),sizeof(nextnc_motion_receipt));
     return 0;
 }
+
+CHECK(sizeof(nextnc_kernel_evidence) == 400, "kernel extent");
+CHECK(offsetof(nextnc_snapshot, kernel) == 1248, "kernel offset");

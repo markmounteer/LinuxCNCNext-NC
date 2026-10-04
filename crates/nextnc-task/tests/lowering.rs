@@ -38,6 +38,7 @@ fn bind_prepared(
                 maximum_mm: 2000.0,
             }; 3],
             shaping: Shaping::Disabled,
+            shaping_kernel: None,
             reverse_spindle: false,
             maximum_rpm: 2000.0,
             flood: true,

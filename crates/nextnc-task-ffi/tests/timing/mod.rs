@@ -94,7 +94,7 @@ fn both_old_snapshot_abis_refuse_before_reading_the_extended_body() -> TestResul
     let _lock = SERIAL.lock().map_err(|_| "test mutex poisoned")?;
     let a = artifact()?;
     let t = tools();
-    for old in [[1_u32, 1096], [2, 1176]] {
+    for old in [[1_u32, 1096], [2, 1176], [3, 1216], [4, 1248]] {
         let mut h = 9;
         // SAFETY: only the common eight-byte header is read on ABI mismatch.
         let result = unsafe {
@@ -110,7 +110,7 @@ fn both_old_snapshot_abis_refuse_before_reading_the_extended_body() -> TestResul
         assert_eq!(result, -1);
         assert_eq!(h, 0);
     }
-    assert_eq!(wire::ABI, 4);
+    assert_eq!(wire::ABI, 5);
     assert_eq!(std::mem::size_of::<wire::TimingEvidence>(), 40);
     assert_eq!(std::mem::offset_of!(Snapshot, timing), 1176);
     Ok(())
