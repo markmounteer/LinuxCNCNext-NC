@@ -11,6 +11,8 @@ pub use corner_budget::CornerBudget;
 #[path = "numerical_budget.rs"]
 mod numerical_budget;
 pub use numerical_budget::NumericalBudget;
+#[path = "curve_budget.rs"]
+mod curve_budget;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct AxisDynamics {
@@ -240,12 +242,15 @@ impl Dynamics {
             // every servo tick. Only the geometric/axis ceiling belongs here.
             Feed::PerRevolution { .. } => maximum_velocity_mm_s,
         };
-        let dynamics = ScalarDynamics {
+        let mut dynamics = ScalarDynamics {
             velocity_mm_s,
             maximum_velocity_mm_s,
             acceleration_mm_s2: (length / accel_ratio).min(self.trajectory.acceleration_mm_s2),
             jerk_mm_s3: jerk.min(self.trajectory.jerk_mm_s3),
         };
+        if motion.circular.is_some() {
+            dynamics = curve_budget::allocate(self, motion, dynamics)?;
+        }
         if [
             dynamics.velocity_mm_s,
             dynamics.maximum_velocity_mm_s,
