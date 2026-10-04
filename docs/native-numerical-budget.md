@@ -24,6 +24,11 @@ Planning respects both reduced directional axis limits and reduced trajectory
 limits. Corner budgets use those remaining limits. Requested G94 and G95 feed
 values are retained independently of the resulting hard velocity ceiling.
 
+Analytic circles and helices additionally use [coupled curve dynamics](native-curve-budgets.md)
+to account for scalar and curvature acceleration/jerk together, including braking.
+The following counts describe the earlier numerical-reserve checkpoint; the
+linked curve checkpoint carries its own frozen source and runtime evidence.
+
 Windows workspace tests pass 152 cases; Linux passes 153 including its additional
 platform-specific case. Clippy and C/C++ layout checks pass. The companion
 controller verifies 52 NML representation cases and 12 full-stack unshaped jobs,
