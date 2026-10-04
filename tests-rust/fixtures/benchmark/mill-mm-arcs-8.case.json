@@ -1,0 +1,21 @@
+{
+  "name": "mill-mm-arcs-8",
+  "source": "mill-mm-arcs-8.stpnc",
+  "setup": "mill-mm-arcs-8.plan.json",
+  "expected": {
+    "motions": 8,
+    "lines": 0,
+    "circular": 8,
+    "helices": 2,
+    "multiTurns": 2,
+    "dwells": 0,
+    "fingerprint": "41da950689e920465ad7fe416311d5dbc188c25832e26a45f495ccde7d1408b6",
+    "machine": "mill",
+    "units": "mm"
+  },
+  "sourceBytes": 14277,
+  "setupBytes": 767,
+  "sourceSHA256": "8a7ca7f9b5f864ecf59e6dfd1b367a1a363e317a4ed0bf64207966af9b90bf1a",
+  "setupSHA256": "6f83f683562791d9408ffd4e01dc8b1f88642722604b6247648736819ad44b7f",
+  "entities": 239
+}

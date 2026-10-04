@@ -3,3 +3,7 @@ bin/nextnc-filter text eol=lf
 tools/step-conformance/upstream/** -text
 tools/step-conformance/*.json text eol=lf
 tools/step-conformance/*.js text eol=lf
+
+# Exact source bytes are part of the captured provenance and SHA-256 identity.
+tests-rust/fixtures/**/*.stpnc -text
+tests-rust/fixtures/negative/*.json -text

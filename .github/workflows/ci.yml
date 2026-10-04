@@ -3,6 +3,32 @@ on: [push, pull_request, workflow_dispatch]
 permissions:
   contents: read
 jobs:
+  native-rust:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install the repository-pinned Rust toolchain
+        run: rustup toolchain install 1.96.1 --profile minimal --component clippy --component rustfmt
+      - run: cargo fmt --all -- --check
+      - run: cargo test --locked
+      - run: cargo clippy --locked --all-targets -- -D warnings
+      - name: Build release benchmark worker
+        run: cargo build --release --locked --example native_benchmark
+      - name: Verify benchmark measurements and analytic geometry on portable fixtures
+        run: python tools/native-benchmark/run.py tests-rust/fixtures/benchmark artifacts/native-benchmark-smoke --worker target/release/examples/native_benchmark${{ runner.os == 'Windows' && '.exe' || '' }} --processes 1 --samples 2
+      - name: Verify raw benchmark evidence and render its report
+        run: python tools/native-benchmark/report.py artifacts/native-benchmark-smoke/results.json artifacts/native-benchmark-smoke/report.md
+      - name: Preserve native benchmark smoke evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: native-benchmark-smoke-${{ matrix.os }}
+          path: artifacts/native-benchmark-smoke/*.json
+          if-no-files-found: warn
   node:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -32,6 +58,10 @@ jobs:
       - name: Install isolated pinned compiler (no lifecycle scripts)
         run: npm --prefix tools/step-conformance ci --ignore-scripts --no-audit --no-fund
       - run: npm run test:conformance
+      - name: Install development-only validation inventory parser
+        run: npm --prefix tools/native-validation ci --ignore-scripts --no-audit --no-fund
+      - name: Verify every reviewed legacy validation site and grammar field
+        run: npm --prefix tools/native-validation test
       - name: Preserve parser comparison and synthetic inputs
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a

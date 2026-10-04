@@ -1,0 +1,44 @@
+{
+  "schema": "linuxcnc-next-nc/execution-plan/4",
+  "machine": "lathe",
+  "units": "inch",
+  "programFingerprint": "53861f980e6364a3024b7bbfc2ad8ef7d3bba92bd77ba742fe8fcaa69e19620b",
+  "tools": {
+    "1:2": {
+      "tool": 1,
+      "offset": 2
+    }
+  },
+  "workOffsets": {
+    "1": "G54"
+  },
+  "sections": [
+    {
+      "mode": "retract",
+      "retract": [
+        {
+          "x": 25
+        },
+        {
+          "z": 10
+        }
+      ],
+      "approach": [
+        {
+          "z": 0.125
+        },
+        {
+          "x": 0.5
+        }
+      ]
+    }
+  ],
+  "end": [
+    {
+      "x": 25
+    },
+    {
+      "z": 10
+    }
+  ]
+}

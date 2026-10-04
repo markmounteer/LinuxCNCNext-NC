@@ -1,0 +1,21 @@
+{
+  "name": "mill-mm-polyline-8",
+  "source": "mill-mm-polyline-8.stpnc",
+  "setup": "mill-mm-polyline-8.plan.json",
+  "expected": {
+    "motions": 8,
+    "lines": 8,
+    "circular": 0,
+    "helices": 0,
+    "multiTurns": 0,
+    "dwells": 0,
+    "fingerprint": "889bcacb7fabc0a9e8c47122ddf70fdceeb67e8ec7f0147ac55adb394c394201",
+    "machine": "mill",
+    "units": "mm"
+  },
+  "sourceBytes": 7385,
+  "setupBytes": 767,
+  "sourceSHA256": "ede0fab4cabd7a98f446b45f737dad65f83471c3b1af3545b4c5aa16cdd08521",
+  "setupSHA256": "4735acc6e86e2d617d80678a06e22caeb20281b9e1b28cbffa7dc39f21dd0f35",
+  "entities": 133
+}

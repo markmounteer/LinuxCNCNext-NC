@@ -1,0 +1,2 @@
+# Preserve the reviewed measurement input's exact byte identity on every host.
+reference.json -text

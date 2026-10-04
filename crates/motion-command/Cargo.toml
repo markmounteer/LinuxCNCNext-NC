@@ -1,0 +1,17 @@
+[package]
+name = "motion-command"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+description = "Shared headless Next-NC native motion contract; no transport or controller execution"
+
+[lints.rust]
+missing_docs = "warn"
+unsafe_code = "forbid"
+
+[lints.clippy]
+float_cmp = "deny"
+unwrap_used = "deny"
+expect_used = "deny"
+indexing_slicing = "deny"

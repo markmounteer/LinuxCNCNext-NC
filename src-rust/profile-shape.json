@@ -1,0 +1,2005 @@
+{
+  "contract": {
+    "REPRESENTATION_CONTEXT": [
+      {
+        "attribute": "REPRESENTATION_CONTEXT.context_identifier",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "REPRESENTATION_CONTEXT.context_type",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "LENGTH_UNIT": [],
+    "PLANE_ANGLE_UNIT": [],
+    "SOLID_ANGLE_UNIT": [],
+    "TIME_UNIT": [],
+    "NAMED_UNIT": [
+      {
+        "attribute": "NAMED_UNIT.dimensions",
+        "shape": {
+          "kind": "dimensions"
+        }
+      }
+    ],
+    "SI_UNIT": [
+      {
+        "attribute": "SI_UNIT.prefix",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "symbol",
+              "values": [
+                ".MILLI."
+              ]
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "SI_UNIT.name",
+        "shape": {
+          "kind": "symbol",
+          "values": [
+            ".METRE.",
+            ".RADIAN.",
+            ".STERADIAN.",
+            ".SECOND."
+          ]
+        }
+      }
+    ],
+    "GEOMETRIC_REPRESENTATION_CONTEXT": [
+      {
+        "attribute": "GEOMETRIC_REPRESENTATION_CONTEXT.coordinate_space_dimension",
+        "shape": {
+          "kind": "integer"
+        }
+      }
+    ],
+    "GLOBAL_UNIT_ASSIGNED_CONTEXT": [
+      {
+        "attribute": "GLOBAL_UNIT_ASSIGNED_CONTEXT.units",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "NAMED_UNIT",
+              "CONTEXT_DEPENDENT_UNIT",
+              "DERIVED_UNIT"
+            ]
+          },
+          "min": 3,
+          "max": 3
+        }
+      }
+    ],
+    "TIME_MEASURE_WITH_UNIT": [
+      {
+        "attribute": "MEASURE_WITH_UNIT.value_component",
+        "shape": {
+          "kind": "typed",
+          "types": [
+            "TIME_MEASURE"
+          ]
+        }
+      },
+      {
+        "attribute": "MEASURE_WITH_UNIT.unit_component",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "NAMED_UNIT",
+            "CONTEXT_DEPENDENT_UNIT",
+            "DERIVED_UNIT"
+          ]
+        }
+      }
+    ],
+    "LENGTH_MEASURE_WITH_UNIT": [
+      {
+        "attribute": "MEASURE_WITH_UNIT.value_component",
+        "shape": {
+          "kind": "typed",
+          "types": [
+            "LENGTH_MEASURE"
+          ]
+        }
+      },
+      {
+        "attribute": "MEASURE_WITH_UNIT.unit_component",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "NAMED_UNIT",
+            "CONTEXT_DEPENDENT_UNIT",
+            "DERIVED_UNIT"
+          ]
+        }
+      }
+    ],
+    "DIMENSIONAL_EXPONENTS": [
+      {
+        "attribute": "DIMENSIONAL_EXPONENTS.length_exponent",
+        "shape": {
+          "kind": "number"
+        }
+      },
+      {
+        "attribute": "DIMENSIONAL_EXPONENTS.mass_exponent",
+        "shape": {
+          "kind": "number"
+        }
+      },
+      {
+        "attribute": "DIMENSIONAL_EXPONENTS.time_exponent",
+        "shape": {
+          "kind": "number"
+        }
+      },
+      {
+        "attribute": "DIMENSIONAL_EXPONENTS.electric_current_exponent",
+        "shape": {
+          "kind": "number"
+        }
+      },
+      {
+        "attribute": "DIMENSIONAL_EXPONENTS.thermodynamic_temperature_exponent",
+        "shape": {
+          "kind": "number"
+        }
+      },
+      {
+        "attribute": "DIMENSIONAL_EXPONENTS.amount_of_substance_exponent",
+        "shape": {
+          "kind": "number"
+        }
+      },
+      {
+        "attribute": "DIMENSIONAL_EXPONENTS.luminous_intensity_exponent",
+        "shape": {
+          "kind": "number"
+        }
+      }
+    ],
+    "CONVERSION_BASED_UNIT": [
+      {
+        "attribute": "CONVERSION_BASED_UNIT.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "CONVERSION_BASED_UNIT.conversion_factor",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "LENGTH_MEASURE_WITH_UNIT",
+            "TIME_MEASURE_WITH_UNIT"
+          ]
+        }
+      }
+    ],
+    "CONTEXT_DEPENDENT_UNIT": [
+      {
+        "attribute": "NAMED_UNIT.dimensions",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "DIMENSIONAL_EXPONENTS"
+          ]
+        }
+      },
+      {
+        "attribute": "CONTEXT_DEPENDENT_UNIT.name",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "DERIVED_UNIT": [
+      {
+        "attribute": "DERIVED_UNIT.elements",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "DERIVED_UNIT_ELEMENT"
+            ]
+          },
+          "min": 2,
+          "max": 2
+        }
+      }
+    ],
+    "DERIVED_UNIT_ELEMENT": [
+      {
+        "attribute": "DERIVED_UNIT_ELEMENT.unit",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "NAMED_UNIT",
+            "CONTEXT_DEPENDENT_UNIT"
+          ]
+        }
+      },
+      {
+        "attribute": "DERIVED_UNIT_ELEMENT.exponent",
+        "shape": {
+          "kind": "number"
+        }
+      }
+    ],
+    "APPLICATION_CONTEXT": [
+      {
+        "attribute": "APPLICATION_CONTEXT.application",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "APPLICATION_PROTOCOL_DEFINITION": [
+      {
+        "attribute": "APPLICATION_PROTOCOL_DEFINITION.status",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "APPLICATION_PROTOCOL_DEFINITION.application_interpreted_model_schema_name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "APPLICATION_PROTOCOL_DEFINITION.application_protocol_year",
+        "shape": {
+          "kind": "integer"
+        }
+      },
+      {
+        "attribute": "APPLICATION_PROTOCOL_DEFINITION.application",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "APPLICATION_CONTEXT"
+          ]
+        }
+      }
+    ],
+    "PRODUCT_CONTEXT": [
+      {
+        "attribute": "APPLICATION_CONTEXT_ELEMENT.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "APPLICATION_CONTEXT_ELEMENT.frame_of_reference",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "APPLICATION_CONTEXT"
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT_CONTEXT.discipline_type",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "PRODUCT_DEFINITION_CONTEXT": [
+      {
+        "attribute": "APPLICATION_CONTEXT_ELEMENT.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "APPLICATION_CONTEXT_ELEMENT.frame_of_reference",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "APPLICATION_CONTEXT"
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION_CONTEXT.life_cycle_stage",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "PRODUCT": [
+      {
+        "attribute": "PRODUCT.id",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PRODUCT.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PRODUCT.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT.frame_of_reference",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "PRODUCT_CONTEXT"
+            ]
+          },
+          "min": 1,
+          "max": null
+        }
+      }
+    ],
+    "MACHINING_PROJECT": [
+      {
+        "attribute": "PRODUCT.id",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PRODUCT.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PRODUCT.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT.frame_of_reference",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "PRODUCT_CONTEXT"
+            ]
+          },
+          "min": 1,
+          "max": null
+        }
+      }
+    ],
+    "PRODUCT_DEFINITION_FORMATION": [
+      {
+        "attribute": "PRODUCT_DEFINITION_FORMATION.id",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION_FORMATION.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION_FORMATION.of_product",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT",
+            "MACHINING_PROJECT"
+          ]
+        }
+      }
+    ],
+    "PRODUCT_DEFINITION": [
+      {
+        "attribute": "PRODUCT_DEFINITION.id",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION.formation",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT_DEFINITION_FORMATION"
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION.frame_of_reference",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT_DEFINITION_CONTEXT"
+          ]
+        }
+      }
+    ],
+    "PRODUCT_DEFINITION_PROCESS": [
+      {
+        "attribute": "ACTION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION.chosen_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION_PROCESS.identification",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "PROPERTY_PROCESS": [
+      {
+        "attribute": "ACTION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION.chosen_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "PROPERTY_PROCESS.identification",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "PROCESS_PRODUCT_ASSOCIATION": [
+      {
+        "attribute": "PROCESS_PRODUCT_ASSOCIATION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PROCESS_PRODUCT_ASSOCIATION.description",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PROCESS_PRODUCT_ASSOCIATION.defined_product",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT_DEFINITION"
+          ]
+        }
+      },
+      {
+        "attribute": "PROCESS_PRODUCT_ASSOCIATION.process",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT_DEFINITION_PROCESS"
+          ]
+        }
+      }
+    ],
+    "PROCESS_PROPERTY_ASSOCIATION": [
+      {
+        "attribute": "PROCESS_PROPERTY_ASSOCIATION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PROCESS_PROPERTY_ASSOCIATION.description",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PROCESS_PROPERTY_ASSOCIATION.process",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PROPERTY_PROCESS"
+          ]
+        }
+      },
+      {
+        "attribute": "PROCESS_PROPERTY_ASSOCIATION.property_or_shape",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "INSTANCED_FEATURE"
+          ]
+        }
+      }
+    ],
+    "DESCRIPTIVE_REPRESENTATION_ITEM": [
+      {
+        "attribute": "REPRESENTATION_ITEM.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "DESCRIPTIVE_REPRESENTATION_ITEM.description",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "ACTION_PROPERTY": [
+      {
+        "attribute": "ACTION_PROPERTY.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_PROPERTY.description",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_PROPERTY.definition",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      }
+    ],
+    "ACTION_PROPERTY_REPRESENTATION": [
+      {
+        "attribute": "ACTION_PROPERTY_REPRESENTATION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_PROPERTY_REPRESENTATION.description",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_PROPERTY_REPRESENTATION.property",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "ACTION_PROPERTY"
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_PROPERTY_REPRESENTATION.representation",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "REPRESENTATION",
+            "MACHINING_SPINDLE_SPEED_REPRESENTATION",
+            "MACHINING_FEED_SPEED_REPRESENTATION",
+            "MACHINING_TOOLPATH_SPEED_PROFILE_REPRESENTATION"
+          ]
+        }
+      }
+    ],
+    "MACHINING_PROJECT_WORKPIECE_RELATIONSHIP": [
+      {
+        "attribute": "PRODUCT_DEFINITION_RELATIONSHIP.id",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION_RELATIONSHIP.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION_RELATIONSHIP.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION_RELATIONSHIP.relating_product_definition",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT_DEFINITION"
+          ]
+        }
+      },
+      {
+        "attribute": "PRODUCT_DEFINITION_RELATIONSHIP.related_product_definition",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT_DEFINITION"
+          ]
+        }
+      }
+    ],
+    "PRODUCT_DEFINITION_SHAPE": [
+      {
+        "attribute": "PROPERTY_DEFINITION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PROPERTY_DEFINITION.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "PROPERTY_DEFINITION.definition",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT_DEFINITION"
+          ]
+        }
+      }
+    ],
+    "INSTANCED_FEATURE": [
+      {
+        "attribute": "CHARACTERIZED_OBJECT.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "CHARACTERIZED_OBJECT.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "SHAPE_ASPECT.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "SHAPE_ASPECT.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "SHAPE_ASPECT.of_shape",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "PRODUCT_DEFINITION_SHAPE"
+          ]
+        }
+      },
+      {
+        "attribute": "SHAPE_ASPECT.product_definitional",
+        "shape": {
+          "kind": "symbol",
+          "values": [
+            ".T.",
+            ".F.",
+            ".U."
+          ]
+        }
+      }
+    ],
+    "ACTION_RESOURCE_TYPE": [
+      {
+        "attribute": "ACTION_RESOURCE_TYPE.name",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "MACHINING_TOOL": [
+      {
+        "attribute": "ACTION_RESOURCE.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_RESOURCE.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_RESOURCE.usage",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "TURNING_TYPE_OPERATION",
+              "MILLING_TYPE_OPERATION"
+            ]
+          },
+          "min": 1,
+          "max": null
+        }
+      },
+      {
+        "attribute": "ACTION_RESOURCE.kind",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "ACTION_RESOURCE_TYPE"
+          ]
+        }
+      }
+    ],
+    "CARTESIAN_POINT": [
+      {
+        "attribute": "REPRESENTATION_ITEM.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "CARTESIAN_POINT.coordinates",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "number"
+          },
+          "min": 3,
+          "max": 3
+        }
+      }
+    ],
+    "DIRECTION": [
+      {
+        "attribute": "REPRESENTATION_ITEM.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "DIRECTION.direction_ratios",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "number"
+          },
+          "min": 3,
+          "max": 3
+        }
+      }
+    ],
+    "MEASURE_REPRESENTATION_ITEM": [
+      {
+        "attribute": "REPRESENTATION_ITEM.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "MEASURE_WITH_UNIT.value_component",
+        "shape": {
+          "kind": "typed",
+          "types": [
+            "NUMERIC_MEASURE",
+            "TIME_MEASURE"
+          ]
+        }
+      },
+      {
+        "attribute": "MEASURE_WITH_UNIT.unit_component",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "NAMED_UNIT",
+            "CONTEXT_DEPENDENT_UNIT",
+            "DERIVED_UNIT"
+          ]
+        }
+      }
+    ],
+    "POLYLINE": [
+      {
+        "attribute": "REPRESENTATION_ITEM.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "POLYLINE.points",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "CARTESIAN_POINT"
+            ]
+          },
+          "min": 2,
+          "max": null
+        }
+      }
+    ],
+    "AXIS2_PLACEMENT_3D": [
+      {
+        "attribute": "REPRESENTATION_ITEM.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "PLACEMENT.location",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "CARTESIAN_POINT"
+          ]
+        }
+      },
+      {
+        "attribute": "AXIS2_PLACEMENT_3D.axis",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "DIRECTION"
+          ]
+        }
+      },
+      {
+        "attribute": "AXIS2_PLACEMENT_3D.ref_direction",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "DIRECTION"
+          ]
+        }
+      }
+    ],
+    "CIRCLE": [
+      {
+        "attribute": "REPRESENTATION_ITEM.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "CONIC.position",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "AXIS2_PLACEMENT_3D"
+          ]
+        }
+      },
+      {
+        "attribute": "CIRCLE.radius",
+        "shape": {
+          "kind": "number"
+        }
+      }
+    ],
+    "TRIMMED_CURVE": [
+      {
+        "attribute": "REPRESENTATION_ITEM.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "TRIMMED_CURVE.basis_curve",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "CIRCLE"
+          ]
+        }
+      },
+      {
+        "attribute": "TRIMMED_CURVE.trim_1",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "choice",
+            "choices": [
+              {
+                "kind": "reference",
+                "types": [
+                  "CARTESIAN_POINT"
+                ]
+              },
+              {
+                "kind": "typed",
+                "types": [
+                  "PARAMETER_VALUE"
+                ]
+              }
+            ]
+          },
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "attribute": "TRIMMED_CURVE.trim_2",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "choice",
+            "choices": [
+              {
+                "kind": "reference",
+                "types": [
+                  "CARTESIAN_POINT"
+                ]
+              },
+              {
+                "kind": "typed",
+                "types": [
+                  "PARAMETER_VALUE"
+                ]
+              }
+            ]
+          },
+          "min": 1,
+          "max": 1
+        }
+      },
+      {
+        "attribute": "TRIMMED_CURVE.sense_agreement",
+        "shape": {
+          "kind": "symbol",
+          "values": [
+            ".T.",
+            ".F."
+          ]
+        }
+      },
+      {
+        "attribute": "TRIMMED_CURVE.master_representation",
+        "shape": {
+          "kind": "symbol",
+          "values": [
+            ".CARTESIAN.",
+            ".PARAMETER."
+          ]
+        }
+      }
+    ],
+    "MACHINING_WORKPLAN": [
+      {
+        "attribute": "ACTION_METHOD.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.consequence",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.purpose",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "MACHINING_WORKINGSTEP": [
+      {
+        "attribute": "ACTION_METHOD.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.consequence",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.purpose",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "TURNING_TYPE_OPERATION": [
+      {
+        "attribute": "ACTION_METHOD.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.consequence",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.purpose",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "MILLING_TYPE_OPERATION": [
+      {
+        "attribute": "ACTION_METHOD.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.consequence",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.purpose",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "MACHINING_FEATURE_PROCESS": [
+      {
+        "attribute": "ACTION_METHOD.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.consequence",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.purpose",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "MACHINING_TECHNOLOGY": [
+      {
+        "attribute": "ACTION_METHOD.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.consequence",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.purpose",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "MACHINING_FUNCTIONS": [
+      {
+        "attribute": "ACTION_METHOD.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.consequence",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.purpose",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "MACHINING_TOOLPATH": [
+      {
+        "attribute": "ACTION_METHOD.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.consequence",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD.purpose",
+        "shape": {
+          "kind": "string"
+        }
+      }
+    ],
+    "REPRESENTATION": [
+      {
+        "attribute": "REPRESENTATION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "REPRESENTATION.items",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "DESCRIPTIVE_REPRESENTATION_ITEM",
+              "MEASURE_REPRESENTATION_ITEM",
+              "CARTESIAN_POINT",
+              "POLYLINE",
+              "TRIMMED_CURVE"
+            ]
+          },
+          "min": 1,
+          "max": null
+        }
+      },
+      {
+        "attribute": "REPRESENTATION.context_of_items",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "REPRESENTATION_CONTEXT"
+          ]
+        }
+      }
+    ],
+    "MACHINING_SPINDLE_SPEED_REPRESENTATION": [
+      {
+        "attribute": "REPRESENTATION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "REPRESENTATION.items",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "DESCRIPTIVE_REPRESENTATION_ITEM",
+              "MEASURE_REPRESENTATION_ITEM",
+              "CARTESIAN_POINT",
+              "POLYLINE",
+              "TRIMMED_CURVE"
+            ]
+          },
+          "min": 1,
+          "max": null
+        }
+      },
+      {
+        "attribute": "REPRESENTATION.context_of_items",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "REPRESENTATION_CONTEXT"
+          ]
+        }
+      }
+    ],
+    "MACHINING_FEED_SPEED_REPRESENTATION": [
+      {
+        "attribute": "REPRESENTATION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "REPRESENTATION.items",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "DESCRIPTIVE_REPRESENTATION_ITEM",
+              "MEASURE_REPRESENTATION_ITEM",
+              "CARTESIAN_POINT",
+              "POLYLINE",
+              "TRIMMED_CURVE"
+            ]
+          },
+          "min": 1,
+          "max": null
+        }
+      },
+      {
+        "attribute": "REPRESENTATION.context_of_items",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "REPRESENTATION_CONTEXT"
+          ]
+        }
+      }
+    ],
+    "MACHINING_TOOLPATH_SPEED_PROFILE_REPRESENTATION": [
+      {
+        "attribute": "REPRESENTATION.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "REPRESENTATION.items",
+        "shape": {
+          "kind": "aggregate",
+          "item": {
+            "kind": "reference",
+            "types": [
+              "DESCRIPTIVE_REPRESENTATION_ITEM",
+              "MEASURE_REPRESENTATION_ITEM",
+              "CARTESIAN_POINT",
+              "POLYLINE",
+              "TRIMMED_CURVE"
+            ]
+          },
+          "min": 1,
+          "max": null
+        }
+      },
+      {
+        "attribute": "REPRESENTATION.context_of_items",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "REPRESENTATION_CONTEXT"
+          ]
+        }
+      }
+    ],
+    "MACHINING_OPERATION_RELATIONSHIP": [
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.relating_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.related_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      }
+    ],
+    "MACHINING_TECHNOLOGY_RELATIONSHIP": [
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.relating_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.related_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      }
+    ],
+    "MACHINING_FUNCTIONS_RELATIONSHIP": [
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.relating_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.related_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      }
+    ],
+    "MACHINING_FEATURE_RELATIONSHIP": [
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.relating_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.related_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      }
+    ],
+    "MACHINING_PROCESS_SEQUENCE_RELATIONSHIP": [
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.relating_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.related_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "SEQUENTIAL_METHOD.sequence_position",
+        "shape": {
+          "kind": "number"
+        }
+      }
+    ],
+    "MACHINING_TOOLPATH_SEQUENCE_RELATIONSHIP": [
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.name",
+        "shape": {
+          "kind": "string"
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.description",
+        "shape": {
+          "kind": "choice",
+          "choices": [
+            {
+              "kind": "string"
+            },
+            {
+              "kind": "symbol",
+              "values": [
+                "$"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.relating_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "ACTION_METHOD_RELATIONSHIP.related_method",
+        "shape": {
+          "kind": "reference",
+          "types": [
+            "MACHINING_WORKPLAN",
+            "MACHINING_WORKINGSTEP",
+            "TURNING_TYPE_OPERATION",
+            "MILLING_TYPE_OPERATION",
+            "MACHINING_FEATURE_PROCESS",
+            "MACHINING_TECHNOLOGY",
+            "MACHINING_FUNCTIONS",
+            "MACHINING_TOOLPATH"
+          ]
+        }
+      },
+      {
+        "attribute": "SEQUENTIAL_METHOD.sequence_position",
+        "shape": {
+          "kind": "number"
+        }
+      }
+    ]
+  },
+  "complexCombinations": [
+    [
+      "LENGTH_UNIT",
+      "NAMED_UNIT",
+      "SI_UNIT"
+    ],
+    [
+      "NAMED_UNIT",
+      "PLANE_ANGLE_UNIT",
+      "SI_UNIT"
+    ],
+    [
+      "NAMED_UNIT",
+      "SI_UNIT",
+      "SOLID_ANGLE_UNIT"
+    ],
+    [
+      "NAMED_UNIT",
+      "SI_UNIT",
+      "TIME_UNIT"
+    ],
+    [
+      "CONVERSION_BASED_UNIT",
+      "LENGTH_UNIT",
+      "NAMED_UNIT"
+    ],
+    [
+      "CONVERSION_BASED_UNIT",
+      "NAMED_UNIT",
+      "TIME_UNIT"
+    ],
+    [
+      "GEOMETRIC_REPRESENTATION_CONTEXT",
+      "GLOBAL_UNIT_ASSIGNED_CONTEXT",
+      "REPRESENTATION_CONTEXT"
+    ]
+  ],
+  "version": "next-nc/profile-shape/1"
+}

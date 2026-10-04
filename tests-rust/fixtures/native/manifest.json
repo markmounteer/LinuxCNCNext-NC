@@ -1,0 +1,1826 @@
+{
+  "schema": "nextnc-native/profile-fixtures/1",
+  "producerCommit": "34be02209af5e6a6b396f92a99fae98e05275e9d",
+  "sources": [
+    {
+      "file": "src/next-nc.js",
+      "sha256": "55fed366ffa59fe69c2aeea9c9210309acc847587b2fbe5227fa7cb643b1b609"
+    },
+    {
+      "file": "src/fusion-adapter.js",
+      "sha256": "01675b55830d5e6b07eae4aa1caa2e549dbe3fe84185e596c887b18e94557486"
+    },
+    {
+      "file": "lib/inspect.js",
+      "sha256": "c301676ecd0e5eafe26685010ca6497abef59eb5a9f2081ffd1c33df908d2fdc"
+    },
+    {
+      "file": "lib/native-profile.js",
+      "sha256": "0c7e527bb160bb26d5f1d3d92fff8745ea6114a46f892876d8519ae75958e718"
+    },
+    {
+      "file": "lib/part21.js",
+      "sha256": "a8b5b278873523119b31b0be98bfdac556b8a54dbeab7346f49091eb069ad322"
+    },
+    {
+      "file": "lib/validation-error.js",
+      "sha256": "f7c738b0017b2b5605a6ae0d1ac723fe47d6311c9f3e74179fbb8be488f4c278"
+    },
+    {
+      "file": "posts/next-nc.cps",
+      "sha256": "94b9eab01cdd62da539f7678d099e9882831466dceebc66a6a2b5743fb947fd4"
+    }
+  ],
+  "cases": [
+    {
+      "name": "synthetic-1",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "0a95eed7ffc2e371413734011f41d325d40c44d2874db8a9ed062fda2296e8b5",
+      "fingerprint": "989b352aab93e4424721f5cdaeddb8fd02b909728ed3cdb08d54d7891fb14afe"
+    },
+    {
+      "name": "synthetic-2",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "1b93da2a833665a3bb1ac1b02cd00fb9398450fb357bbbba28e0b841affa3510",
+      "fingerprint": "065906f84226a98e3e51aba98bafe2de29138760cb813d79d9c683d997e763f9"
+    },
+    {
+      "name": "synthetic-3",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "797aae4794d75af3ce693fcc298d08e6d4dc08683fb34e68345d41e1d2f440ab",
+      "fingerprint": "aa97bcda1cf3db23494e8e572cace1671913ddf5a848aba6c6b7e1af16743d1c"
+    },
+    {
+      "name": "synthetic-4",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "785d519f2bb97e0c282b21053dce4c6f5b0d85be69147f220aecf322beded724",
+      "fingerprint": "086466d6fb287f113f99a12299b030265eb0c3395ce6514abd3926752ce357ae"
+    },
+    {
+      "name": "synthetic-5",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "612957d51d81e3b68490f4f700b42081c692d83e4789365d3059e683b719c39a",
+      "fingerprint": "fecf431a07bb2d9355cdb67809cde80a0aff9f4de96299ea8eaa3bf3bd05295f"
+    },
+    {
+      "name": "synthetic-6",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "4b12a04e36bcd724e6fbeece82aa203b5db1333fcc6aa40ac35cbb499afcf096",
+      "fingerprint": "5b2b19770eb386cf63fcc846ae58ec54d9d8c268210c36a87468050c1e93f3b5"
+    },
+    {
+      "name": "synthetic-7",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "8842a4b03c050bf4f53d49408a522acea774fcda911826ed83db3fd19c387d4b",
+      "fingerprint": "a4fecbe17d5728ac324743fc7c2b603c10e1ef47071a6f479a6f18f9f04a7e5f"
+    },
+    {
+      "name": "synthetic-8",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "6e2d31000c370c17bb69248a8511ce98b59870a81f30e7a26b6bc1f8960d50db",
+      "fingerprint": "b27e31b0177a615f0ec7155d145f4213c31b2bd0ca86d6cdb3d7acc78405a29e"
+    },
+    {
+      "name": "synthetic-9",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "3acb29e68688b918a4219fdb45f419fbbe374f1e1847dbea5965f21d848d08d2",
+      "fingerprint": "f6c204692ba2583f3d26a6a7c944ad8ca18d3920e282c908ec9b9ec734dd9e24"
+    },
+    {
+      "name": "synthetic-10",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "63385c5afa643ba80f41808ad4f16ec8b5102b46555a45046bd56e629f60ae4f",
+      "fingerprint": "8bd13e5bd76fab234acc1f88d6c4da4968cb0ad084d938543a7d7adb2e9078de"
+    },
+    {
+      "name": "synthetic-11",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "c90a741aef0a02545aeb5f185284a660c2ee92b95994d5f95e6658abdd3a8551",
+      "fingerprint": "2b25766990be5f9c1d4efb2cc2e197f35b231a96ba5b722ade0c9e861349f2ef"
+    },
+    {
+      "name": "synthetic-12",
+      "origin": {
+        "type": "synthetic",
+        "machine": "lathe",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "4708d1f02c7c320abfb5c7e77bc8f456675fb08b855a4dd482365b15b2a412e6",
+      "fingerprint": "6e3a729ded5c74da9d1d47529086359a728c11de7cad4244f157e7682afdcd1f"
+    },
+    {
+      "name": "synthetic-13",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "52ca1542767edb3d7c20de7328cee9b75a8b2dad41f1c62a780c228c14b750a3",
+      "fingerprint": "e7d38e4b88c509fbba42ff3fabf7709935c10abf17cda8143a1f8b6531793522"
+    },
+    {
+      "name": "synthetic-14",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "cb5a68324ce45512028f9f39bd9aebc856c6378774a571a08e31add2332e437c",
+      "fingerprint": "3dc5908024e039e811aa2de57e524dcf23be32346c1288b9a2fd210be023a48f"
+    },
+    {
+      "name": "synthetic-15",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "3832928449151362754fb55ead2a1e93f1661180de9fbc5311925e4daea0292b",
+      "fingerprint": "acb78ce766b943393fe699a94a3d18b96436c1ff534a10686bda2c49e1d3f60c"
+    },
+    {
+      "name": "synthetic-16",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "5132c5e6097a13f847cd9ac75cd2a5f6951736cbd431dad469829362a4131e55",
+      "fingerprint": "2dd5320d676ef35ec9bc187ed187dc12547b9b6e9a6fb36bff63257f41d70e2e"
+    },
+    {
+      "name": "synthetic-17",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "ef0e9cf8d4dd0d5321fbe8a80249606f921a7174160d77fc5346911b7e21a39f",
+      "fingerprint": "400b45c6298c7c38a15d43d7a990f57cefd24aecbc725e3d4b0cb48d0b5e5e0a"
+    },
+    {
+      "name": "synthetic-18",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "3cf78b2a89965223c6126381f473971d10447e233a56371033b84f354e8d4db1",
+      "fingerprint": "1783229996a925ff9adde836518da2cddd666617cbc73d0ae4304e0a3545fcba"
+    },
+    {
+      "name": "synthetic-19",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "ba905a43b83077f787468ea4127948fff51144cec2eb08a8532ac1532f77f31f",
+      "fingerprint": "3da894c74db2f540cf49f25d5a625de77be462081d91bc95cf88170d133e2101"
+    },
+    {
+      "name": "synthetic-20",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "a8c299afa7c8c225ee4e24b1da6b1f5aa5f806270d68ca41744204ff924f99d1",
+      "fingerprint": "11334c7cb3fb355527b42398b9c6260d1a5f31c3156a70d3ccb9096c741b9f31"
+    },
+    {
+      "name": "synthetic-21",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "1f37426a4bb5e28e4cf3d3b3f81118e8e05f3928f00a8d932fb37d5258464385",
+      "fingerprint": "f63a1fae6c7d4efcdf02ef536f983338441b346dc6ad2bdabccc9d435b32f313"
+    },
+    {
+      "name": "synthetic-22",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "82058ae68c62ae1a5ac6d0f6b24eb9040c799d69ffb6b2af23bb3fb4b0290b6e",
+      "fingerprint": "18e1393a63d214a78b3afa110bca380557c916329560bc9f572f51e73c8137d6"
+    },
+    {
+      "name": "synthetic-23",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "dc4dd81d7e814badbe5fc03d213b803df876b137eab5df62b03bbc3107b02a05",
+      "fingerprint": "25247d2bf269a30426b2c8c0a2d64cc08d5da317a0cd657004d86af31a6b2b53"
+    },
+    {
+      "name": "synthetic-24",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "603219af92c4e4777b0d993cba966a908a03fb36860120d5b74a373e817187e7",
+      "fingerprint": "55801ea8857a7082ef866bf0147529fd651b7d7615b6dd2308a16b5ce33bdeab"
+    },
+    {
+      "name": "synthetic-25",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "fe7544cc160124ff1d481c472f9b564ed0524e7b26a9578fbfa93ff1dbe4b74e",
+      "fingerprint": "ae70a7ce77fa2c7699c63608b66bf156ee1ea56d07f0733cbcc2fa97471475c1"
+    },
+    {
+      "name": "synthetic-26",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "0dca4ae4f434ba3728b514223e58c35f1a27011886af784f973df9b98384bbfd",
+      "fingerprint": "52da82498aeb2c3644eed712f4ccb304605292edc9b92eb1ce2115f4e3373bba"
+    },
+    {
+      "name": "synthetic-27",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "548d8fb08b0ccae633d8a7ec2edfd361843c47896ecc04241a9956e1df473610",
+      "fingerprint": "09832b2c8a3cc92e116a4a8f60902b37b5d0e8530a078c423489fbb92812848e"
+    },
+    {
+      "name": "synthetic-28",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "540d54ce0ac5f823f310c230b3637080a7765f934e6a14e1bc5ce03309a80658",
+      "fingerprint": "8973f9aa601ca5f073c261e6d1e0b32b5b8401a6a5338d987d7dd643f2bb09e5"
+    },
+    {
+      "name": "synthetic-29",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "e5738203cd368fb307703feef9725d9db4b03c903b53cf45a6fc5fe757575cd9",
+      "fingerprint": "ffa1a575aa8c30455ec7188bb7f73d3488a0c6e6c85c1350f41749b2a40ac50b"
+    },
+    {
+      "name": "synthetic-30",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "b07c1b1c87df952065467e44aae6d760e6d1dcc77475480594ef53f7a82203ef",
+      "fingerprint": "c71db07512db6f592a910ad0c2fb6aca34549c5d975ae3ec1e2a2d89c3802614"
+    },
+    {
+      "name": "synthetic-31",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "f272e6443648273d19d5d3fbcaef21e1e0136fea7c21b9293f32f8e6833efa24",
+      "fingerprint": "9319a167b32d9729c7fe1b52653245e25bf09d80ac12e557ace78ccfbc5ffb2f"
+    },
+    {
+      "name": "synthetic-32",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "ae0b0f8f3479a1bc76d9ddf1f3756469864c80071aba209d25aa1dcf49ccf793",
+      "fingerprint": "054e0166f6103988e60916b21e8e15426bfb31e390b15fb9cceaec088aa4ebea"
+    },
+    {
+      "name": "synthetic-33",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "2e6861b32976c8961466c6b7360082a79ebc7b29fb830fa88aa1bf5ad67614af",
+      "fingerprint": "dca60f8a91fe5106324f8061a33ea3cf43fc4d103e4445a0e643d45ee7e900b0"
+    },
+    {
+      "name": "synthetic-34",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "a1967db07b7ec7a76444d958741d385f179039ed58b197051c4f0e7946071b18",
+      "fingerprint": "f8e43643b068a845cd49dddbb50781d599dbf19d5b083434430336bbb563f94c"
+    },
+    {
+      "name": "synthetic-35",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "33704ad1ffaa5c37f135489d60ceb074d3c4bed6cba2fa0a65bfd6e1072ad210",
+      "fingerprint": "371d8644207b4958ccd2744fdb34dccc502e33a58febb8c7dfa2979c63ca04c9"
+    },
+    {
+      "name": "synthetic-36",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "552eb53a5a18fca44bcd11cba12e9668e40f92522113dd71f9ac7ef29f2b99cb",
+      "fingerprint": "bcdc9b217bbf2e005272c91e2f21109eb6be1f2b15cadc0a0579f5923e8c4be7"
+    },
+    {
+      "name": "synthetic-37",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "1cd4fdd23ff63133cbf47dc8e9cb0fc2e59f2bce989f1bdd75d449944e5ff7d2",
+      "fingerprint": "bb0bc596424cd30260a170c7cf066417002db64bff1085aa127dee4342808642"
+    },
+    {
+      "name": "synthetic-38",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "e7c3c9df534a8d7d8912279174f755d3da5c5d9334c26d4cea1f2a75345ba958",
+      "fingerprint": "4817dda1133995203aeb555383ef03685477dd0a63439f839de5fa7c8e8368c3"
+    },
+    {
+      "name": "synthetic-39",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "6df9994c8ef58d3b4ad684addef4b54ed3303e260ee7f5771c65a6dd08e10c32",
+      "fingerprint": "4ff7208742ea5a388791726aa71d5cfd98e42ebbd3fa9d31b638f2a55639c0c0"
+    },
+    {
+      "name": "synthetic-40",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "04050a1ff5eae712040a2945d66c901d47222824c7e60202cc9ab535302f07c1",
+      "fingerprint": "2eed81f825bc8c6869877ab04a99c6a264e6b10034ff592c75d1e31a1dbe874b"
+    },
+    {
+      "name": "synthetic-41",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "fed8d58e9d916e375ba15c1b5abad70fd60e784300459b5101fa9351ed09bfc3",
+      "fingerprint": "923101cda221c11add93944a92dbee09d119f916691043145c767e64b3bfc3d8"
+    },
+    {
+      "name": "synthetic-42",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "12a5318e13025fbcc0eb647f951bf957a4b4bfaf4cd4a8fdc39d6dee443d0908",
+      "fingerprint": "ae54cc24e47afa0b7092c1b97b631f3c0af212a7abaa498e83282fda85994c0c"
+    },
+    {
+      "name": "synthetic-43",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "df70877ba2baf5dfa16fd4caa0854d2ec177887a4fc401b6e2d44de4a797c1fb",
+      "fingerprint": "45e0d13b7cf08a3e05d205f5a9d3fc996c8f53b5e1a2cbfaaeca27f082168815"
+    },
+    {
+      "name": "synthetic-44",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "5cf586f36599493e68dbd458c6d156b376945f9e3115eb7390c699613e20a6a9",
+      "fingerprint": "d3b4c1a44d339f097e7c365109143a916a42c80ab17654bc590021c096142a25"
+    },
+    {
+      "name": "synthetic-45",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "92af9979c766c9aa4146e0b43e2a701b065c2348ebe1bde7d641a7a74baffd4f",
+      "fingerprint": "737ceab3d8c5e16b8f8b7527f8564960117bc9c82e7cb85192380970c2576eb0"
+    },
+    {
+      "name": "synthetic-46",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "2bc396010cb14bd109d0b3d7b0309c9226009395d6d5c55b1cf9fc8e25619f43",
+      "fingerprint": "130820ecaeb048caf566e18f6f8e71a6b14b9d318947919cce56aac67940f7d8"
+    },
+    {
+      "name": "synthetic-47",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "0f2766b9ecf79aa091b4de250125937998f8c25a1276fc76a81717fd1aa0636c",
+      "fingerprint": "0ed46a80bf039e6c646a5b08abd4e5a27cc4af470d2200f3d4cd5237b5da0978"
+    },
+    {
+      "name": "synthetic-48",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "4a8fb8bb72b5fc5741730731eaf61a83ede9bb42268ff521b8ce2ae3a5558a74",
+      "fingerprint": "5e2d3c808515f099e057801bc99a5bf895f588ed86b9228cf10bc104a193150b"
+    },
+    {
+      "name": "synthetic-49",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "3c92f818b7bc0ef32ec87fe5805a445f7f47f32596ec8b56c37e9e4baa1c65f4",
+      "fingerprint": "d8751024b2fb2841b0381c4ef5ff2b01111381c799d085370e41ef07e40e3389"
+    },
+    {
+      "name": "synthetic-50",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "210919f5810965c59e5dc47f9a567f148ef4264c573e6bca3c1570a6b5fd77f2",
+      "fingerprint": "a3ad6033a564395e5734ad5d9337a08139eed59c8cd61d1f9fa1317cdd260a4b"
+    },
+    {
+      "name": "synthetic-51",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "b097865394f59de8fb56bfb81c0a4f85f401ae40b73176c78fc2aca91c2084db",
+      "fingerprint": "dcd2b94db8cc9f25ba349ea6bfa179b987bc59ed49e20448e4689205be580d3a"
+    },
+    {
+      "name": "synthetic-52",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "d206d5b332d91190cdce7171201d88dabe4aa60f74f2a538359bd5ace5ded2cf",
+      "fingerprint": "f79250aee427f90ca0aa68ed1c1df776590a843467bb14f97e40b775837ec4dc"
+    },
+    {
+      "name": "synthetic-53",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "b23be32e66f0dfc5b96bd3b53715b25802ffcb9959a6f730be335d50242cd055",
+      "fingerprint": "6933b2a2750957faac21b0fb8fff90f58d6bafae9a1aacf292b5476261d6bf25"
+    },
+    {
+      "name": "synthetic-54",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "960d8e7a85e2f43e3869deae8e59ddf930b079a064605f4384f90b3ac678b6c4",
+      "fingerprint": "9607a5666d7fb36a06b2ee9d17a6960a8b6616ac6e1976a3a54d2f926f75ff9c"
+    },
+    {
+      "name": "synthetic-55",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "e3695c9267818c038e97e20f382cb7502972cf9e6817a0b06264c5cbf6ea1c8f",
+      "fingerprint": "9fe9a96a5cec13da8dd29db2abd47393e71cbbbb5bfe13c5c66449260f11d8b3"
+    },
+    {
+      "name": "synthetic-56",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "7c1889aede16ca4c71f76f4b86c8c25fe01a271cfff41ab020aaef3a79a54891",
+      "fingerprint": "9d7b7543d842f424398b7ea8bcc9ed6baae77d3f9d02bdb73140e0d202992147"
+    },
+    {
+      "name": "synthetic-57",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "cacbbc5f2e2b2518b5506c24655a6e1a195963a546f3bba2900d3b4b57441fc9",
+      "fingerprint": "620efd77d01d9c185db61aeeb5ad632318ad6ee725633a0693053bd74c70d8f3"
+    },
+    {
+      "name": "synthetic-58",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "ff3c984664077e2c0ff912cbdcc6646299e47811538577d7d47285e85b3b843a",
+      "fingerprint": "144ed18984c4cd061416db308f5d525539e247e352823e873343b16430fb08f9"
+    },
+    {
+      "name": "synthetic-59",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "9c9f60d296e11d0a373dae93c092d579f08fc1aa34ecece100f42da2fede1074",
+      "fingerprint": "1fd31cf3c71949f252f5bc508f0fb04657f298148c027b8563de9a277f708dc0"
+    },
+    {
+      "name": "synthetic-60",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "b7e9816f52a2893aab64f1bbb3c80cc8f536f5046ba5a266427d4087d799883c",
+      "fingerprint": "6d16fce2138c08ab825bad2f22b4b00c60e571e8fade7cd574beb2545a9536bd"
+    },
+    {
+      "name": "synthetic-61",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "1cd1680b541e2236941bb3c07559264860824bc115ede630bc26ffb664e0fbf8",
+      "fingerprint": "942f4552b50d25ede789515f9d0a763feb9bc3591d35e3ecf1967c34afb95923"
+    },
+    {
+      "name": "synthetic-62",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "55ec9606e1447cb7fa09c4e52122cf210afb6bf5648f895393445b60afccdd85",
+      "fingerprint": "d36bfb2797f1b7b51aaf1f58e231c8b70954e40ad9d11390ca0c45d72cf1d08c"
+    },
+    {
+      "name": "synthetic-63",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "e79af58443cf80954a61c440c3681a19c884289269224281bba667f8d2294694",
+      "fingerprint": "ef1e1b5ee3c7ba53d9479b8e519e413a29fbde66a66d1cf7a0eb56dafe9d5cf6"
+    },
+    {
+      "name": "synthetic-64",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "cbf26c7035c5da9e1beb3308e832e43c0db18f0816d8e9aafc775083ba7dab96",
+      "fingerprint": "94671e29a3d294c8984a3f573eaf11095773e4b7f662a17d15ad5b277f6534a5"
+    },
+    {
+      "name": "synthetic-65",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "c1eb0aaa0d32fa3c1a4be41de2521c311638e1269d77f9fc33b9d042ae1e8d66",
+      "fingerprint": "63e0a8d308dcacab481d251d40cbf0b00790e64ea68420628a7f6a9aec8b0ce0"
+    },
+    {
+      "name": "synthetic-66",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "mm",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "4191c285b4770dde34f1e7ce2b6df2bfcee93869043e3d27d069b4f7fd490052",
+      "fingerprint": "a20b7a7ac0dee50402bcca99899adb1b9437bfd3d1831d2dc6b0a7b006e782fc"
+    },
+    {
+      "name": "synthetic-67",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "8dd68094a20b930408818f343c544dc567729eab1dc2456f518f717a88ddbccb",
+      "fingerprint": "8ebdd2d0ce0fcd5df85aa8d54267d2ef73febf5a177b5a42f7aba017ecd0a325"
+    },
+    {
+      "name": "synthetic-68",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "4c64026187fd00974ae497e591b5747e8cf101a357de9c3751d0883386acfa94",
+      "fingerprint": "6ffa0414ffce7fadbde64bec766324bd1dedd991de44625c839eb152abe3b185"
+    },
+    {
+      "name": "synthetic-69",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "d07ff490f2869b94be7d490955fcb26ce76400b09a1f028d4590ae4f25e0dc93",
+      "fingerprint": "2670ac08b677bc8381813a5c870014cf74d3e6205df67615483ee2b09169b500"
+    },
+    {
+      "name": "synthetic-70",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "b3dff96839002badec7a569eef71b6eea198634d52bfbfd7908cc70a42038a49",
+      "fingerprint": "b8f10987ac63fc65b97983c8bc99ea065fe0e93933de185bc16870126a518ec3"
+    },
+    {
+      "name": "synthetic-71",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "5c7054675bbc6afc19b397075e417e53ea210ae2b5b94e8bcbb45e0812e4140d",
+      "fingerprint": "92bfb4222b5508d273021674e926b39f430dc2cf3abda2218b27e4ff4518a600"
+    },
+    {
+      "name": "synthetic-72",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "b52a1ac9d6bf747cfb99b0c1fefd7d65d93317d14f64acce081623c353d27dab",
+      "fingerprint": "093205bae4b2e5d2299eda69b42895163c254b37438e915b0841763bafac83c4"
+    },
+    {
+      "name": "synthetic-73",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "5034cc1774b5eef712680a76dbfba7dcd478a47e0fe411fffb98306a525a553e",
+      "fingerprint": "493261f69ba1e4894e44f97db24ba0dc9475c6136e6d6734befd9dd8385a63b5"
+    },
+    {
+      "name": "synthetic-74",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "0223d67118591c177153fa4277bfc274cd29d958d6b5fe1c797f419d0bf63fe2",
+      "fingerprint": "4ae5441bf5a2803f4f90660896566e39b0df060caa38e696b2b43c16eea840c5"
+    },
+    {
+      "name": "synthetic-75",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "4182379303fd2cc9b72fcdde13af1d80a4dc4d3c4fa3a7619503d986db5ea3ab",
+      "fingerprint": "867eb30987e38d233ebc910863c95eba31c17145025357f604c2854079c62f1f"
+    },
+    {
+      "name": "synthetic-76",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "8760354d1e01aea65eda459f47372758fa57e91294bb4bf9c3b54a21fe526efe",
+      "fingerprint": "708bbdd2d06e5cfcea6eb8b4dd358f79c4833096b36866d0ee0c20ce9d14fd88"
+    },
+    {
+      "name": "synthetic-77",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "86f6f0e81debe340ef2a249708d95685d9fafd2e1b6231081b5a36989ff955ff",
+      "fingerprint": "0914242f9373ab2f050c35f2a07488e9be00a692e969e2cc97c6096e4e41cd1a"
+    },
+    {
+      "name": "synthetic-78",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "06750d4e156aec77b5cfd6eb5b85fb8fd3bb100706446eda83a4eb3385330ab2",
+      "fingerprint": "23d5fd57c8e561cc3e182171ed0e119b3a121a972293734a7f60d311d7a875ab"
+    },
+    {
+      "name": "synthetic-79",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "50f7753fbcc292cfe4f34c8989f17894a22c1d93469e45f5cb80e1c0aaa0fbc9",
+      "fingerprint": "788cd2201fccccfae1cac6d5bb681fcc4272f98e9b8a0f4886d496a2d8a8437a"
+    },
+    {
+      "name": "synthetic-80",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "5e1576e9ca8a32eeb85abbb430663cc32b57b6152b14f4701ad3d3bb9a17a86c",
+      "fingerprint": "7ff991e10522b023fa2ef17068915cf5c77e9a9ff0b4c5f3d7380008496c4ce5"
+    },
+    {
+      "name": "synthetic-81",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "fb408f252af3287d028c177627e5941e3112a4c64a29cc780e19a3fad760634b",
+      "fingerprint": "15ceeca0358e9dbe14cd564a67e1ed639f3a399197fed2fa08926d894b780625"
+    },
+    {
+      "name": "synthetic-82",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "ba331e98b955d79fc8fe56074ce1d824d363d82f61a6a6e73f70a6e460107ada",
+      "fingerprint": "e18ac325a8dd0599a1dbca96a7b4e2abfad8b406e07466a6969f54fda3b8f753"
+    },
+    {
+      "name": "synthetic-83",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "63c3838fad9f3d7b360bad32958f92b71ad42ebe3907d16936845374ea499b71",
+      "fingerprint": "f2faaa90d046da20f49952099dccc7ab7ec8b4a50a3fe6abfd80d3372377fc81"
+    },
+    {
+      "name": "synthetic-84",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XY",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "d1466c3a0ea57219888bbd4a63336e262ee1d107fe143a87a0dd158548c9fb09",
+      "fingerprint": "d9b30182947022720f467bd259a01dc87061fd6bfa2811b4ce99823cc0759456"
+    },
+    {
+      "name": "synthetic-85",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "7b2e76c0eb9c4899c5deba019f37304350884227fe92d4f7756347636a37561d",
+      "fingerprint": "e8fe20d254d8403a8bad942513e3a91f906c6e838b381ce475df33ee68936259"
+    },
+    {
+      "name": "synthetic-86",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "4fe59c56564d23ece9ccb4881104987fd1d701178e38486556799c4d90a4174a",
+      "fingerprint": "5d57d55a851a0d98165c079435fa03ce71bd332e6da43c890e9268266acb70d8"
+    },
+    {
+      "name": "synthetic-87",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "3d45ffc73525cff6d61ab038881911325964c6d1c84af6b572ef043fea19c81d",
+      "fingerprint": "cfe61bac1f02b1b3559362f9a96caebef6982c516dd093d2e4c51b78503dcbac"
+    },
+    {
+      "name": "synthetic-88",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "f4f06b73ae82a63fbccb8852e8386248cace697f0fa1ecd1870d02f7bb43eb82",
+      "fingerprint": "ad6fe874228183a064b23b84a8a1400f26984d5c53a7478a8d74ae7722ca9f58"
+    },
+    {
+      "name": "synthetic-89",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "8dd5db27debc96158f810fad17328661141dceba38195729a002825f633b8887",
+      "fingerprint": "0b668aca655f0ab5e3d077a90c9a91d16085cf6d9a3f7dbbc6678add199ecd28"
+    },
+    {
+      "name": "synthetic-90",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "0ddaf3520a5a5e47652c384a539358df28b188152885ff7d3f6cb5fb1b58ae5d",
+      "fingerprint": "d21b68899119ea566f3f48d720c6ed20dd0804284a78c6e3fb76aadb4f3356fb"
+    },
+    {
+      "name": "synthetic-91",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "256cd15a1300ca08fa71b75c2b546c08cce34365ba7204739e4c4bf8f4b7b182",
+      "fingerprint": "7d82f9637a70f3c848085ca0d51fb914578e48a1d368c80b248b0617e4ce3fea"
+    },
+    {
+      "name": "synthetic-92",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "b1f7df845443482209cf01339e4d572205224a12276f3f1fbc0c20d868c1c62e",
+      "fingerprint": "d5ede1785693dd1dd92c2d6dfddfa2aaf19a85096ccfd8f7db0ccf3644fe8dae"
+    },
+    {
+      "name": "synthetic-93",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "0e41caf3064b53574cefb5ef8c4299c8b5ccbd6bf94b0702e975000962ab7f68",
+      "fingerprint": "61646364cc68d624a14667d28b5b473ee0a6fb3ca1ebdde0e5495357f772ebfd"
+    },
+    {
+      "name": "synthetic-94",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "668cc73c5b29d1199979452f7a7966f7b116d0335eac85396593338ae8b34ec6",
+      "fingerprint": "db61a2d9b2f59030dd171ed7e2c63c9855e17b7c9a69ea34ec15fe881c08f92a"
+    },
+    {
+      "name": "synthetic-95",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "f340261bc571c1fb56eb8d806892355f12dd473e90aa3646f209581311ae610b",
+      "fingerprint": "a4e26e4df637629fdc8275a68cce309a49f250168f5088cb4ab735c639cda8fa"
+    },
+    {
+      "name": "synthetic-96",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "91d85a1b6a792c21356283e004082ece3e72c8b6e66527f138b85f342401fdc1",
+      "fingerprint": "d78cd56945a2b8123803ba6cc24f75fd4cc41f19558d5c18aba9abd9ef962339"
+    },
+    {
+      "name": "synthetic-97",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "42a9a1f34662e3ebbf08c12f61be3109d4f5e51b6a959a52d55489c48b8dff70",
+      "fingerprint": "68f8bf2229590bf17f769479b5346223b7b8d2ed8f6228bf8d03c41311fda1b0"
+    },
+    {
+      "name": "synthetic-98",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "75c02b5f88c55ad48caf8b8494038bd2268a8fe8d4cde9f2942b12dd2ef7c177",
+      "fingerprint": "5ae5ea65ddb4635ba807eb667091f335a915ed4826f43c9dc6a3b01a29721bba"
+    },
+    {
+      "name": "synthetic-99",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "3ad98175f41db73d5fdaab80b9d297b0a0c82d951c0411d627dc00cd083b4607",
+      "fingerprint": "41899e0ca45e26643347d15d0a54b6705db5f2dbfd25c5789572f973ad66d248"
+    },
+    {
+      "name": "synthetic-100",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "5215f6d9e3a617fe997f1f2d4d844d51e99cb9134e9882dda04afb4ca8ff84a1",
+      "fingerprint": "a063f47f88078a795e2f48b7bc9fb0da2be77b6ba34724d0524bd40ae92b5d3e"
+    },
+    {
+      "name": "synthetic-101",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "c9fcc50dd9bbb645f19e320412fcf18e280f333b86e9a5a978dfa0ff1a935520",
+      "fingerprint": "e74f6b51a99d22f85ebb9823f391d03368f21d12f18f9c555bf7a959e94a0d09"
+    },
+    {
+      "name": "synthetic-102",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "XZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "01f474eeee6c7ac47b738642bd43b1509eaec638a1cf9b662d73777ef2fb786e",
+      "fingerprint": "0b742c1159a4f50268af475a51fdcc2b0cc270a3939da1f7b6a60219e673efeb"
+    },
+    {
+      "name": "synthetic-103",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "c8bce94e926275e19cccdb165a41c89a0e2ad5f4bbbf844c060ab1461d8e12a3",
+      "fingerprint": "16d8720cd04c0aecf3d6d1208498206e90d5b3fcc7867842685f8d39e8528dab"
+    },
+    {
+      "name": "synthetic-104",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "25a6d0cba77f2045732a8ffe076821beeb2954dfe0608cb5791e5fc678ad305e",
+      "fingerprint": "9225c27105c6d11d29381b7bee0eb9a5569efe2f637d96241fd14a83e761272b"
+    },
+    {
+      "name": "synthetic-105",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "6db34f077e0dad1b626f8e9bc739c5526ecd3f003eb199e1ac4402396ddf044d",
+      "fingerprint": "9cd74f708255c95af9f902e9712f148bc79cad9fc608902916c217b875f46807"
+    },
+    {
+      "name": "synthetic-106",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "0629f38508cf93b51dced4cd261533f9e3067cd1529c2530a539e1a137fd0b59",
+      "fingerprint": "5c715106dc24cdb8cd1dfdd939de6058e78ff5f3f142089337e17edab5687960"
+    },
+    {
+      "name": "synthetic-107",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "c42e82585472d32b6f3447b813b6f46f59716121ecec750b850a6a33df745111",
+      "fingerprint": "fb091b865de0fd98af037b4b47f07a12c9c05feb5fbb35cc25374a8a9b4f9802"
+    },
+    {
+      "name": "synthetic-108",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "9e0a142cd8d3beb44b9ad9884a8ac528d9acd48e43c27aab8c6f0c57554b7144",
+      "fingerprint": "d70cb2912a8f6b9e1922d70bc58736ea1be07aa741c3d6cc2a25b33a5a174311"
+    },
+    {
+      "name": "synthetic-109",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "f5c1df1c26bb67ce7cc4152ba96be196997051c0ba858fc641f7da500dedbd6c",
+      "fingerprint": "73ad292b4c9c3a4defcc30ccd3d336a5193d2e316b80befcb5cb21a03a72f518"
+    },
+    {
+      "name": "synthetic-110",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "8549b9f3644b9e4907790936e3f8285b6e88a61407a4840020ee99a122bda7fb",
+      "fingerprint": "b47e1844b6ef14e8ff84995ea424a3a55fae5b90d2d99e9f6b16be1c1470eb93"
+    },
+    {
+      "name": "synthetic-111",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": false,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "2c990db1ebc3bc0a32b01f8caaa531d829d5c45c199f4f9c012d3d972ae087f9",
+      "fingerprint": "12a184f6008d2d810231da62377bcd774e44dd619bf521e090b9743d2dc132a7"
+    },
+    {
+      "name": "synthetic-112",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "ad109cd8a34d1db18c427097424e87777d03c787afdf5cf5162e14aa2be05a43",
+      "fingerprint": "68d25c1c39d06604ab0a5a1e6c488863806d12ac3f6160f75c3f8161f38dad0a"
+    },
+    {
+      "name": "synthetic-113",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "cc9347e8a26d63ea060d96a891c739e767c69a5b3bc323e6328fcd02c75a54ce",
+      "fingerprint": "e2cf40f30ec987788f7bfff96f5de55c3b1141e82ea5189babb36232530f7ead"
+    },
+    {
+      "name": "synthetic-114",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 1.5707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "65d2bf3cc5e48043010961a7be1875f7e465a8d9e347e38c0ac9dcf484bd6555",
+      "fingerprint": "7aced8ef73b88523df03c38fbfc5b7d90d458bc7257c5b77b6d52d7d4056d7aa"
+    },
+    {
+      "name": "synthetic-115",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 0
+      },
+      "inputSHA256": "f4b70209f257987e66daecfa350993732732d1e5066691f94760a8bfe118f536",
+      "fingerprint": "c7fc1df7518849fc85b592e1d6ff0e1a5bd94930c7bc60478a51f2c4dbb52859"
+    },
+    {
+      "name": "synthetic-116",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": -3
+      },
+      "inputSHA256": "c873ba954dffa3e891029bc2f6fa91918de52798346dd1389b3f32f7cb322ff7",
+      "fingerprint": "85af7730e134afda37f0d273b80b191c34a14e8d29b8e39ec0a50997119c647d"
+    },
+    {
+      "name": "synthetic-117",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 6.283185307179586,
+        "rise": 3
+      },
+      "inputSHA256": "ee0bd6f010c783affa55b09f9cae270ab49f8de432077ab58335b06c910d7ed1",
+      "fingerprint": "ffdf0bb7eabc39a28187b32a09550a903ad6a6a8f0f2196cb69b92818b4e4272"
+    },
+    {
+      "name": "synthetic-118",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 0
+      },
+      "inputSHA256": "d2de4a2b7fffd6f4eeebc59d8ac169a348926921b8731adf990e7a6c67b913f7",
+      "fingerprint": "a36881c90a4f05255d9b4f8b76191a80d0f1ae6e6d70eefa6079e6f7a586dad3"
+    },
+    {
+      "name": "synthetic-119",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": -3
+      },
+      "inputSHA256": "fcf6448eb602f5463613845434e7c1c350caea03170361713b1a3f9ab7a17c8f",
+      "fingerprint": "22c0e8e3e9e38780ef99965fc8520a7bb649bb7a141a5855152ba20b872215c1"
+    },
+    {
+      "name": "synthetic-120",
+      "origin": {
+        "type": "synthetic",
+        "machine": "mill",
+        "units": "inch",
+        "plane": "YZ",
+        "clockwise": true,
+        "sweep": 15.707963267948966,
+        "rise": 3
+      },
+      "inputSHA256": "c934d0dcf44c2001d8d8c56f4cc5abc89b9b62933c0ecda5be68547f010c17bd",
+      "fingerprint": "831f04294d7f72c330cb2e0ae95809136cfcd2d607759c52ae80565186737d10"
+    },
+    {
+      "name": "autodesk-face",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "face.stpnc",
+        "logSHA256": "ecbdd4f03afd8cddc1d81be77ccb7921f4cf7368ef5c31d60d0566c81ac302fe"
+      },
+      "inputSHA256": "70a73245a2041ff67bbcda438d1a88500b91ace1fb1cc61a64f6be57d0a13a25",
+      "fingerprint": "e589a93137e5bdf1ccad9d3423712e6d20ad639565df5e934783c796b8d613b9"
+    },
+    {
+      "name": "autodesk-mill-Rapid-out",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "mill-Rapid out.stpnc",
+        "logSHA256": "aca28a32fa0d68d963a1c23979b8d232ba0060266f9f1d56f0e9f92e4690848e"
+      },
+      "inputSHA256": "5f2446104e74afcddb30bc49e6db7b43aab2759022ec9d74829aa8ebcb8c8871",
+      "fingerprint": "e912cdc05cbb258cea0c948e68fce024048f3a06faeb1ebc2e466561bfb522b1"
+    },
+    {
+      "name": "autodesk-mill-bore",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "mill-bore.stpnc",
+        "logSHA256": "896b323e4a14b384d341309e7f43ce7e1b61c0a6ee42c023608b9deb68ca3b8a"
+      },
+      "inputSHA256": "608f06785b28ac25b7355725078d87b8351fc7c3d26514bb5847a36ec2e8f242",
+      "fingerprint": "003c50c7fd6e7d42decb5e473825d731e145b7bc4955c3d46dba81be56ee481b"
+    },
+    {
+      "name": "autodesk-mill-chip-breaking",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "mill-chip breaking.stpnc",
+        "logSHA256": "b25e8c9df40418762c93ff5932a4a14163d0d464059509014972625ed6647162"
+      },
+      "inputSHA256": "1412ee47e2506e1af65cce1aba3f7ab4e5ed616dcc509b7aff55d021cf49c34a",
+      "fingerprint": "182f79723b413c37d65c6e40708903dfb026ced67520a5f2ee86ddb338ece39a"
+    },
+    {
+      "name": "autodesk-mill-deep-drilling",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "mill-deep drilling.stpnc",
+        "logSHA256": "2476056db291d5819dd88a2139b52ee474156e05b66ad787baadb27c2062ae8b"
+      },
+      "inputSHA256": "a30d6ca2a13497b4886cd40d31bce62adf08ae3482dd611384ccb9ebd1315a76",
+      "fingerprint": "45e3bb72d3c7bcbfae4008024b8ddfedc285d18522d7b1897242ccfaa642a894"
+    },
+    {
+      "name": "autodesk-mill-dwell-and-rapid-out",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "mill-dwell and rapid out.stpnc",
+        "logSHA256": "f33775d566a9168d15e7a1eb86139e72463a52661bb397c98219a15fd9824d86"
+      },
+      "inputSHA256": "b1568e086dbde986118968850d17b5743865f32fbf7d320618c432a02ea510e2",
+      "fingerprint": "de99b27415c3d3485f71e3bc0361cc02f5342998cf6a2c18c39d6da39b5c37b3"
+    },
+    {
+      "name": "autodesk-mill-face",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "mill-face.stpnc",
+        "logSHA256": "08c8e2722abc1b549124d4efb05a03ab73636b2b15a931f074e4de0e60dd072d"
+      },
+      "inputSHA256": "3049364e7ab1d9d0ea545c833d13a5f914c5f0624a011087b649befd76b65015",
+      "fingerprint": "dd7ea024138403a5511096c76557c58491291402c46d0f888d77d328c65301ac"
+    },
+    {
+      "name": "autodesk-mill-toolchange",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "mill-toolchange.stpnc",
+        "logSHA256": "86c7ffdb9a7af9e678d382e39e6ed3d68b6cb0b3a90d8c382cc903dc668279dc"
+      },
+      "inputSHA256": "2bac5b67fac12e148532749bc6b48d5e4c11005918610fd7e825bd0a1ef55c29",
+      "fingerprint": "68ab0f59d4aac40b694c5c8846c8a7bb6647cf250f98a93a31f7da2aafa66b2c"
+    },
+    {
+      "name": "autodesk-profile",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "profile.stpnc",
+        "logSHA256": "a47c19eddef2c6c202c67475fcc2d62e813dae13c1fdcdd37dcdbe0e91fa0585"
+      },
+      "inputSHA256": "8b49b3526ae5b1b23046491e37d8b8eb884e12e29575dad1acc7f06dd43dd918",
+      "fingerprint": "2764bb6a109881e02caafe6ac1cf809ce04e83dca88b939b5f49eb7d21e6f8a5"
+    },
+    {
+      "name": "autodesk-synthetic-positive-dwell",
+      "origin": {
+        "type": "autodesk-post",
+        "engine": "5.413.5",
+        "evidence": "synthetic-positive-dwell.stpnc",
+        "logSHA256": "e670fc740401b95750c6c53662e04e54b6144645b1903b47f802a9786e08f129"
+      },
+      "inputSHA256": "2e81b963aa9b9b2e51269c0f70715c1351457eed9902ff8970fa2f5dcf235bbd",
+      "fingerprint": "14442cc0f33c1dde9a3529e2d032b45adc8756f58f80371a3c9a532d65385833"
+    }
+  ]
+}

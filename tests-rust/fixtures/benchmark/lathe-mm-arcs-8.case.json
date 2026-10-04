@@ -1,0 +1,21 @@
+{
+  "name": "lathe-mm-arcs-8",
+  "source": "lathe-mm-arcs-8.stpnc",
+  "setup": "lathe-mm-arcs-8.plan.json",
+  "expected": {
+    "motions": 8,
+    "lines": 0,
+    "circular": 8,
+    "helices": 0,
+    "multiTurns": 0,
+    "dwells": 0,
+    "fingerprint": "412542941a9ecc842525a53f59a47489389326cddc29f3e18d8117ec44a27c6e",
+    "machine": "lathe",
+    "units": "mm"
+  },
+  "sourceBytes": 13313,
+  "setupBytes": 629,
+  "sourceSHA256": "b259aba6665bf99d9749470f44bb0ccc14176fe6c46d335b7db147fe209c8f46",
+  "setupSHA256": "2908dc0ab2864f143e6f024ebd6f0df2eadd79a9720ca368f3977fedb86275bc",
+  "entities": 230
+}

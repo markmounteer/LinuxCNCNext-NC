@@ -1,0 +1,82 @@
+[package]
+name = "nextnc-native"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Bounded Next-NC job compiler in Rust; no controller execution"
+
+[lib]
+path = "src-rust/lib.rs"
+
+[[bin]]
+name = "nextnc-native"
+path = "src-rust/main.rs"
+
+[[example]]
+name = "native_benchmark"
+path = "examples-rust/native_benchmark.rs"
+
+[dependencies]
+motion-command = { path = "crates/motion-command" }
+ryu-js = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order", "float_roundtrip"] }
+sha2 = "0.10"
+
+[target.'cfg(unix)'.dependencies]
+libc = "=0.2.189"
+
+[build-dependencies]
+sha2 = "0.10"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+
+[workspace]
+members = ["crates/motion-command", "crates/nextnc-task", "crates/nextnc-task-ffi"]
+default-members = [".", "crates/motion-command", "crates/nextnc-task", "crates/nextnc-task-ffi"]
+resolver = "2"
+
+[[test]]
+name = "part21"
+path = "tests-rust/part21.rs"
+
+[[test]]
+name = "geometry"
+path = "tests-rust/geometry.rs"
+
+[[test]]
+name = "units"
+path = "tests-rust/units.rs"
+
+[[test]]
+name = "json"
+path = "tests-rust/json.rs"
+
+[[test]]
+name = "graph"
+path = "tests-rust/graph.rs"
+
+[[test]]
+name = "profile"
+path = "tests-rust/profile.rs"
+
+[[test]]
+name = "plan"
+path = "tests-rust/plan.rs"
+
+[[test]]
+name = "path_control"
+path = "tests-rust/path_control.rs"
+
+[[test]]
+name = "native_cli"
+path = "tests-rust/native_cli.rs"
+
+[[test]]
+name = "compiled"
+path = "tests-rust/compiled.rs"
