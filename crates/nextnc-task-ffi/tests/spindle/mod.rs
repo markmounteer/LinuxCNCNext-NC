@@ -166,7 +166,7 @@ fn spindle_evidence_is_strict_and_every_policy_field_is_bound_for_resume() -> Te
         -1
     );
     assert_eq!(out, 0);
-    assert_eq!(std::mem::size_of::<Snapshot>(), 1248);
+    assert_eq!(std::mem::size_of::<Snapshot>(), 1648);
     assert_eq!(std::mem::size_of::<Message>(), 312);
     assert_eq!(std::mem::size_of::<MotionReceipt>(), 72);
     assert_eq!(std::mem::offset_of!(Snapshot, spindle), 1096);

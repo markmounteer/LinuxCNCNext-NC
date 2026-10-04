@@ -39,6 +39,8 @@ pub struct Snapshot {
     pub tool_offsets_mm: BTreeMap<u32, Pose>,
     pub limits: [AxisLimits; 3],
     pub shaping: Shaping,
+    /// Actual immutable motion-owned coefficients, absent only when disabled.
+    pub shaping_kernel: Option<crate::shaping::Kernel>,
     pub reverse_spindle: bool,
     pub maximum_rpm: f64,
     pub flood: bool,
@@ -89,8 +91,12 @@ pub struct BoundPlan {
     records: Vec<BoundRecord>,
     initial: Pose,
     final_pose: Pose,
+    shaping_kernel: Option<crate::shaping::Kernel>,
 }
 impl BoundPlan {
+    pub fn shaping_kernel(&self) -> Option<&crate::shaping::Kernel> {
+        self.shaping_kernel.as_ref()
+    }
     pub fn records(&self) -> &[BoundRecord] {
         &self.records
     }
@@ -188,6 +194,10 @@ impl Transform {
 
 impl Snapshot {
     fn validate(&self, plan: &PreparedPlan) -> Result<()> {
+        require(
+            (self.shaping == Shaping::EngagedXy) == self.shaping_kernel.is_some(),
+            "input shaping requires actual kernel evidence; disabled shaping must omit it",
+        )?;
         require(
             (self.machine == Machine::MillXyz && plan.program().report.machine == "mill")
                 || (self.machine == Machine::LatheXz && plan.program().report.machine == "lathe"),
@@ -533,6 +543,7 @@ fn bind_from(
         records,
         initial: snapshot.commanded_pose_mm,
         final_pose: position,
+        shaping_kernel: snapshot.shaping_kernel.clone(),
     })
 }
 
@@ -638,6 +649,7 @@ mod spindle_offset_tests {
                 }
             );
             let bound = BoundPlan {
+                shaping_kernel: None,
                 records: vec![BoundRecord {
                     command: 0,
                     source: Record {

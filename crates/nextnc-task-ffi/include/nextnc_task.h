@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define NEXTNC_TASK_ABI 4u
+#define NEXTNC_TASK_ABI 5u
 #define NEXTNC_MAX_TOOLS 4096u
 /* All dimensional values are mm, mm/s, mm/s^2, mm/s^3; X is lathe radius.
  * Native candidates are not execution permits. Preparation belongs on a worker.
@@ -24,6 +24,16 @@ typedef struct {
     uint32_t model, servo_period_ns, trajectory_period_ns, interpolation_rate, cubic_segment_ns;
     uint32_t motion_instance, motion_birth[4];
 } nextnc_timing_evidence;
+/* Actual immutable motion-owned common XY positive FIR. Model 1, axis mask 3.
+ * period_ns must match observed rate-one timing. Up to 32 ordered unique taps;
+ * unused entries are +0. Disabled shaping requires the entire record be zero.
+ * Bound to timing.motion_instance/motion_birth by the host's coherent capture.
+ * Numeric evidence is not a machine authorization digest. */
+typedef struct {
+    uint32_t model, axis_mask, period_ns, count;
+    uint32_t delays[32];
+    double weights[32];
+} nextnc_kernel_evidence;
 typedef struct {
     uint32_t abi, bytes, machine, axis_mask, work_offset, shaping, capabilities, reserved;
     double pose[9], work[9][9], rotation[9], temporary[9], tool_offset[9];
@@ -31,6 +41,7 @@ typedef struct {
     nextnc_spindle_evidence spindle;
     nextnc_timing_evidence timing;
     double trajectory[3], scalar_origin_mm;
+    nextnc_kernel_evidence kernel;
 } nextnc_snapshot;
 typedef struct { uint32_t number, reserved; double offset[9]; } nextnc_tool;
 enum nextnc_kind {

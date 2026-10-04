@@ -65,6 +65,17 @@ struct Candidate {
     rebind: Option<(u64, usize)>,
     recovery: Vec<Option<recovery::Modes>>,
 }
+impl Candidate {
+    fn check_kernel(&self, s: &wire::Snapshot) -> Result<()> {
+        let current = s.kernel.decode(s.shaping != 0, s.timing.servo_period_ns)?;
+        if current.as_ref().map(|k| k.identity())
+            != self.bound.shaping_kernel().map(|k| k.identity())
+        {
+            return Err("live shaping kernel changed; a new selection is required".into());
+        }
+        Ok(())
+    }
+}
 
 fn candidate(
     artifact: Arc<bundle::Artifact>,
@@ -321,6 +332,7 @@ pub unsafe extern "C" fn nextnc_task_rebind(
                 "motion instance or interpolation timing changed before procedure rebind".into(),
             );
         }
+        parent.check_kernel(&s)?;
         let fingerprint = runtime::fingerprint(&s, &t)?;
         let environment = runtime::environment(&s, &t)?;
         let (snapshot, dynamics) = s.decode(&t)?;
@@ -423,6 +435,7 @@ pub unsafe extern "C" fn nextnc_task_check_current(
         if s.timing != candidate.timing {
             return Err("motion instance or interpolation timing changed before start/resume/tool confirmation".into());
         }
+        candidate.check_kernel(&s)?;
         let fresh = runtime::fingerprint(&s, t)?;
         if mode == 0 && fresh != candidate.fingerprint {
             return Err("live pose/configuration changed before start".into());

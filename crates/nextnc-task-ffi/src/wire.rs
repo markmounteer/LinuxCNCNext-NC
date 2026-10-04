@@ -4,7 +4,7 @@ use nextnc_native::compiled::Action;
 use nextnc_task::{binding, lowering};
 use std::collections::BTreeMap;
 
-pub const ABI: u32 = 4;
+pub const ABI: u32 = 5;
 pub const MAX_TOOLS: usize = 4096;
 pub const FEED_PER_REV: u32 = 16;
 pub const CSS: u32 = 32;
@@ -107,6 +107,62 @@ pub struct Snapshot {
     /// Observed scalar trajectory velocity, acceleration and jerk ceilings.
     pub trajectory: [f64; 3],
     pub scalar_origin_mm: f64,
+    pub kernel: KernelEvidence,
+}
+
+/// Model 1 is the immutable, common XY positive FIR. This describes the actual
+/// filter; neither its identity nor a job constitutes machine authorization.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct KernelEvidence {
+    pub model: u32,
+    pub axis_mask: u32,
+    pub period_ns: u32,
+    pub count: u32,
+    pub delays: [u32; 32],
+    pub weights: [f64; 32],
+}
+impl KernelEvidence {
+    pub(crate) fn decode(
+        self,
+        enabled: bool,
+        period_ns: u32,
+    ) -> Result<Option<nextnc_task::shaping::Kernel>, String> {
+        if !enabled {
+            if self.model != 0
+                || self.axis_mask != 0
+                || self.period_ns != 0
+                || self.count != 0
+                || self.delays != [0; 32]
+                || self.weights.iter().any(|v| v.to_bits() != 0)
+            {
+                return Err("disabled shaping kernel evidence must be empty".into());
+            }
+            return Ok(None);
+        }
+        if self.model != 1
+            || self.axis_mask != 3
+            || self.period_ns != period_ns
+            || !(1..=32).contains(&self.count)
+        {
+            return Err("missing or incompatible live common XY shaping kernel".into());
+        }
+        let count = self.count as usize;
+        if self.delays[count..].iter().any(|v| *v != 0)
+            || self.weights[count..].iter().any(|v| v.to_bits() != 0)
+        {
+            return Err("unused shaping kernel terms must be empty".into());
+        }
+        let terms: Vec<_> = (0..count)
+            .map(|i| nextnc_task::shaping::Term {
+                delay_ticks: self.delays[i],
+                weight: self.weights[i],
+            })
+            .collect();
+        nextnc_task::shaping::Kernel::from_terms(period_ns, &terms)
+            .map(Some)
+            .map_err(|e| e.to_string())
+    }
 }
 
 #[repr(C)]
@@ -158,6 +214,9 @@ impl Snapshot {
             return Err("unknown snapshot flags".into());
         }
         self.timing.validate()?;
+        let shaping_kernel = self
+            .kernel
+            .decode(self.shaping != 0, self.timing.servo_period_ns)?;
         if self.trajectory.iter().any(|v| !v.is_finite() || *v <= 0.0)
             || !self.scalar_origin_mm.is_finite()
             || self.scalar_origin_mm < 0.0
@@ -209,6 +268,7 @@ impl Snapshot {
                 } else {
                     binding::Shaping::EngagedXy
                 },
+                shaping_kernel,
                 reverse_spindle: self.capabilities & 1 != 0,
                 maximum_rpm: self.maximum_rpm,
                 flood: self.capabilities & 2 != 0,
