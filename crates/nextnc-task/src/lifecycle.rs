@@ -476,7 +476,7 @@ impl Owner {
         }
         if !matches!(
             self.phase,
-            Phase::Running | Phase::StepDrain | Phase::Draining
+            Phase::Running | Phase::StepDrain | Phase::Draining | Phase::Reconciling
         ) {
             return Err(Error::State);
         }
@@ -538,10 +538,12 @@ impl Owner {
             };
         } else {
             self.step_end = None;
-            self.phase = if self.resume_phase == Phase::Draining {
-                Phase::Draining
-            } else {
-                Phase::Running
+            // A final durable-save barrier still owns the job. Resuming that
+            // barrier must never reopen admission for the completed prefix.
+            self.phase = match self.resume_phase {
+                Phase::Draining => Phase::Draining,
+                Phase::Reconciling => Phase::Reconciling,
+                _ => Phase::Running,
             };
         }
         self.boundary_proposal = None;
