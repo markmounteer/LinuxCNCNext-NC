@@ -96,6 +96,16 @@ pub struct Store {
     #[cfg(test)]
     crash: bool,
 }
+impl Drop for Store {
+    fn drop(&mut self) {
+        // Another thread may fork while this store is open. Closing our File
+        // alone then leaves its lock held by the child's inherited descriptor
+        // until exec, spuriously denying a replacement owner in this process.
+        // Ownership ends with Store, not with every copy of that descriptor.
+        // On an OS unlock error File still closes; a retained lock fails closed.
+        let _ = self._lock.unlock();
+    }
+}
 fn fail(code: &str, message: impl Into<String>) -> Diagnostic {
     Diagnostic::new("native-publication", code, message)
 }
@@ -876,6 +886,31 @@ mod tests {
         );
         assert_eq!(fs::read(protected)?, source);
         assert!(store.selected()?.is_none());
+        Ok(())
+    }
+    #[test]
+    fn dropping_store_releases_ownership_even_while_an_inherited_descriptor_remains() -> TestResult
+    {
+        let temp = Temp::new()?;
+        let root = temp.0.join("store");
+        let store = Store::open(&root, Limits::default())?;
+        // A fork in another thread retains the same open file description until
+        // its exec. try_clone deterministically supplies that same lifetime
+        // condition, without racing a subprocess or adding unsafe test code.
+        let inherited = store._lock.try_clone()?;
+        drop(store);
+        let replacement = Store::open(&root, Limits::default())?;
+        // Closing an old descriptor must not unlock the replacement owner.
+        drop(inherited);
+        assert_eq!(
+            Store::open(&root, Limits::default())
+                .err()
+                .ok_or("replacement ownership was lost")?
+                .code,
+            "OWNER_BUSY"
+        );
+        drop(replacement);
+        let _next = Store::open(&root, Limits::default())?;
         Ok(())
     }
     #[test]
