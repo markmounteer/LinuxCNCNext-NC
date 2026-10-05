@@ -84,7 +84,7 @@ enum Point {
 }
 pub struct Store {
     root: PathBuf,
-    _lock: File,
+    _lock: StoreLock,
     owner: Arc<()>,
     session: String,
     request: u64,
@@ -96,14 +96,16 @@ pub struct Store {
     #[cfg(test)]
     crash: bool,
 }
-impl Drop for Store {
+struct StoreLock(File);
+impl Drop for StoreLock {
     fn drop(&mut self) {
         // Another thread may fork while this store is open. Closing our File
         // alone then leaves its lock held by the child's inherited descriptor
         // until exec, spuriously denying a replacement owner in this process.
-        // Ownership ends with Store, not with every copy of that descriptor.
+        // Ownership ends with this guard, not every copy of that descriptor.
+        // The guard also covers errors before Store construction finishes.
         // On an OS unlock error File still closes; a retained lock fails closed.
-        let _ = self._lock.unlock();
+        let _ = self.0.unlock();
     }
 }
 fn fail(code: &str, message: impl Into<String>) -> Diagnostic {
@@ -243,6 +245,7 @@ impl Store {
                 format!("Artifact store cannot obtain exclusive ownership: {e}"),
             )
         })?;
+        let lock = StoreLock(lock);
         if format_path
             .try_exists()
             .map_err(|e| io_error("inspect store format", e))?
@@ -897,7 +900,7 @@ mod tests {
         // A fork in another thread retains the same open file description until
         // its exec. try_clone deterministically supplies that same lifetime
         // condition, without racing a subprocess or adding unsafe test code.
-        let inherited = store._lock.try_clone()?;
+        let inherited = store._lock.0.try_clone()?;
         drop(store);
         let replacement = Store::open(&root, Limits::default())?;
         // Closing an old descriptor must not unlock the replacement owner.
