@@ -177,6 +177,60 @@ fn partial_acceptance_retries_and_capacity_preserve_exactly_one_ordered_prefix()
 }
 
 #[test]
+fn final_reconciliation_can_be_held_without_reopening_admission() -> TestResult {
+    for abort in [false, true] {
+        let (mut owner, binding) = armed(16)?;
+        owner.start(binding, ready(), Start::Continuous, 0)?;
+        while owner.phase() == Phase::Running {
+            if let Some(offer) = owner.offer(16)? {
+                owner.accept(&offer, offer.commands.end)?;
+                owner.admitted(binding, offer.commands.end)?;
+            }
+            if owner.phase() == Phase::Running {
+                owner.drained(binding, drain())?;
+            }
+        }
+        assert_eq!(owner.phase(), Phase::Draining);
+        owner.drained(binding, drain())?;
+        assert_eq!(owner.phase(), Phase::Reconciling);
+        let prefixes = owner.prefixes();
+        owner.hold()?;
+        owner.hold()?;
+        assert_eq!(owner.phase(), Phase::Holding);
+        assert_eq!(owner.held(binding, false), Err(Error::NotReady));
+        owner.held(binding, true)?;
+        assert_eq!(owner.phase(), Phase::Held);
+        assert!(owner.offer(16)?.is_none());
+        assert!(!owner.allows_mdi());
+        assert_eq!(owner.reconciled(drain(), true), Err(Error::State));
+        assert_eq!(owner.propose_step(binding), Err(Error::State));
+        assert_eq!(owner.prefixes(), prefixes);
+        if abort {
+            owner.abort();
+            owner.reconciled(drain(), true)?;
+            assert_eq!(owner.phase(), Phase::Empty);
+        } else {
+            let mut stale = binding;
+            stale.state_epoch += 1;
+            assert_eq!(owner.resume(stale, ready(), None), Err(Error::Stale));
+            let mut disabled = ready();
+            disabled.enabled = false;
+            assert_eq!(owner.resume(binding, disabled, None), Err(Error::NotReady));
+            owner.resume(binding, ready(), None)?;
+            assert_eq!(owner.phase(), Phase::Reconciling);
+            assert_eq!(owner.prefixes(), prefixes);
+            assert!(owner.offer(16)?.is_none());
+            assert!(!owner.allows_mdi());
+            owner.reconciled(drain(), true)?;
+            assert_eq!(owner.phase(), Phase::Complete);
+        }
+        assert!(owner.allows_mdi());
+        assert_eq!(owner.hold(), Err(Error::State));
+    }
+    Ok(())
+}
+
+#[test]
 fn motion_done_alone_never_completes_a_step_or_releases_mdi() -> TestResult {
     let (mut owner, binding) = armed(16)?;
     owner.start(binding, ready(), Start::Step, 0)?;

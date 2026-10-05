@@ -3757,9 +3757,9 @@
       "rust": [
         {
           "file": "src-rust/main.rs",
-          "line": 229,
+          "line": 235,
           "anchor": "fn main()",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/diagnostics.rs",
@@ -9669,7 +9669,7 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         }
       ],
       "tests": [
@@ -9921,7 +9921,7 @@
           "file": "src-rust/main.rs",
           "line": 11,
           "anchor": "const OPTION_LIMIT",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         }
       ],
       "tests": [
@@ -9954,13 +9954,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10005,13 +10005,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10056,13 +10056,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10107,13 +10107,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10158,13 +10158,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10209,13 +10209,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10260,13 +10260,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10311,13 +10311,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10362,13 +10362,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10413,13 +10413,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10464,13 +10464,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10515,13 +10515,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10566,13 +10566,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10617,13 +10617,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
@@ -10668,13 +10668,13 @@
           "file": "src-rust/main.rs",
           "line": 12,
           "anchor": "fn run(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/main.rs",
-          "line": 191,
+          "line": 197,
           "anchor": "fn option_paths(",
-          "sha256": "124fec2f197f0254880bf1675be30b1d2203e8546e4d2a113acc7b7ca615956d"
+          "sha256": "3f65ce531d388cda7820730c6adf18989efd16502affadcc7ebc522328318510"
         },
         {
           "file": "src-rust/json.rs",
